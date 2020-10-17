@@ -1,10 +1,9 @@
+#pragma once
 #include <Windows.h>
-#include <d3dx9.h>
-#include <unordered_map>
 
-#define KEYBOARD_BUFFER_SIZE 1024
-#define DIRECTINPUT_VERSION 0x0800
-
+/*
+	Abstract class to define keyboard event handlers
+*/
 class CKeyEventHandler
 {
 public:
@@ -12,5 +11,4 @@ public:
 	virtual void OnKeyDown(int KeyCode) = 0;
 	virtual void OnKeyUp(int KeyCode) = 0;
 };
-
 typedef CKeyEventHandler* LPKEYEVENTHANDLER;

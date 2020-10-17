@@ -1,74 +1,41 @@
 /* =============================================================
 	INTRODUCTION TO GAME PROGRAMMING SE102
 
-	SAMPLE 03 - KEYBOARD AND OBJECT STATE
+	SAMPLE 05 - SCENCE MANAGER
 
 	This sample illustrates how to:
 
-		1/ Process keyboard input
-		2/ Control object state with keyboard events
+		1/ Implement a scence manager
+		2/ Load scene from "database", add/edit/remove scene without changing code
+		3/ Dynamically move between scenes without hardcode logic
+
 ================================================================ */
 
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
 
-#include "debug.h"
+#include "Utils.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
 
 #include "Mario.h"
+#include "Brick.h"
+#include "Goomba.h"
+
+#include "PlayScene.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
-#define MAIN_WINDOW_TITLE L"02 - Sprite animation"
+#define MAIN_WINDOW_TITLE L"SAMPLE 05 - SCENCE MANAGER"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
 
-#define MAX_FRAME_RATE 90
-
-#define ID_TEX_MARIO 0
-#define ID_TEX_ENEMY 10
-#define ID_TEX_MISC 20
+#define MAX_FRAME_RATE 120
 
 CGame* game;
-CMario* mario;
-
-class CSampleKeyHander : public CKeyEventHandler
-{
-	virtual void KeyState(BYTE* states);
-	virtual void OnKeyDown(int KeyCode);
-	virtual void OnKeyUp(int KeyCode);
-};
-
-CSampleKeyHander* keyHandler;
-
-void CSampleKeyHander::OnKeyDown(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
-		break;
-	}
-}
-
-void CSampleKeyHander::OnKeyUp(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-}
-
-void CSampleKeyHander::KeyState(BYTE* states)
-{
-	if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else mario->SetState(MARIO_STATE_IDLE);
-}
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -84,71 +51,12 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 /*
-	Load all game resources
-	In this example: load textures, sprites, animations and mario object
-*/
-void LoadResources()
-{
-	CTextures* textures = CTextures::GetInstance();
-
-	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(176, 224, 248));
-
-	CSprites* sprites = CSprites::GetInstance();
-	CAnimations* animations = CAnimations::GetInstance();
-
-	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
-
-
-	sprites->Add(10001, 246, 154, 260, 181, texMario);
-
-	sprites->Add(10002, 275, 154, 290, 181, texMario);
-	sprites->Add(10003, 304, 154, 321, 181, texMario);
-
-	sprites->Add(10011, 186, 154, 200, 181, texMario);
-
-	sprites->Add(10012, 155, 154, 170, 181, texMario);
-	sprites->Add(10013, 125, 154, 140, 181, texMario);
-
-
-	LPANIMATION ani;
-
-	ani = new CAnimation(100);
-	ani->Add(10001);
-	animations->Add(400, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(10011);
-	animations->Add(401, ani);
-
-
-	ani = new CAnimation(100);
-	ani->Add(10001);
-	ani->Add(10002);
-	ani->Add(10003);
-	animations->Add(500, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(10011);
-	ani->Add(10012);
-	ani->Add(10013);
-	animations->Add(501, ani);
-
-	mario = new CMario();
-	CMario::AddAnimation(400);		// idle right
-	CMario::AddAnimation(401);		// idle left
-	CMario::AddAnimation(500);		// walk right
-	CMario::AddAnimation(501);		// walk left
-
-	mario->SetPosition(0.0f, 100.0f);
-}
-
-/*
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
 */
 void Update(DWORD dt)
 {
-	mario->Update(dt);
+	CGame::GetInstance()->GetCurrentScene()->Update(dt);
 }
 
 /*
@@ -167,7 +75,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		mario->Render();
+		CGame::GetInstance()->GetCurrentScene()->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();
@@ -269,12 +177,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	game = CGame::GetInstance();
 	game->Init(hWnd);
+	game->InitKeyboard();
 
-	keyHandler = new CSampleKeyHander();
-	game->InitKeyboard(keyHandler);
+	game->Load(L"mario-sample.txt");
 
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
-	LoadResources();
 	Run();
 
 	return 0;
