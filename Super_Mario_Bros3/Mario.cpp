@@ -148,6 +148,51 @@ void CMario::Render()
 				ani = MARIO_ANI_SMALL_WALKING_RIGHT;
 			else ani = MARIO_ANI_SMALL_WALKING_LEFT;
 		}
+		else if (level == MARIO_LEVEL_FIRE)
+		{
+			if (vx == 0)
+			{
+				if (nx > 0) ani = MARIO_ANI_FIRE_IDLE_RIGHT;
+				else ani = MARIO_ANI_FIRE_IDLE_LEFT;
+			}
+			else if (vx > 0)
+				ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+			else ani = MARIO_ANI_FIRE_WALKING_LEFT;
+		}
+		else if (level == MARIO_LEVEL_FROG)
+		{
+			if (vx == 0)
+			{
+				if (nx > 0) ani = MARIO_ANI_FROG_IDLE_RIGHT;
+				else ani = MARIO_ANI_FROG_IDLE_LEFT;
+			}
+			else if (vx > 0)
+				ani = MARIO_ANI_FROG_WALKING_RIGHT;
+			else ani = MARIO_ANI_FROG_WALKING_LEFT;
+		}
+		else if (level == MARIO_LEVEL_TAIL)
+		{
+			if (vx == 0)
+			{
+				if (nx > 0) ani = MARIO_ANI_TAIL_IDLE_RIGHT;
+				else ani = MARIO_ANI_TAIL_IDLE_LEFT;
+			}
+			else if (vx > 0)
+				ani = MARIO_ANI_TAIL_WALKING_RIGHT;
+			else ani = MARIO_ANI_TAIL_WALKING_LEFT;
+		}
+		else if (level == MARIO_LEVEL_HAMMER)
+		{
+			if (vx == 0)
+			{
+				if (nx > 0) ani = MARIO_ANI_HAMMER_IDLE_RIGHT;
+				else ani = MARIO_ANI_HAMMER_IDLE_LEFT;
+			}
+			else if (vx > 0)
+				ani = MARIO_ANI_HAMMER_WALKING_RIGHT;
+			else ani = MARIO_ANI_HAMMER_WALKING_LEFT;
+		}
+
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
@@ -189,7 +234,7 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	left = x;
 	top = y;
 
-	if (level == MARIO_LEVEL_BIG)
+	if (level != MARIO_LEVEL_SMALL)
 	{
 		right = x + MARIO_BIG_BBOX_WIDTH;
 		bottom = y + MARIO_BIG_BBOX_HEIGHT;

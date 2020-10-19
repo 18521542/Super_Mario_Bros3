@@ -7,6 +7,7 @@
 #include "Sprites.h"
 #include "Portal.h"
 
+#define PushBackPixel 20.0f
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -287,6 +288,38 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
+	case DIK_1:
+		mario->SetLevel(MARIO_LEVEL_SMALL);
+		break;
+	case DIK_2:
+		float currentX, currentY;
+		mario->GetPosition(currentX, currentY);
+		mario->SetPosition(currentX, currentY - PushBackPixel);
+		mario->SetLevel(MARIO_LEVEL_BIG);
+		break;
+	case DIK_3:
+		mario->GetPosition(currentX, currentY);
+		mario->SetPosition(currentX, currentY - PushBackPixel);
+		mario->SetLevel(MARIO_LEVEL_FIRE);
+		break;
+	case DIK_4:
+		//float currentX, currentY;
+		mario->GetPosition(currentX, currentY);
+		mario->SetPosition(currentX, currentY - PushBackPixel);
+		mario->SetLevel(MARIO_LEVEL_FROG);
+		break;
+	case DIK_5:
+		//float currentX, currentY;
+		mario->GetPosition(currentX, currentY);
+		mario->SetPosition(currentX, currentY - PushBackPixel);
+		mario->SetLevel(MARIO_LEVEL_HAMMER);
+		break;
+	case DIK_6:
+		//float currentX, currentY;
+		mario->GetPosition(currentX, currentY);
+		mario->SetPosition(currentX, currentY - PushBackPixel);
+		mario->SetLevel(MARIO_LEVEL_TAIL);
+		break;
 	case DIK_SPACE:
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
