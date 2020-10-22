@@ -7,6 +7,10 @@
 
 #include "Goomba.h"
 #include "Portal.h"
+#include "GameObject.h"
+#include "Platform.h"
+
+#define PLATFORM_TYPE_TWO	2
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -59,23 +63,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
-
-		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-
 		//
-		// Collision logic with other objects
+		// Collision logic with  special-objects
 		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
+		for (UINT i = 0; i < coEventsResult.size(); i++) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
 			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
@@ -107,17 +98,35 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-			} // if Goomba
+			}
 			else if (dynamic_cast<CPortal*>(e->obj))
 			{
 				CPortal* p = dynamic_cast<CPortal*>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
+			else if (dynamic_cast<CPlatform*>(e->obj)) {
+				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
+				if (e->ny > 0) {
+					if (plat->getType() == PLATFORM_TYPE_TWO) {
+						x += dx;
+						y += dy;
+						ny = 0;
+					}
+				}
+			}
 		}
-	}
 
-	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+		// block every none-special object !
+		x += min_tx * dx + nx * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
+
+		//if (nx != 0) vx = 0;
+		//if (ny != 0) vy = 0;
+
+		// clean up collision events
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	}
 }
 
 void CMario::Render()

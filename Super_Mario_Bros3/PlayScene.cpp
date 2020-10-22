@@ -34,6 +34,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_KOOPAS		3
 #define OBJECT_TYPE_BACKGROUND	4
 #define OBJECT_TYPE_PLATFORM	5
+#define OBJECT_TYPE_COIN		6
 #define OBJECT_TYPE_PORTAL		50
 
 #define MAX_SCENE_LINE 1024
@@ -173,8 +174,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		//DebugOut(L"aaaa");
 		float r = atof(tokens[4].c_str());
 		float b = atof(tokens[5].c_str());
-		obj = new CPlatform(x, y, r, b);
+		int type = atoi(tokens[6].c_str());
+		obj = new CPlatform(x, y, r, b, type);
 
+	}
+	break;
+	case OBJECT_TYPE_COIN:
+	{
+		DebugOut(L"Create");
+		obj = new CCoin();
 	}
 	break;
 	default:

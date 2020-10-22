@@ -1,7 +1,8 @@
 #include"Platform.h"
 
-CPlatform::CPlatform(float l, float t, float r, float b)
+CPlatform::CPlatform(float l, float t, float r, float b, int typ)
 {
+	type = typ;
 	x = l;
 	y = t;
 	width = r - l ;
