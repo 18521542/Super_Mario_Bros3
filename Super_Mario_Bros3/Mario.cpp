@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "GameObject.h"
 #include "Platform.h"
+#include "Koopas.h"
 
 #define PLATFORM_TYPE_TWO	2
 
@@ -17,7 +18,8 @@ CMario::CMario(float x, float y) : CGameObject()
 	level = MARIO_LEVEL_BIG;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
-
+	nx = 1;
+	a = -MARIO_ACCELERATION;
 	start_x = x;
 	start_y = y;
 	this->x = x;
@@ -26,17 +28,32 @@ CMario::CMario(float x, float y) : CGameObject()
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
-	// Simple fall down
+	//a = nx * MARIO_ACCELERATION;
+	vx += a * dt;
+	if (abs(vx) >= MARIO_WALKING_SPEED_MAX) 
+	// limit the speed of mario
+	// don't care about direction
+	{
+		vx = nx * MARIO_WALKING_SPEED_MAX;
+	}
+	if (state == MARIO_STATE_IDLE) 
+	// If player want to slow down mario then acceleration and speed have opposite sign 
+	{
+		a = -nx * MARIO_ACCELERATION;
+		if (abs(vx) <= MARIO_WALKING_SPEED_MIN) 
+			 vx = 0;
+	}
+	
+	//Calculate vx,vy via acceleration and time
 	vy += MARIO_GRAVITY * dt;
-
+	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-
 	// turn off collision when die 
 	if (state != MARIO_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
@@ -114,6 +131,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
+			//else if (dynamic_cast<CKoopas*>(e->obj)) {
+
+			//}
 		}
 
 
@@ -121,8 +141,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		//if (nx != 0) vx = 0;
-		//if (ny != 0) vy = 0;
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;
 
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -137,14 +157,28 @@ void CMario::Render()
 	else
 		if (level == MARIO_LEVEL_BIG)
 		{
-			if (vx == 0)
+			if (state == MARIO_STATE_IDLE)
 			{
 				if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
 				else ani = MARIO_ANI_BIG_IDLE_LEFT;
 			}
-			else if (vx > 0)
-				ani = MARIO_ANI_BIG_WALKING_RIGHT;
-			else ani = MARIO_ANI_BIG_WALKING_LEFT;
+			else {
+				if (vx > 0 && nx < 0) {
+					ani = MARIO_ANI_BIG_STOP_RIGHT;
+				}
+				else if (vx < 0 && nx >0) {
+					ani = MARIO_ANI_BIG_STOP_LEFT;
+				}
+				else if (vx > 0 && nx > 0) {
+					ani = MARIO_ANI_BIG_WALKING_RIGHT;
+				}
+				else if (vx < 0 && nx < 0) {
+					ani = MARIO_ANI_BIG_WALKING_LEFT;
+				}
+			}
+				
+				
+			//else ani = MARIO_ANI_BIG_WALKING_LEFT;
 		}
 		else if (level == MARIO_LEVEL_SMALL)
 		{
@@ -153,9 +187,23 @@ void CMario::Render()
 				if (nx > 0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
 				else ani = MARIO_ANI_SMALL_IDLE_LEFT;
 			}
-			else if (vx > 0)
-				ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-			else ani = MARIO_ANI_SMALL_WALKING_LEFT;
+			else 
+			// small mario is moving
+			{
+				if (vx > 0 && nx < 0) {
+					ani = MARIO_ANI_SMALL_STOP_RIGHT;
+				}
+				else if (vx < 0 && nx >0) {
+					ani = MARIO_ANI_SMALL_STOP_LEFT;
+				}
+				else if (vx > 0 && nx > 0) {
+					ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				}
+				else if (vx < 0 && nx < 0) {
+					ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				}
+			}
+			
 		}
 		else if (level == MARIO_LEVEL_FIRE)
 		{
@@ -218,19 +266,24 @@ void CMario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
-		vx = MARIO_WALKING_SPEED;
+		a = MARIO_ACCELERATION;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
-		vx = -MARIO_WALKING_SPEED;
+		a = -MARIO_ACCELERATION;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
+		//isJumping = true;
 		vy = -MARIO_JUMP_SPEED_Y;
 		break;
 	case MARIO_STATE_IDLE:
-		vx = 0;
+		if (nx == 1) {
+			a = -MARIO_ACCELERATION;
+		}
+		else
+			a = MARIO_ACCELERATION;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
@@ -262,6 +315,8 @@ void CMario::Reset()
 {
 	SetState(MARIO_STATE_IDLE);
 	SetLevel(MARIO_LEVEL_BIG);
+	nx = 1;
+	a = MARIO_ACCELERATION;
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }

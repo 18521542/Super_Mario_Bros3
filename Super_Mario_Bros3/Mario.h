@@ -1,13 +1,16 @@
 #pragma once
 #include "GameObject.h"
 
-#define MARIO_WALKING_SPEED		0.15f 
+#define MARIO_WALKING_SPEED_START	0.001f 
+#define MARIO_WALKING_SPEED_MAX		0.1f
+#define MARIO_ACCELERATION			0.0003f
+#define MARIO_WALKING_SPEED_MIN		0.01f
 //0.1f
 #define MARIO_JUMP_SPEED_Y		0.3f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
 #define MARIO_GRAVITY			0.002f
 #define MARIO_DIE_DEFLECT_SPEED	 0.5f
-#define MARIO_ACCELERATION		0.5f
+
 
 //define state - xxx
 #define MARIO_STATE_IDLE			0
@@ -25,11 +28,15 @@
 #define MARIO_ANI_BIG_IDLE_LEFT			1
 #define MARIO_ANI_BIG_WALKING_RIGHT		4
 #define MARIO_ANI_BIG_WALKING_LEFT		5
+#define MARIO_ANI_BIG_STOP_RIGHT		27
+#define MARIO_ANI_BIG_STOP_LEFT			28
 
 #define MARIO_ANI_SMALL_IDLE_RIGHT		2
 #define MARIO_ANI_SMALL_IDLE_LEFT		3
 #define MARIO_ANI_SMALL_WALKING_RIGHT	6
 #define MARIO_ANI_SMALL_WALKING_LEFT	7
+#define MARIO_ANI_SMALL_STOP_LEFT		25
+#define MARIO_ANI_SMALL_STOP_RIGHT		26
 
 #define MARIO_ANI_FIRE_IDLE_RIGHT		9 
 #define MARIO_ANI_FIRE_IDLE_LEFT		10
@@ -72,6 +79,8 @@
 
 class CMario : public CGameObject
 {
+	float a;	// vx = vx + a*dt
+	bool isJumping = false;
 	int level;
 	int untouchable;
 	DWORD untouchable_start;
@@ -87,7 +96,12 @@ public:
 	void SetLevel(int l) { level = l; }
 	int GetLevel() { return this->level; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
-
+	bool IsJumping() {
+		return isJumping;
+	}
+	void setJumping(bool jump) {
+		isJumping = jump;
+	}
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

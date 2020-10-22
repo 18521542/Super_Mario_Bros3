@@ -181,7 +181,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	break;
 	case OBJECT_TYPE_COIN:
 	{
-		DebugOut(L"Create");
+		//DebugOut(L"Create");
 		obj = new CCoin();
 	}
 	break;
@@ -341,12 +341,29 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetLevel(MARIO_LEVEL_TAIL);
 		break;
 	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
+		//DebugOut(L"Jumping");
+		//if (mario->IsJumping() == false) {
+			mario->SetState(MARIO_STATE_JUMP);
+		//}
 		break;
 	case DIK_A:
 		mario->Reset();
 		break;
 	}
+}
+
+void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
+{
+	//CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	//switch (KeyCode) 
+	//{
+	///*case (DIK_LEFT) :
+	//	mario->SetState(MARIO_STATE_IDLE);
+	//	break;
+	//case (DIK_RIGHT):
+	//	mario->SetState(MARIO_STATE_IDLE);
+	//	break;*/
+	//}
 }
 
 void CPlayScenceKeyHandler::KeyState(BYTE* states)
@@ -360,6 +377,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else
+	else if(!game->IsKeyDown(DIK_LEFT)||!game->IsKeyDown(DIK_RIGHT))
 		mario->SetState(MARIO_STATE_IDLE);
 }
