@@ -1,5 +1,8 @@
 #pragma once
 #include"GameObject.h"
+#define PLATFORM_TYPE_TWO	2
+#define PLATFORM_TYPE_ONE	1
+#define PLATFORM_TYPE_THREE	3
 class CPlatform : public CGameObject
 {
 	int width;
