@@ -341,8 +341,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetLevel(MARIO_LEVEL_TAIL);
 		break;
 	case DIK_X:
+		if(mario->IsReadyToJump())
 		mario->SetState(MARIO_STATE_JUMP);
-		//DebugOut(L"\nIsReadyToJump  = %d", mario->IsReadyToJump());
 		break;
 	case DIK_A:
 		mario->Reset();
@@ -355,11 +355,10 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode) 
 	{
-	case DIK_X:
-		//mario->setIsReadyToJump(false);
+	case (DIK_X):
+		mario->setIsReadyToJump(false);
 		break;
-	case (DIK_LEFT||DIK_RIGHT):
-		if (mario->vx != 0)
+	case (DIK_LEFT):
 		mario->SetState(MARIO_STATE_SLOWINGDOWN);
 		break;
 	}
@@ -373,28 +372,23 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE)
 		return;
-
-	if (game->IsKeyDown(DIK_X))
+	else
 	{
-		if ((mario->IsReadyToJump())) {
-			mario->SetState(MARIO_STATE_JUMP);
+		if /*(game->IsKeyDown(DIK_X))
+		{
+			if (mario->IsReadyToJump())
+				mario->SetState(MARIO_STATE_JUMP);
 		}
-	}
-	else if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else if (!game->IsKeyDown(DIK_LEFT) || !game->IsKeyDown(DIK_RIGHT))
-	{
-		if (mario->vx != 0)
+		else if*/ (game->IsKeyDown(DIK_RIGHT))
+			mario->SetState(MARIO_STATE_WALKING_RIGHT);
+		else if (game->IsKeyDown(DIK_LEFT))
+			mario->SetState(MARIO_STATE_WALKING_LEFT);
+		else if (!game->IsKeyDown(DIK_LEFT) || !game->IsKeyDown(DIK_RIGHT))
+		{
 			mario->SetState(MARIO_STATE_SLOWINGDOWN);
+		}
+	else
+		mario->SetState(MARIO_STATE_IDLE);
 	}
-	/*else
-		mario->SetState(MARIO_STATE_DIE);*/
-		
-	/*else
-		mario->SetState(MARIO_STATE_IDLE);*/
-
-	
 	
 }

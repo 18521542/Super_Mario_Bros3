@@ -10,7 +10,7 @@
 #include "GameObject.h"
 #include "Platform.h"
 #include "Koopas.h"
-
+#include "coin.h"
 
 
 
@@ -22,7 +22,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	nx = 1;
 	setIsReadyToJump(true);
 	a = MARIO_ACCELERATION;
-	ay = MARIO_GRAVITY;
+	//ay = MARIO_GRAVITY;
 	start_x = x;
 	start_y = y;
 	this->x = x;
@@ -34,12 +34,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// Calculate dx, dy by speed and acceleration
 	CGameObject::Update(dt);
-
-	vx += a * dt;
-	//Simple fall down or jump
-	vy += ay * dt;
 	
 
+	vx += a * dt;
+	//Simple fall down
+	vy += MARIO_GRAVITY * dt;
+	
 	// limit the speed of mario don't care about direction
 	if (state == MARIO_STATE_WALKING_LEFT || state == MARIO_STATE_WALKING_RIGHT)
 	{
@@ -47,19 +47,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx = nx * MARIO_WALKING_SPEED_MAX;
 	}
 
-	//limit y when mario jump
-	if (state == MARIO_STATE_JUMP)
-	{
-		if (y >= (MARIO_JUMP_SPEED_MAX *dt ))
-			ay = MARIO_GRAVITY;
-	}
-	
+
 	// If player want to slow down mario then acceleration and speed have opposite sign 
-	if (state == MARIO_STATE_SLOWINGDOWN) 
+	else if (state == MARIO_STATE_SLOWINGDOWN) 
 	{
-		if (abs(vx) <= MARIO_WALKING_SPEED_MIN) 
+		if (abs(vx) <= MARIO_WALKING_SPEED_MIN)
 			 vx = 0;
 	}
+	else if (state == MARIO_STATE_JUMP && IsReadyToJump()==true)
+	{
+		if (vy >= 0)
+			vy -= MARIO_ACCELERATION_JUMP  * dt;;
+		DebugOut(L"\nVy = %d", vy);
+	}
+
 	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -156,15 +157,44 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj)) {
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+				float currentX, currentY;
+				if(e->ny<0)
+				{
+					/*koopas->GetPosition(currentX, currentY);
+					koopas->SetPosition(currentX, currentY - 20);*/
+					if (koopas->GetState() == KOOPAS_STATE_WALKING) {
+						koopas->SetState(KOOPAS_STATE_DIE);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+						
+					else if (koopas->GetState() == KOOPAS_STATE_DIE)
+					{
+						koopas->SetState(KOOPAS_STATE_DIE_MOVING);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+						
+					
+				}
+			}
+			else if(dynamic_cast<CCoin*>(e->obj)){
+				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+				if (e->nx != 0 || e->ny != 0) {
+					coin->SetState(COIN_STATE_DISAPPEAR);
+					nx = 0;
+					ny = 0;
+				}
 				
 			}
 
 		}
+
+
 		// block every none-special object and set IsReadyToJump = true if mario below them!
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 		if(ny<0)
 			setIsReadyToJump(true);
+		//DebugOut(L"\nIsReadyToJump = %d", isReadyToJump);
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
@@ -302,20 +332,14 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		if (vy == 0)
-		{
-			vy = -MARIO_JUMP_SPEED_MAX;
-			ay = -MARIO_ACCELERATION_JUMP;
-			a = 0;
-		}
-		setIsReadyToJump(false);
+		vy = -MARIO_JUMP_SPEED_MAX;
 		break;
 	case MARIO_STATE_IDLE:
 		//setIsReadyToJump(true);
 		break;
 	case MARIO_STATE_SLOWINGDOWN:
-		if(vy!=0){ a = -nx * MARIO_ACCELERATION; }
-		
+		if(a*nx>0)
+			a = -nx * MARIO_ACCELERATION; 
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
@@ -349,7 +373,7 @@ void CMario::Reset()
 	SetLevel(MARIO_LEVEL_BIG);
 	nx = 1;
 	a = MARIO_ACCELERATION;
-	setIsReadyToJump(true);
+	//setIsReadyToJump(true);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }
