@@ -5,11 +5,11 @@
 #define MARIO_WALKING_SPEED_MAX		0.1f
 #define MARIO_ACCELERATION			0.0003f
 #define MARIO_WALKING_SPEED_MIN		0.02f
-#define MARIO_ACCELERATION_JUMP		0.006f
+#define MARIO_ACCELERATION_JUMP		0.0005f
 //0.1f
-#define MARIO_JUMP_SPEED_MAX		0.5f
+#define MARIO_JUMP_SPEED_MAX		0.3f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
-#define MARIO_GRAVITY			0.002f
+#define MARIO_GRAVITY			0.001f
 #define MARIO_DIE_DEFLECT_SPEED	 0.5f
 
 
@@ -24,6 +24,7 @@
 #define MARIO_STATE_THROW_FIRE		600
 #define MARIO_STATE_SWIM			700
 #define MARIO_STATE_DIE				800
+#define	MARIO_STATE_FALING_DOWN		900
 
 //define animation - xx
 #define MARIO_ANI_BIG_IDLE_RIGHT		0
@@ -84,6 +85,7 @@
 class CMario : public CGameObject
 {
 	float a;	// vx = vx + a*dt
+	float ay;
 	bool isReadyToJump = true;
 	int level;
 	int untouchable;

@@ -356,10 +356,14 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode) 
 	{
 	case (DIK_X):
+		mario->SetState(MARIO_STATE_IDLE);
 		mario->setIsReadyToJump(false);
 		break;
 	case (DIK_LEFT):
-		mario->SetState(MARIO_STATE_SLOWINGDOWN);
+		mario->SetState(MARIO_STATE_IDLE);
+		break;
+	case (DIK_RIGHT):
+		mario->SetState(MARIO_STATE_IDLE);
 		break;
 	}
 }
@@ -374,21 +378,17 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		return;
 	else
 	{
-		if /*(game->IsKeyDown(DIK_X))
+		if (game->IsKeyDown(DIK_X))
 		{
 			if (mario->IsReadyToJump())
 				mario->SetState(MARIO_STATE_JUMP);
 		}
-		else if*/ (game->IsKeyDown(DIK_RIGHT))
+		else if (game->IsKeyDown(DIK_RIGHT))
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
 		else if (game->IsKeyDown(DIK_LEFT))
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
-		else if (!game->IsKeyDown(DIK_LEFT) || !game->IsKeyDown(DIK_RIGHT))
-		{
-			mario->SetState(MARIO_STATE_SLOWINGDOWN);
-		}
-	else
-		mario->SetState(MARIO_STATE_IDLE);
+		/*else
+			mario->SetState(MARIO_STATE_IDLE);*/
 	}
 	
 }

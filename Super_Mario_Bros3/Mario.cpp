@@ -20,6 +20,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
 	nx = 1;
+	ay = MARIO_GRAVITY;
 	setIsReadyToJump(true);
 	a = MARIO_ACCELERATION;
 	//ay = MARIO_GRAVITY;
@@ -34,31 +35,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// Calculate dx, dy by speed and acceleration
 	CGameObject::Update(dt);
-	
 
+	//a = nx * MARIO_ACCELERATION;
 	vx += a * dt;
-	//Simple fall down
-	vy += MARIO_GRAVITY * dt;
-	
-	// limit the speed of mario don't care about direction
-	if (state == MARIO_STATE_WALKING_LEFT || state == MARIO_STATE_WALKING_RIGHT)
+	// Simple fall down	
+	vy += ay * dt;
+	DebugOut(L"\nVy = %f", vy);
+	// limit the speed of mario
+	// don't care about direction
+	if (abs(vx) >= MARIO_WALKING_SPEED_MAX)
 	{
-		if(abs(vx)>= MARIO_WALKING_SPEED_MAX)
 		vx = nx * MARIO_WALKING_SPEED_MAX;
 	}
-
-
-	// If player want to slow down mario then acceleration and speed have opposite sign 
-	else if (state == MARIO_STATE_SLOWINGDOWN) 
+	if (state == MARIO_STATE_IDLE)// If player want to slow down mario then acceleration and speed have opposite sign 
 	{
+		a = -nx * MARIO_ACCELERATION;
+		ay = MARIO_GRAVITY;
 		if (abs(vx) <= MARIO_WALKING_SPEED_MIN)
-			 vx = 0;
+			vx = 0;
 	}
-	else if (state == MARIO_STATE_JUMP && IsReadyToJump()==true)
+	if (state == MARIO_STATE_JUMP) 
 	{
-		if (vy >= 0)
-			vy -= MARIO_ACCELERATION_JUMP  * dt;;
-		DebugOut(L"\nVy = %d", vy);
+		DebugOut(L"\nVy = %f", vy);
+		if (vy < 0)
+			vy -= MARIO_ACCELERATION_JUMP * dt;
+		
 	}
 
 	
@@ -332,14 +333,19 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
+		a = 0;
+		if(vy==0)
 		vy = -MARIO_JUMP_SPEED_MAX;
 		break;
 	case MARIO_STATE_IDLE:
+		if (a * nx > 0)
+			a = -nx * MARIO_ACCELERATION;
 		//setIsReadyToJump(true);
 		break;
-	case MARIO_STATE_SLOWINGDOWN:
-		if(a*nx>0)
-			a = -nx * MARIO_ACCELERATION; 
+	case MARIO_STATE_FALING_DOWN:
+		ay = MARIO_GRAVITY;
+		a = MARIO_ACCELERATION;
+		//setIsReadyToJump(true);
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
