@@ -27,7 +27,7 @@
 #define MARIO_STATE_DIE				800
 #define	MARIO_STATE_FALING_DOWN		900
 
-//define animation - xx
+//define animation 
 #define MARIO_ANI_BIG_IDLE_RIGHT		0
 #define MARIO_ANI_BIG_IDLE_LEFT			1
 #define MARIO_ANI_BIG_WALKING_RIGHT		4
@@ -47,16 +47,37 @@
 #define MARIO_ANI_SMALL_WALKING_LEFT	7
 #define MARIO_ANI_SMALL_STOP_LEFT		25
 #define MARIO_ANI_SMALL_STOP_RIGHT		26
+#define	MARIO_ANI_SMALL_JUMP_RIGHT		35
+#define	MARIO_ANI_SMALL_JUMP_LEFT		36
+#define	MARIO_ANI_SMALL_JUMP_DOWN_RIGHT	37
+#define	MARIO_ANI_SMALL_JUMP_DOWN_LEFT	38
 
 #define MARIO_ANI_FIRE_IDLE_RIGHT		9 
 #define MARIO_ANI_FIRE_IDLE_LEFT		10
 #define MARIO_ANI_FIRE_WALKING_RIGHT	11
 #define MARIO_ANI_FIRE_WALKING_LEFT		12
 
+#define MARIO_ANI_FIRE_SIT_RIGHT		39
+#define MARIO_ANI_FIRE_SIT_LEFT			40
+#define MARIO_ANI_FIRE_JUMP_RIGHT		41
+#define MARIO_ANI_FIRE_JUMP_LEFT		42
+#define MARIO_ANI_FIRE_JUMP_DOWN_RIGHT	43
+#define MARIO_ANI_FIRE_JUMP_DOWN_LEFT	44
+#define MARIO_ANI_FIRE_STOP_RIGHT		45
+#define MARIO_ANI_FIRE_STOP_LEFT		46
+
 #define MARIO_ANI_TAIL_IDLE_RIGHT		13
 #define MARIO_ANI_TAIL_IDLE_LEFT		14
 #define MARIO_ANI_TAIL_WALKING_RIGHT	15
 #define MARIO_ANI_TAIL_WALKING_LEFT		16
+#define MARIO_ANI_TAIL_SIT_RIGHT		47
+#define MARIO_ANI_TAIL_SIT_LEFT			48
+#define MARIO_ANI_TAIL_JUMP_RIGHT		49
+#define MARIO_ANI_TAIL_JUMP_LEFT		50
+#define MARIO_ANI_TAIL_JUMP_DOWN_RIGHT	51
+#define MARIO_ANI_TAIL_JUMP_DOWN_LEFT	52
+#define MARIO_ANI_TAIL_STOP_RIGHT		53
+#define MARIO_ANI_TAIL_STOP_LEFT		54
 
 #define MARIO_ANI_FROG_IDLE_RIGHT		17
 #define MARIO_ANI_FROG_IDLE_LEFT		18
@@ -67,6 +88,14 @@
 #define MARIO_ANI_HAMMER_IDLE_LEFT		22
 #define MARIO_ANI_HAMMER_WALKING_RIGHT	23
 #define MARIO_ANI_HAMMER_WALKING_LEFT	24
+#define MARIO_ANI_HAMMER_SIT_RIGHT		55
+#define MARIO_ANI_HAMMER_SIT_LEFT		56
+#define MARIO_ANI_HAMMER_JUMP_RIGHT		57
+#define MARIO_ANI_HAMMER_JUMP_LEFT		58
+#define MARIO_ANI_HAMMER_JUMP_DOWN_RIGHT	59
+#define MARIO_ANI_HAMMER_JUMP_DOWN_LEFT		60
+#define MARIO_ANI_HAMMER_STOP_RIGHT		61
+#define MARIO_ANI_HAMMER_STOP_LEFT		62
 
 #define MARIO_ANI_DIE				8
 
@@ -97,6 +126,7 @@ class CMario : public CGameObject
 	int level;
 	int untouchable;
 	DWORD untouchable_start;
+	bool isUsingTail = false;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -121,11 +151,11 @@ public:
 	void setIsReadyToJump(bool jump) {
 		isReadyToJump = jump;
 	}
-	void setIsReadyToSit(bool sit) { this->isReadyToSit = sit; }
-	bool IsReadyToSit() {
-		return isReadyToSit;
-	}
+	void setIsReadyToSit(bool use) { this->isUsingTail = use; }
+	bool IsReadyToSit() {	return isReadyToSit; }
+	bool IsUsingTail() { return this->isUsingTail; }
 	void Reset();
+	void SetIsUsingTail(bool sit) { this->isReadyToSit = sit; }
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

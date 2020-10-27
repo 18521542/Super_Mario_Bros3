@@ -95,7 +95,11 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 		int frame_time = atoi(tokens[i + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
-
+	if (ani == NULL)
+	{
+		DebugOut(L"[ERROR] ani ID %d not found!\n", ani_id);
+		return;
+	}
 	CAnimations::GetInstance()->Add(ani_id, ani);
 }
 
@@ -316,52 +320,35 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetLevel(MARIO_LEVEL_SMALL);
 		break;
 	case DIK_2:
-		float currentX, currentY;
-		mario->GetPosition(currentX, currentY);
-		mario->SetPosition(currentX, currentY - PushBackPixel);
 		mario->SetLevel(MARIO_LEVEL_BIG);
 		break;
 	case DIK_3:
-		mario->GetPosition(currentX, currentY);
-		mario->SetPosition(currentX, currentY - PushBackPixel);
 		mario->SetLevel(MARIO_LEVEL_FIRE);
 		break;
 	case DIK_4:
-		//float currentX, currentY;
-		mario->GetPosition(currentX, currentY);
-		mario->SetPosition(currentX, currentY - PushBackPixel);
 		mario->SetLevel(MARIO_LEVEL_FROG);
 		break;
 	case DIK_5:
-		//float currentX, currentY;
-		mario->GetPosition(currentX, currentY);
-		mario->SetPosition(currentX, currentY - PushBackPixel);
 		mario->SetLevel(MARIO_LEVEL_HAMMER);
 		break;
 	case DIK_6:
-		//float currentX, currentY;
-		mario->GetPosition(currentX, currentY);
-		mario->SetPosition(currentX, currentY - PushBackPixel);
 		mario->SetLevel(MARIO_LEVEL_TAIL);
 		break;
-	case DIK_X:
+	case DIK_S:
 		if(mario->IsReadyToJump())
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
-	case DIK_A:
+	case DIK_R:
 		mario->Reset();
 		break;
-	//case (DIK_LEFT):
-	//	/*mario->GetPosition(currentX, currentY);
-	//	mario->SetPosition(currentX, currentY - PushBackPixel);*/
-	//	//mario->SetState(MARIO_STATE_IDLE);
-	//	//mario->SetState(MARIO_STATE_IDLE);
-	//	break;
-	//case (DIK_RIGHT):
-	//	/*mario->GetPosition(currentX, currentY);
-	//	mario->SetPosition(currentX, currentY - PushBackPixel);*/
-	//	//mario->SetState(MARIO_STATE_IDLE);
-	//	break;
+	case DIK_A:
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL) {
+			if (!mario->IsUsingTail())
+				mario->SetIsUsingTail(true);
+		}
+		DebugOut(L"\n mario is using tail = %d", mario->IsUsingTail());
+		break;
+	
 	}
 }
 
@@ -372,7 +359,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	float currentY;
 	switch (KeyCode) 
 	{
-	case (DIK_X):
+	case (DIK_S):
 		mario->SetState(MARIO_STATE_IDLE);
 		mario->setIsReadyToJump(false);
 		mario->setIsReadyToSit(true);
@@ -394,6 +381,19 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 			mario->SetState(MARIO_STATE_IDLE);
 		}
 		break;
+	case DIK_A:
+		if (mario->GetLevel() != MARIO_LEVEL_TAIL) 
+		{
+			mario->setIsReadyToJump(false);
+			mario->setIsReadyToSit(true);
+			break;
+		}
+		else {
+			if (mario->IsUsingTail())
+				mario->SetIsUsingTail(false);
+		}
+		DebugOut(L"\n mario is using tail = %d", mario->IsUsingTail());
+		break;
 	}
 }
 
@@ -407,7 +407,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		return;
 	else
 	{
-		if (game->IsKeyDown(DIK_X))
+		if (game->IsKeyDown(DIK_S))
 		{
 			if (mario->IsReadyToJump()) {
 				mario->SetState(MARIO_STATE_JUMP);
@@ -434,6 +434,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		/*else
 			mario->SetState(MARIO_STATE_IDLE);*/
 	}
-	DebugOut(L"\nState of Mario is: %d", mario->GetState());
+	//DebugOut(L"\nState of Mario is: %d", mario->GetState());
 	
 }

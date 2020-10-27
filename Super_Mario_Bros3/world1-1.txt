@@ -71,7 +71,15 @@
 # walk
 10032	155	0	170	15	0
 10033	125	0	139	15	0
-
+# jump
+#up right
+3014	395	80	411	96	0
+#up left
+3002	35	80	51	96	0
+#down right
+2014	395	40	411	56	0
+#down left
+2002	35	40	51	56	0
 #Mario-on-fire
 #idle fire right
 11009	246	394	260	421	0
@@ -83,6 +91,23 @@
 #walking fire left
 11006	155	394	171	421	0
 11005	125	395	141	421	0
+#FIRE_SIT_RIGHT	
+13015	426	479	440	505	0
+#FIRE_SIT_LEFT
+13001	6	479	20	497	0
+#FIRE_JUMP_RIGHT
+14014	395 	514	412	542	0
+#FIRE_JUMP_LEFT
+14002 	34	514	52	542	0
+#FIRE_JUMP_DOWN_RIGHT
+11011	305	395	321	421	0
+#FIRE_JUMP_DOWN_LEFT	
+11005	125	395	141	421	0
+#Fire stop right
+11001	5	394	21	422	0
+#fire stop left
+11015	425	394	441	422	0
+
 #Mario-with-tail
 #idle tail right
 17009	243	634	264	662	0
@@ -94,6 +119,24 @@
 #walking tail left
 17006	152	634	174	662	0
 17005	122	634	143	661	0
+#MARIO_ANI_TAIL_SIT_RIGHT
+19015	422 	719	444	737	0	
+#MARIO_ANI_TAIL_SIT_LEFT		
+19001	2	719	24	737	0
+#MARIO_ANI_TAIL_JUMP_RIGHT
+20014	392	754	415	781	0
+#MARIO_ANI_TAIL_JUMP_LEFT
+20002	31	754	54	781	0
+#MARIO_ANI_TAIL_JUMP_DOWN_RIGHT	
+17011	303	634	324	661	0
+#MARIO_ANI_TAIL_JUMP_DOWN_LEFT	
+17005	122	634	143	661	0
+#MARIO_ANI_TAIL_STOP_RIGHT
+17001	5 	633	21	663	0
+#MARIO_ANI_TAIL_STOP_LEFT
+17015	425	633	441	663	0
+
+
 #Frog-mario
 #idle frog right
 24009	243	916	263	940	0
@@ -105,6 +148,8 @@
 #walking frog left
 24006	153	913	173	942	0
 24005	123	913	142	942	0
+
+
 #Hammer-mario
 #idle hammer right
 29009	245	1084	261	1112	0
@@ -116,6 +161,22 @@
 #walking hammer left
 29006	155	1084	171	1112	0
 29005	125	1084	141	1111	0
+#MARIO_ANI_HAMMER_SIT_RIGHT
+31015	425	1170	441	1186	0
+#MARIO_ANI_HAMMER_SIT_LEFT
+31001	5	1170	21	1186	0	
+#MARIO_ANI_HAMMER_JUMP_RIGHT
+32014	395	1204	411	1231	0	
+#MARIO_ANI_HAMMER_JUMP_LEFT	
+32002	35	1204	51	1231	0	
+#MARIO_ANI_HAMMER_JUMP_DOWN_RIGHT
+29011	305	1084	321	1111	0
+#MARIO_ANI_HAMMER_JUMP_DOWN_LEFT	
+29005	125	1084	141	1111	0
+#MARIO_ANI_HAMMER_STOP_RIGHT
+29001	5	1084	21	1112	0
+#MARIO_ANI_HAMMER_STOP_LEFT	
+29015	425	1084	441	1112	0
 #BRICK
 20001	408	225	424	241	20
 #GOOMBA
@@ -132,6 +193,8 @@
 #############################################################################################
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+# ====== Background ========
+1	1	100
 # ==== coin ==========
 1001	2	100	3	100	4	100
 # ==== MARIO =========
@@ -151,26 +214,8 @@
 502	10021	100	10022	100	10023	100
 #walk left small
 503	10031	100	10032	100	10033	100
-#stop left small
-25	1015	100
-#stop right small
-26	1001	100
-#stop right big
-27	5001	100
-#jump up right big
-29	8014	100
-#jump down right big
-31	5011	100
-#jump up left big
-30	8002	100
-#jump down left big
-32	5005	100
-#sit right
-33	7015	100
-#sit left
-34	7001	100
-#stop right left
-28	5015	100
+
+
 #idle fire right
 9	11009	100
 #idle fire left
@@ -179,6 +224,8 @@
 11	11009 	100	11010	100	11011	100
 #walking fire left
 12	11007	100	11006	100	11005	100
+
+
 #idle tail right
 13	17009	100
 #idle tail left
@@ -205,6 +252,83 @@
 23	29009	100	29010	100	29011	100
 #walking hammer left
 24	29007	100	29006	100	29005	100
+#stop left small
+25	1015	100
+#stop right small
+26	1001	100
+#stop right big
+27	5001	100
+#stop right left
+28	5015	100
+#jump up right big
+29	8014	100
+#jump down right big
+31	5011	100
+#jump up left big
+30	8002	100
+#jump down left big
+32	5005	100
+#sit right big
+33	7015	100
+#sit left big
+34	7001	100
+#small jump right
+35	3014	100
+#small jump left
+36	3002	100
+#small jump down right
+37	2014	100
+#small jump down left
+38	2002	100
+#FIRE_SIT_RIGHT	
+39	13015	100
+#FIRE_SIT_LEFT
+40	13001	100
+#FIRE_JUMP_RIGHT
+41	14014	100
+#FIRE_JUMP_LEFT
+42	14002 	100
+#FIRE_JUMP_DOWN_RIGHT
+43	11011	
+#FIRE_JUMP_DOWN_LEFT	
+44	11005	100
+#Fire stop right
+45	11001	100
+#fire stop left
+46	11015	100
+#sit tail right
+47	19015	100
+#sit tail left
+48	19001	100
+#jump tail up righ
+49	20014	100
+#jump tail up left
+50	20002	100
+#jump tail down right
+51	17011	100
+#jump tail down left
+52	17005	100
+#tail stop right
+53	17001	100
+#tail stop left
+54	17015	100
+
+#sit hammer right
+55	31015	100
+#sit hammer left
+56	31001	100
+#jump hammer up righ
+57	32014	100
+#jump hammer up left
+58	32002	100
+#jump hammer down right
+59	29011	100
+#jump hammer down left
+60	29005	100
+#tail hammer right
+61	29001	100
+#tail hammer left
+62	29015	100
 #die
 599	10099	100
 
@@ -221,8 +345,7 @@
 701	30001	100	30002	100
 # die
 702	30003	100
-# ====== Background ========
-1	1	100
+
 # ====== KOOPAS =======
 #walk left
 100	7	100	8	100
@@ -236,7 +359,7 @@
 # id	ani1	ani2	ani3
 [ANIMATION_SETS]
 # MARIO
-1	400	401	402	403	500	501	502	503	599	9	10	11 	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32	33	34
+1	400	401	402	403	500	501	502	503	599	9	10	11 	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32	33	34	35	36	37	38	39	40	41	42	43	44	45	46	47	48	49	50	51	52	53	54	55	56	57	58	59	60	61	62	
 # BRICK 
 2	601
 # QUESTION MARK BRICK 
@@ -257,8 +380,9 @@
 
 #---platform----
 #type	left	top	ani_set_id	right	bottom	type
+
 -------bottom platform----------------------------
-5	0	0	1	4	420	1
+5	0	0	3	4	420	1
 5	0	418	1	625	419	1
 	
 5	627	402	1	1088	433	1
@@ -311,7 +435,7 @@
 # ---- background ---------rgb = 156 252 240
 4	0	0	4
 # ---- MARIO---------------	
-0	678	300	1
+0	2372	300	1
 #-----	QUESTION BRICK ----
 1	177	353	22
 1	193	353	22
