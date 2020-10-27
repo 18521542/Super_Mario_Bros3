@@ -7,7 +7,7 @@
 #include "Sprites.h"
 #include "Portal.h"
 
-#define PushBackPixel 20.0f
+#define PushBackPixel 9.0f
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -275,9 +275,13 @@ void CPlayScene::Update(DWORD dt)
 	player->GetPosition(cx, cy);
 
 	CGame* game = CGame::GetInstance();
-	cx -= (game->GetScreenWidth() -100)/2;
-	cy -= 250 - (game->GetScreenHeight())/2;
-
+	cx -= (game->GetScreenWidth())/2;
+	cy -= (game->GetScreenHeight()+70)/2;
+	//if (cy > 220.0f) cy = 220.0f;
+	//else 
+	if (cx ==0 ) cx = 0;
+	if (player->GetState() == MARIO_STATE_DIE)
+		return;
 	CGame::GetInstance()->SetCamPos(cx, cy);
 }
 
@@ -347,23 +351,48 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		mario->Reset();
 		break;
+	//case (DIK_LEFT):
+	//	/*mario->GetPosition(currentX, currentY);
+	//	mario->SetPosition(currentX, currentY - PushBackPixel);*/
+	//	//mario->SetState(MARIO_STATE_IDLE);
+	//	//mario->SetState(MARIO_STATE_IDLE);
+	//	break;
+	//case (DIK_RIGHT):
+	//	/*mario->GetPosition(currentX, currentY);
+	//	mario->SetPosition(currentX, currentY - PushBackPixel);*/
+	//	//mario->SetState(MARIO_STATE_IDLE);
+	//	break;
 	}
 }
 
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	float currentX;
+	float currentY;
 	switch (KeyCode) 
 	{
 	case (DIK_X):
 		mario->SetState(MARIO_STATE_IDLE);
 		mario->setIsReadyToJump(false);
+		mario->setIsReadyToSit(true);
 		break;
 	case (DIK_LEFT):
 		mario->SetState(MARIO_STATE_IDLE);
+		mario->setIsReadyToSit(true);
+		//mario->SetState(MARIO_STATE_IDLE);
 		break;
 	case (DIK_RIGHT):
 		mario->SetState(MARIO_STATE_IDLE);
+		mario->setIsReadyToSit(true);
+		break;
+	case (DIK_DOWN):
+		mario->setIsReadyToSit(true);
+		if (mario->GetState() == MARIO_STATE_SIT) {
+			mario->GetPosition(currentX, currentY);
+			mario->SetPosition(currentX, currentY - PushBackPixel);
+			mario->SetState(MARIO_STATE_IDLE);
+		}
 		break;
 	}
 }
@@ -372,7 +401,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
-
+	float currentX, currentY;
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE)
 		return;
@@ -380,15 +409,31 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	{
 		if (game->IsKeyDown(DIK_X))
 		{
-			if (mario->IsReadyToJump())
+			if (mario->IsReadyToJump()) {
 				mario->SetState(MARIO_STATE_JUMP);
+				mario->setIsReadyToSit(false);
+			}
+				
 		}
-		else if (game->IsKeyDown(DIK_RIGHT))
+		else if (game->IsKeyDown(DIK_RIGHT)) {
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-		else if (game->IsKeyDown(DIK_LEFT))
+			mario->setIsReadyToSit(false);
+		}
+			
+		else if (game->IsKeyDown(DIK_LEFT)) {
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
+			mario->setIsReadyToSit(false);
+		}
+			
+		else if (game->IsKeyDown(DIK_DOWN)) {
+
+			if(mario->IsReadyToSit())
+				mario->SetState(MARIO_STATE_SIT);
+		}
+			
 		/*else
 			mario->SetState(MARIO_STATE_IDLE);*/
 	}
+	DebugOut(L"\nState of Mario is: %d", mario->GetState());
 	
 }

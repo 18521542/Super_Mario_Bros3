@@ -92,7 +92,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-
+	bool CheckTwoBB(float friend_left, float friend_top, float friend_right, float friend_bottom);
 
 	~CGameObject();
 };

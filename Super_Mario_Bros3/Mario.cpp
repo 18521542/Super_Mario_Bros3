@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Koopas.h"
 #include "coin.h"
+#include "Brick.h"
 
 
 
@@ -22,6 +23,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	nx = 1;
 	ay = MARIO_GRAVITY;
 	setIsReadyToJump(true);
+	setIsReadyToSit(true);
 	a = MARIO_ACCELERATION;
 	//ay = MARIO_GRAVITY;
 	start_x = x;
@@ -38,30 +40,54 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	//a = nx * MARIO_ACCELERATION;
 	vx += a * dt;
+	
+	
 	// Simple fall down	
 	vy += ay * dt;
-	DebugOut(L"\nVy = %f", vy);
-	// limit the speed of mario
-	// don't care about direction
+	
+	// limit the speed of mario	 don't care about direction
 	if (abs(vx) >= MARIO_WALKING_SPEED_MAX)
 	{
 		vx = nx * MARIO_WALKING_SPEED_MAX;
 	}
-	if (state == MARIO_STATE_IDLE)// If player want to slow down mario then acceleration and speed have opposite sign 
+
+	// If player want to slow down mario then acceleration and speed have opposite sign
+	if (state == MARIO_STATE_IDLE) 
 	{
 		a = -nx * MARIO_ACCELERATION;
 		ay = MARIO_GRAVITY;
 		if (abs(vx) <= MARIO_WALKING_SPEED_MIN)
 			vx = 0;
 	}
-	if (state == MARIO_STATE_JUMP) 
-	{
-		DebugOut(L"\nVy = %f", vy);
+
+	//if (state == MARIO_STATE_SIT) {
+	//	
+	//	//DebugOut(L"\nVy = %f", vy);
+	//}
+
+	if (state == MARIO_STATE_SIT) {
 		if (vy < 0)
 			vy -= MARIO_ACCELERATION_JUMP * dt;
-		
+	}
+	
+	if (state == MARIO_STATE_JUMP) 
+	{
+		//DebugOut(L"\nVy = %f", vy);
+		if (vy < 0)
+			vy -= MARIO_ACCELERATION_JUMP * dt;
 	}
 
+	for (int i = 0; i < coObjects->size(); i++) {
+		LPGAMEOBJECT obj = coObjects->at(i);
+		if (dynamic_cast<CPlatform*>(obj)) {
+			float pLeft, pTop, pRight, pBottom;
+			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+
+			if (CheckBB(pLeft, pTop, pRight, pBottom)) {
+				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + 1.0f;
+			}
+		}
+	}
 	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -90,10 +116,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
 		float rdy = 0;
-
+		
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
+		if (ny < 0) {
+			setIsReadyToJump(true);
+			setIsReadyToSit(true);
+		}
 		//
 		// Collision logic with  special-objects
 		//
@@ -139,12 +169,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 				if (plat->getType() == PLATFORM_TYPE_TWO) 
 				{
-					if (e->ny > 0) {
-						x += dx;
-						y += dy;
-						ny = 0;
-						nx = 0;
+					x += dx;
+					if (e->ny < 0) 
+					{
+						y += min_ty * dy + ny * 0.4f;
+						vy = 0;
 					}
+					else {
+						y += dy;
+					}
+					
 				}
 				else if (plat->getType() == PLATFORM_TYPE_THREE) {
 					//ignore this platform
@@ -155,14 +189,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						nx = 0;
 					}
 				}
+				else if (plat->getType() == PLATFORM_TYPE_ONE) {
+					x += min_tx * dx + nx * 0.8f;
+					y += min_ty * dy + ny * 0.1f;
+					if (e->ny != 0)vy = 0;
+					if (e->nx != 0)vx = 0;
+				}
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj)) {
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-				float currentX, currentY;
+
+				x += min_tx * dx + nx * 0.8f;
+				y += min_ty * dy + ny * 0.1f;
 				if(e->ny<0)
 				{
-					/*koopas->GetPosition(currentX, currentY);
-					koopas->SetPosition(currentX, currentY - 20);*/
 					if (koopas->GetState() == KOOPAS_STATE_WALKING) {
 						koopas->SetState(KOOPAS_STATE_DIE);
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -173,35 +213,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						koopas->SetState(KOOPAS_STATE_DIE_MOVING);
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
-						
-					
 				}
 			}
 			else if(dynamic_cast<CCoin*>(e->obj)){
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+				x += dx;
+				y += dy;
 				if (e->nx != 0 || e->ny != 0) {
 					coin->SetState(COIN_STATE_DISAPPEAR);
-					nx = 0;
-					ny = 0;
 				}
 				
 			}
-
-		}
-
-
-		// block every none-special object and set IsReadyToJump = true if mario below them!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-		if(ny<0)
-			setIsReadyToJump(true);
-		//DebugOut(L"\nIsReadyToJump = %d", isReadyToJump);
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-		// clean up collision events
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+			else if (dynamic_cast<CBrick*>(e->obj)) {
+				x += min_tx * dx + nx * 0.8f;
+				y += min_ty * dy + ny * 0.1f;
+				if (e->ny != 0)vy = 0;
+				if (e->nx != 0)vx = 0;
+			}
+		}	
 	}
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void CMario::Render()
@@ -214,18 +246,39 @@ void CMario::Render()
 		{
 			if (state == MARIO_STATE_JUMP ) //when mario jump
 			{
-				if (nx > 0)
+				if (nx > 0 && vy < 0)
 					ani = MARIO_ANI_BIG_JUMP_RIGHT;
-				else
+				else if (nx < 0 && vy < 0)
 					ani = MARIO_ANI_BIG_JUMP_LEFT;
+				else if (nx > 0 && vy > 0)
+					ani = MARIO_ANI_BIG_JUMP_DOWN_RIGHT;
+				else
+					ani = MARIO_ANI_BIG_JUMP_DOWN_LEFT;
 			}
-			else if (vx == 0)	//when mario is not doing anything
+			
+			else if (vx == 0)	//when mario is not on the ground or on the ground and not doing anything
 			{
-				if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
-				else ani = MARIO_ANI_BIG_IDLE_LEFT;
+				if (IsReadyToJump()&& vy>=0 ) //if he's on the ground
+				{
+					if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
+					else ani = MARIO_ANI_BIG_IDLE_LEFT;
+				}
+				else //when he falling down
+				{
+					if (nx > 0) ani = MARIO_ANI_BIG_JUMP_DOWN_RIGHT;
+					else ani = MARIO_ANI_BIG_JUMP_DOWN_LEFT;
+				}
+
+					
 			}
-			else   //when mario moving 
-			{
+			else if (state == MARIO_STATE_SIT) {
+				if (nx > 0)
+					ani = MARIO_ANI_BIG_SIT_RIGHT;
+				else
+					ani = MARIO_ANI_BIG_SIT_LEFT;
+			}
+			//when mario moving on the ground
+			else{
 				if (vx > 0 && nx < 0) {
 					ani = MARIO_ANI_BIG_STOP_RIGHT;
 				}
@@ -239,6 +292,7 @@ void CMario::Render()
 					ani = MARIO_ANI_BIG_WALKING_LEFT;
 				}
 			}
+
 			
 		}
 		else if (level == MARIO_LEVEL_SMALL)
@@ -315,7 +369,7 @@ void CMario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -338,14 +392,15 @@ void CMario::SetState(int state)
 		vy = -MARIO_JUMP_SPEED_MAX;
 		break;
 	case MARIO_STATE_IDLE:
-		if (a * nx > 0)
-			a = -nx * MARIO_ACCELERATION;
+		/*if (a * nx > 0)
+			a = -nx * MARIO_ACCELERATION;*/
 		//setIsReadyToJump(true);
 		break;
-	case MARIO_STATE_FALING_DOWN:
+	case MARIO_STATE_SIT:
+		if (abs(vx) <= MARIO_WALKING_SPEED_MIN) {
+			vx = 0;
+		}
 		ay = MARIO_GRAVITY;
-		a = MARIO_ACCELERATION;
-		//setIsReadyToJump(true);
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
@@ -360,8 +415,15 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 	if (level != MARIO_LEVEL_SMALL)
 	{
-		right = x + MARIO_BIG_BBOX_WIDTH;
-		bottom = y + MARIO_BIG_BBOX_HEIGHT;
+		if (state == MARIO_STATE_SIT)
+		{
+			right = x + MARIO_BIG_BBOX_WIDTH;
+			bottom = y + MARIO_SMALL_BBOX_HEIGHT+4;
+		}
+		else {
+			right = x + MARIO_BIG_BBOX_WIDTH;
+			bottom = y + MARIO_BIG_BBOX_HEIGHT;
+		}
 	}
 	else
 	{
@@ -370,6 +432,16 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 }
 
+bool CMario::CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom) {
+	float this_left, this_top, this_right, this_bottom;
+	GetBoundingBox(this_left, this_top, this_right, this_bottom);
+	bool on1 = friend_left < this_right;
+	bool on2 = friend_top < this_bottom;
+	bool down1 = friend_right > this_left;
+	bool down2 = friend_bottom > this_top;
+	
+	return on1 && on2 && down1 && down2 ;
+}
 /*
 	Reset Mario status to the beginning state of a scene
 */

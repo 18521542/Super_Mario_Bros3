@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define MARIO_WALKING_SPEED_START	0.001f 
-#define MARIO_WALKING_SPEED_MAX		0.1f
+#define MARIO_WALKING_SPEED_MAX		0.15f
 #define MARIO_ACCELERATION			0.0003f
 #define MARIO_WALKING_SPEED_MIN		0.02f
 #define MARIO_ACCELERATION_JUMP		0.0005f
@@ -16,6 +16,7 @@
 //define state - xxx
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_SLOWINGDOWN		1
+#define MARIO_STATE_SIT				2
 #define MARIO_STATE_WALKING_RIGHT	100
 #define MARIO_STATE_WALKING_LEFT	200
 #define MARIO_STATE_JUMP			300
@@ -35,6 +36,10 @@
 #define MARIO_ANI_BIG_STOP_LEFT			28
 #define	MARIO_ANI_BIG_JUMP_RIGHT		29
 #define	MARIO_ANI_BIG_JUMP_LEFT			30
+#define	MARIO_ANI_BIG_JUMP_DOWN_RIGHT	31
+#define	MARIO_ANI_BIG_JUMP_DOWN_LEFT	32
+#define	MARIO_ANI_BIG_SIT_RIGHT			33
+#define	MARIO_ANI_BIG_SIT_LEFT			34
 
 #define MARIO_ANI_SMALL_IDLE_RIGHT		2
 #define MARIO_ANI_SMALL_IDLE_LEFT		3
@@ -85,7 +90,9 @@
 class CMario : public CGameObject
 {
 	float a;	// vx = vx + a*dt
-	float ay;
+	float ay;	//vy = ay*dt;
+
+	bool isReadyToSit = true;
 	bool isReadyToJump = true;
 	int level;
 	int untouchable;
@@ -98,6 +105,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
+	bool CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom);
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	int GetLevel() { return this->level; }
@@ -107,6 +115,10 @@ public:
 	}
 	void setIsReadyToJump(bool jump) {
 		isReadyToJump = jump;
+	}
+	void setIsReadyToSit(bool sit) { this->isReadyToSit = sit; }
+	bool IsReadyToSit() {
+		return isReadyToSit;
 	}
 	void Reset();
 
