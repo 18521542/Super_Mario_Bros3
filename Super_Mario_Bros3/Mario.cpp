@@ -236,66 +236,97 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
+void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int ani_jump_down_left,
+									int ani_idle_right, int ani_idle_left,
+									int ani_stop_right, int ani_stop_left, 
+	int ani_walking_right, int ani_walking_left) 
+{
+		//when mario is falling down or 
+		//on the ground and not doing anything
+		if (vx == 0) {
+			if (IsReadyToJump() && vy >= 0) //if he's on the ground
+			{
+				if (nx > 0) ani = ani_idle_right;
+				else ani = ani_idle_left;
+			}
+			else //when he falling down
+			{
+				if (nx > 0) ani = ani_jump_down_right;
+				else ani = ani_jump_down_left;
+			}
+		}
+
+		//when mario moving on the ground
+		else {
+			if (vx > 0 && nx < 0) {
+				ani = ani_stop_right;
+			}
+			else if (vx < 0 && nx >0) {
+				ani = ani_stop_left;
+			}
+			else if (vx > 0 && nx > 0) {
+				ani = ani_walking_right;
+			}
+			else if (vx < 0 && nx < 0) {
+				ani = ani_walking_left;
+			}
+		}
+	
+}
+
+void CMario::RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit_left)
+{
+	if (nx > 0)
+		ani = ani_sit_right;
+	else
+		ani = ani_sit_left;
+}
+void CMario::RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left,int ani_jump_down_right,int ani_jump_down_left)
+{
+		if (nx > 0 && vy < 0)
+			ani = ani_jump_up_right;
+		else if (nx < 0 && vy < 0)
+			ani = ani_jump_up_left;
+		else if (nx > 0 && vy > 0)
+			ani = ani_jump_down_right;
+		else
+			ani = ani_jump_down_left;
+	
+}
 void CMario::Render()
 {
 	int ani = -1;
 	if (state == MARIO_STATE_DIE)
 		ani = MARIO_ANI_DIE;
 
-		if (level == MARIO_LEVEL_BIG)
+	//Render for mario big
+	if (level == MARIO_LEVEL_BIG) 
+	{
+		if (state == MARIO_STATE_SIT) 
 		{
-			if (state == MARIO_STATE_JUMP ) //when mario jump
-			{
-				if (nx > 0 && vy < 0)
-					ani = MARIO_ANI_BIG_JUMP_RIGHT;
-				else if (nx < 0 && vy < 0)
-					ani = MARIO_ANI_BIG_JUMP_LEFT;
-				else if (nx > 0 && vy > 0)
-					ani = MARIO_ANI_BIG_JUMP_DOWN_RIGHT;
-				else
-					ani = MARIO_ANI_BIG_JUMP_DOWN_LEFT;
-			}
-			
-			else if (vx == 0)	//when mario is not on the ground or on the ground and not doing anything
-			{
-				if (IsReadyToJump()&& vy>=0 ) //if he's on the ground
-				{
-					if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
-					else ani = MARIO_ANI_BIG_IDLE_LEFT;
-				}
-				else //when he falling down
-				{
-					if (nx > 0) ani = MARIO_ANI_BIG_JUMP_DOWN_RIGHT;
-					else ani = MARIO_ANI_BIG_JUMP_DOWN_LEFT;
-				}
-
-					
-			}
-			else if (state == MARIO_STATE_SIT) {
-				if (nx > 0)
-					ani = MARIO_ANI_BIG_SIT_RIGHT;
-				else
-					ani = MARIO_ANI_BIG_SIT_LEFT;
-			}
-			//when mario moving on the ground
-			else{
-				if (vx > 0 && nx < 0) {
-					ani = MARIO_ANI_BIG_STOP_RIGHT;
-				}
-				else if (vx < 0 && nx >0) {
-					ani = MARIO_ANI_BIG_STOP_LEFT;
-				}
-				else if (vx > 0 && nx > 0) {
-					ani = MARIO_ANI_BIG_WALKING_RIGHT;
-				}
-				else if (vx < 0 && nx < 0) {
-					ani = MARIO_ANI_BIG_WALKING_LEFT;
-				}
-			}
-
-			
+			RenderLogicForSittingState(ani, 
+				MARIO_ANI_BIG_SIT_RIGHT, 
+				MARIO_ANI_BIG_SIT_LEFT);
 		}
-		else if (level == MARIO_LEVEL_SMALL)
+		else if (state == MARIO_STATE_JUMP) 
+		{
+			RenderLogicForJumpingState(ani, 
+				MARIO_ANI_BIG_JUMP_RIGHT, 
+				MARIO_ANI_BIG_JUMP_LEFT, 
+				MARIO_ANI_BIG_JUMP_DOWN_RIGHT, 
+				MARIO_ANI_BIG_JUMP_DOWN_LEFT);
+		}
+		else 
+		{
+			SameRenderLogicsForAllLevel(ani,
+				MARIO_ANI_BIG_JUMP_DOWN_RIGHT, MARIO_ANI_BIG_JUMP_DOWN_LEFT,
+				MARIO_ANI_BIG_IDLE_RIGHT, MARIO_ANI_BIG_IDLE_LEFT,
+				MARIO_ANI_BIG_STOP_RIGHT, MARIO_ANI_BIG_STOP_LEFT,
+				MARIO_ANI_BIG_WALKING_RIGHT, MARIO_ANI_BIG_WALKING_LEFT);
+		}
+	}
+	
+	else if (level == MARIO_LEVEL_SMALL)
 		{
 			if (vx == 0)
 			{
@@ -320,7 +351,7 @@ void CMario::Render()
 			}
 			
 		}
-		else if (level == MARIO_LEVEL_FIRE)
+	else if (level == MARIO_LEVEL_FIRE)
 		{
 			if (vx == 0)
 			{
@@ -331,7 +362,7 @@ void CMario::Render()
 				ani = MARIO_ANI_FIRE_WALKING_RIGHT;
 			else ani = MARIO_ANI_FIRE_WALKING_LEFT;
 		}
-		else if (level == MARIO_LEVEL_FROG)
+	else if (level == MARIO_LEVEL_FROG)
 		{
 			if (vx == 0)
 			{
@@ -342,7 +373,7 @@ void CMario::Render()
 				ani = MARIO_ANI_FROG_WALKING_RIGHT;
 			else ani = MARIO_ANI_FROG_WALKING_LEFT;
 		}
-		else if (level == MARIO_LEVEL_TAIL)
+	else if (level == MARIO_LEVEL_TAIL)
 		{
 			if (vx == 0)
 			{
@@ -352,8 +383,8 @@ void CMario::Render()
 			else if (vx > 0)
 				ani = MARIO_ANI_TAIL_WALKING_RIGHT;
 			else ani = MARIO_ANI_TAIL_WALKING_LEFT;
-		}
-		else if (level == MARIO_LEVEL_HAMMER)
+		}   
+	else if (level == MARIO_LEVEL_HAMMER)
 		{
 			if (vx == 0)
 			{

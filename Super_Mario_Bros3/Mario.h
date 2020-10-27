@@ -105,6 +105,11 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
+	void SameRenderLogicsForAllLevel(int &ani, 
+		int ani_idle_right, int ani_idle_left, int ani_jump_down_right, int ani_jump_down_left,
+		int ani_stop_right, int ani_stop_left, int ani_walking_right, int ani_walking_left);
+	void RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit_left);
+	void RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left, int ani_jump_down_right, int ani_jump_down_left);
 	bool CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom);
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
