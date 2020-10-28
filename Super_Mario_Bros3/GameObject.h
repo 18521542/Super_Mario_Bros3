@@ -11,7 +11,7 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
-
+#define PushBackPixel 1.0f
 class CGameObject;
 typedef CGameObject* LPGAMEOBJECT;
 
@@ -67,7 +67,7 @@ public:
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
-
+	int GetDirection() { return this->nx; }
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox();
@@ -92,8 +92,11 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-	bool CheckTwoBB(float friend_left, float friend_top, float friend_right, float friend_bottom);
-
+	
 	~CGameObject();
+public :
+	bool CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom);
+
+	
 };
 

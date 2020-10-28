@@ -41,7 +41,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//a = nx * MARIO_ACCELERATION;
 	vx += a * dt;
 	
-	
 	// Simple fall down	
 	vy += ay * dt;
 	
@@ -60,11 +59,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vx = 0;
 	}
 
-	//if (state == MARIO_STATE_SIT) {
-	//	
-	//	//DebugOut(L"\nVy = %f", vy);
-	//}
-
 	if (state == MARIO_STATE_SIT) {
 		if (vy < 0)
 			vy -= MARIO_ACCELERATION_JUMP * dt;
@@ -72,21 +66,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	if (state == MARIO_STATE_JUMP) 
 	{
-		//DebugOut(L"\nVy = %f", vy);
 		if (vy < 0)
 			vy -= MARIO_ACCELERATION_JUMP * dt;
 	}
 
-	for (int i = 0; i < coObjects->size(); i++) {
+	for (int i = 0; i < coObjects->size(); i++)
+	{
 		LPGAMEOBJECT obj = coObjects->at(i);
-		if (dynamic_cast<CPlatform*>(obj)) {
-			float pLeft, pTop, pRight, pBottom;
-			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-
-			if (CheckBB(pLeft, pTop, pRight, pBottom)) {
-				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + 1.0f;
+		float pLeft, pTop, pRight, pBottom;
+		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+		if (dynamic_cast<CPlatform*>(obj)) 
+		{
+			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			{
+				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
 		}
+		
 	}
 	
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -198,20 +194,63 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj)) {
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-
-				x += min_tx * dx + nx * 0.8f;
-				y += min_ty * dy + ny * 0.1f;
+				float left, top, right, bottom;
+				koopas->GetBoundingBox(left, top, right, bottom);
 				if(e->ny<0)
 				{
 					if (koopas->GetState() == KOOPAS_STATE_WALKING) {
 						koopas->SetState(KOOPAS_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
 						
+					}
 					else if (koopas->GetState() == KOOPAS_STATE_DIE)
 					{
 						koopas->SetState(KOOPAS_STATE_DIE_MOVING);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+				}
+				if (e->nx != 0) 
+				{
+					if (koopas->GetState() == KOOPAS_STATE_WALKING)
+					{
+						//If mario is not in Untouchable-mode
+						if (untouchable == 0)
+						{
+							//and not in MARIO_LEVEL_SMALL
+							if (level != MARIO_LEVEL_SMALL)
+							{
+								//Then set level to small 
+								level = MARIO_LEVEL_SMALL;
+
+								//and start Untouchable time
+								StartUntouchable();
+
+								//and tho
+								vx = -nx * MARIO_JUMP_DEFLECT_SPEED;
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+					else if (koopas->GetState() == KOOPAS_STATE_DIE)
+					{
+						if (IsReadyToHold())
+							koopas->SetIsBeingHold(true);
+						else
+							koopas->SetIsBeingHold(false);
+						DebugOut(L"\nkoopas is being hold is %d", koopas->IsBeingHold());
+						/*if (CheckBB(left, top, right, bottom))
+						{
+							if (isReadyToHold)
+							{
+								if (level != MARIO_LEVEL_SMALL)
+								{
+									koopas->SetPosition(this->x + this->nx * 10.0f, this->y + 10.0f);
+								}
+								else {
+									koopas->SetPosition(this->x + this->nx * 10.0f, this->y);
+								}
+							}
+						}*/
 					}
 				}
 			}
@@ -230,6 +269,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny != 0)vy = 0;
 				if (e->nx != 0)vx = 0;
 			}
+
 		}	
 	}
 	// clean up collision events
@@ -383,11 +423,10 @@ void CMario::Render()
 		}
 	else if (level == MARIO_LEVEL_TAIL)
 	{
+		
 		if (state == MARIO_STATE_SIT)
 		{
-			RenderLogicForSittingState(ani,
-				MARIO_ANI_TAIL_SIT_RIGHT,
-				MARIO_ANI_TAIL_SIT_LEFT);
+			RenderLogicForSittingState(ani, MARIO_ANI_TAIL_SIT_RIGHT, MARIO_ANI_TAIL_SIT_LEFT);
 		}
 		else if (state == MARIO_STATE_JUMP)
 		{
@@ -399,12 +438,23 @@ void CMario::Render()
 		}
 		else
 		{
+			/*if (IsUsingTail()) {
+				if (nx > 0)
+					ani = MARIO_ANI_TAIL_USETAIL_LEFT;
+				else
+					ani = MARIO_ANI_TAIL_USETAIL_RIGHT;
+			}
+			else*/ 
 			SameRenderLogicsForAllLevel(ani,
 				MARIO_ANI_TAIL_JUMP_DOWN_RIGHT, MARIO_ANI_TAIL_JUMP_DOWN_LEFT,
 				MARIO_ANI_TAIL_IDLE_RIGHT, MARIO_ANI_TAIL_IDLE_LEFT,
 				MARIO_ANI_TAIL_STOP_RIGHT, MARIO_ANI_TAIL_STOP_LEFT,
 				MARIO_ANI_TAIL_WALKING_RIGHT, MARIO_ANI_TAIL_WALKING_LEFT);
+			
 		}
+
+		
+			
 	}   
 	else if (level == MARIO_LEVEL_HAMMER)
 	{
@@ -462,6 +512,8 @@ void CMario::SetState(int state)
 		/*if (a * nx > 0)
 			a = -nx * MARIO_ACCELERATION;*/
 		//setIsReadyToJump(true);
+		isReadyToUseTail = true;
+		isUsingTail = false;
 		break;
 	case MARIO_STATE_SIT:
 		if (abs(vx) <= MARIO_WALKING_SPEED_MIN) {
@@ -499,16 +551,6 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 }
 
-bool CMario::CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom) {
-	float this_left, this_top, this_right, this_bottom;
-	GetBoundingBox(this_left, this_top, this_right, this_bottom);
-	bool on1 = friend_left < this_right;
-	bool on2 = friend_top < this_bottom;
-	bool down1 = friend_right > this_left;
-	bool down2 = friend_bottom > this_top;
-	
-	return on1 && on2 && down1 && down2 ;
-}
 /*
 	Reset Mario status to the beginning state of a scene
 */

@@ -78,6 +78,8 @@
 #define MARIO_ANI_TAIL_JUMP_DOWN_LEFT	52
 #define MARIO_ANI_TAIL_STOP_RIGHT		53
 #define MARIO_ANI_TAIL_STOP_LEFT		54
+#define MARIO_ANI_TAIL_USETAIL_LEFT		63
+#define MARIO_ANI_TAIL_USETAIL_RIGHT	64
 
 #define MARIO_ANI_FROG_IDLE_RIGHT		17
 #define MARIO_ANI_FROG_IDLE_LEFT		18
@@ -123,10 +125,15 @@ class CMario : public CGameObject
 
 	bool isReadyToSit = true;
 	bool isReadyToJump = true;
+	bool isReadyToUseTail = false;
+	bool isUsingTail = false;
+
+	bool isHolding = false;
+	bool isReadyToHold = true;
+
 	int level;
 	int untouchable;
 	DWORD untouchable_start;
-	bool isUsingTail = false;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -140,22 +147,27 @@ public:
 		int ani_stop_right, int ani_stop_left, int ani_walking_right, int ani_walking_left);
 	void RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit_left);
 	void RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left, int ani_jump_down_right, int ani_jump_down_left);
-	bool CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom);
-	void SetState(int state);
-	void SetLevel(int l) { level = l; }
-	int GetLevel() { return this->level; }
+	
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
-	bool IsReadyToJump() {
-		return isReadyToJump;
-	}
-	void setIsReadyToJump(bool jump) {
-		isReadyToJump = jump;
-	}
-	void setIsReadyToSit(bool use) { this->isUsingTail = use; }
+
+	void Reset();
+
+	//get
+	bool IsReadyToHold() { return isReadyToHold; }
+	bool IsReadyToJump() {return isReadyToJump;}
 	bool IsReadyToSit() {	return isReadyToSit; }
 	bool IsUsingTail() { return this->isUsingTail; }
-	void Reset();
-	void SetIsUsingTail(bool sit) { this->isReadyToSit = sit; }
+	bool IsReadyToUseTail() { return this->isReadyToUseTail; }
+	int GetLevel() { return this->level; }
+	
+	//set
+	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
+	void SetIsUsingTail(bool tail) { this->isUsingTail = tail; }
+	void SetIsReadyToUseTail(bool rTail) { this->isReadyToUseTail = rTail; }
+	void setIsReadyToJump(bool jump) {isReadyToJump = jump;}
+	void setIsReadyToSit(bool use) { this->isUsingTail = use; }
+	void SetState(int state);
+	void SetLevel(int l) { level = l; }
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

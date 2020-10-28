@@ -15,7 +15,6 @@
 
 #define KOOPAS_STATE_WALKING	100
 #define KOOPAS_STATE_DIE 200
-#define KOOPAS_STATE_DIE_AND_MOVING 300
 #define KOOPAS_STATE_DIE_MOVING	400
 
 #define KOOPAS_ANI_WALKING_RIGHT 0
@@ -25,12 +24,16 @@
 
 class CKoopas : public CGameObject
 {
+	bool isBeingHold = false;
 	
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
 public:
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	CKoopas();
+	void SetDirection(int dir) { this->nx = dir; }
 	virtual void SetState(int state);
+	bool IsBeingHold() { return this->isBeingHold; }
+	void SetIsBeingHold(bool hold) { this->isBeingHold = hold; }
 };

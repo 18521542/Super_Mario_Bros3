@@ -1,7 +1,5 @@
 #include <d3dx9.h>
 #include <algorithm>
-
-
 #include "Utils.h"
 #include "Textures.h"
 #include "Game.h"
@@ -132,7 +130,23 @@ void CGameObject::RenderBoundingBox()
 	CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 32);
 }
 
+bool CGameObject::CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom)
+{
+	float this_left, this_top, this_right, this_bottom;
 
+	GetBoundingBox(
+		this_left, 
+		this_top, 
+		this_right, 
+		this_bottom);
+	
+	bool on1 = friend_left < this_right;
+	bool on2 = friend_top < this_bottom;
+	bool down1 = friend_right > this_left;
+	bool down2 = friend_bottom > this_top;
+
+	return on1 && on2 && down1 && down2;
+}
 
 CGameObject::~CGameObject()
 {
