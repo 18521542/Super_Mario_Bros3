@@ -129,7 +129,7 @@ class CMario : public CGameObject
 	bool isUsingTail = false;
 
 	bool isHolding = false;
-	bool isReadyToHold = true;
+	bool isReadyToHold = false;
 
 	int level;
 	int untouchable;

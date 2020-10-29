@@ -75,6 +75,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		LPGAMEOBJECT obj = coObjects->at(i);
 		float pLeft, pTop, pRight, pBottom;
 		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+		if (dynamic_cast<CKoopas*>(obj)) 
+		{
+			float kLeft, kTop, kRight, kBottom;
+			obj->GetBoundingBox(kLeft, kTop, kRight, kBottom);
+			if (obj->GetState() == KOOPAS_STATE_DIE) 
+			{
+				if (CheckBB(kLeft, kTop, kRight, kBottom))
+				{
+					if (isReadyToHold)
+					{
+						//isHoldObject = true;
+						//int direction = (x - kLeft) < 0 ? 1 : -1;
+						if (level != MARIO_LEVEL_SMALL)
+						{
+							obj->SetPosition(this->x + this->nx * 10.0f, this->y + 10.0f);
+						}
+						else
+						{
+							obj->SetPosition(this->x + this->nx * 10.0f, this->y);
+						}
+					}
+				}
+			}
+			
+		}
 		if (dynamic_cast<CPlatform*>(obj)) 
 		{
 			if (CheckBB(pLeft, pTop, pRight, pBottom))
@@ -107,6 +132,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += dx;
 		y += dy;
 	}
+
+	// if collision
 	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
@@ -194,6 +221,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj)) {
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+				float kVx, kVy;
+				koopas->GetSpeed(kVx, kVy);
 				float left, top, right, bottom;
 				koopas->GetBoundingBox(left, top, right, bottom);
 				if(e->ny<0)
@@ -208,9 +237,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
 				}
-				if (e->nx != 0) 
+				if (e->nx != 0)
 				{
-					if (koopas->GetState() == KOOPAS_STATE_WALKING)
+					// if koopas is moving and not being hold
+					if (kVx!=0 && !koopas->IsBeingHold())
 					{
 						//If mario is not in Untouchable-mode
 						if (untouchable == 0)
@@ -231,28 +261,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								SetState(MARIO_STATE_DIE);
 						}
 					}
-					else if (koopas->GetState() == KOOPAS_STATE_DIE)
-					{
-						if (IsReadyToHold())
-							koopas->SetIsBeingHold(true);
-						else
-							koopas->SetIsBeingHold(false);
-						DebugOut(L"\nkoopas is being hold is %d", koopas->IsBeingHold());
-						/*if (CheckBB(left, top, right, bottom))
-						{
-							if (isReadyToHold)
-							{
-								if (level != MARIO_LEVEL_SMALL)
-								{
-									koopas->SetPosition(this->x + this->nx * 10.0f, this->y + 10.0f);
-								}
-								else {
-									koopas->SetPosition(this->x + this->nx * 10.0f, this->y);
-								}
-							}
-						}*/
+					else if (kVx == 0 && koopas->IsBeingHold()) {
+						vx = 0;
 					}
 				}
+				x += dx;
+				y += dy;
 			}
 			else if(dynamic_cast<CCoin*>(e->obj)){
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
@@ -272,6 +286,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}	
 	}
+
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -509,11 +524,6 @@ void CMario::SetState(int state)
 		vy = -MARIO_JUMP_SPEED_MAX;
 		break;
 	case MARIO_STATE_IDLE:
-		/*if (a * nx > 0)
-			a = -nx * MARIO_ACCELERATION;*/
-		//setIsReadyToJump(true);
-		isReadyToUseTail = true;
-		isUsingTail = false;
 		break;
 	case MARIO_STATE_SIT:
 		if (abs(vx) <= MARIO_WALKING_SPEED_MIN) {

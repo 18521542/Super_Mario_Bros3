@@ -11,36 +11,12 @@ CKoopas::CKoopas()
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGameObject::Update(dt, coObjects);
-	if (IsBeingHold()) 
-	{
-		for (int i = 0; i < coObjects->size(); i++)
-		{
-			LPGAMEOBJECT obj = coObjects->at(i);
-			float pLeft, pTop, pRight, pBottom;
-			float xM, yM, nM;
-			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-			if (dynamic_cast<CMario*>(obj))
-			{
-				obj->GetPosition(xM, yM);
-				nM = obj->GetDirection();
-				if (CheckBB(pLeft, pTop, pRight, pBottom))
-				{
-					x = xM + nM * KOOPAS_BBOX_WIDTH;
-					y = yM-KOOPAS_BBOX_HEIGHT_DIE;
-				}
-			}
 
-		}
-		
-	}
-	else 
-	{
 		CGameObject::Update(dt, coObjects);
 
 		vy += MARIO_GRAVITY * dt;
 
-		//Push back a little bit when bounding box has collision
+		
 		for (int i = 0; i < coObjects->size(); i++)
 		{
 			LPGAMEOBJECT obj = coObjects->at(i);
@@ -49,8 +25,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CPlatform*>(obj))
 				if (CheckBB(pLeft, pTop, pRight, pBottom))
 				{
-					y -= y + KOOPAS_BBOX_HEIGHT - pTop + PushBackPixel;
-					x += -nx * (x + KOOPAS_BBOX_WIDTH - pTop + PushBackPixel);
+					//Push back a little bit when bounding box has collision
+					y = KOOPAS_BBOX_HEIGHT - pTop + PushBackPixel;
+
 				}
 		}
 		vector<LPCOLLISIONEVENT> coEvents;
@@ -82,35 +59,30 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (e->ny < 0)
 							SetState(KOOPAS_STATE_WALKING);
 					}
-					else if (plat->getType() == PLATFORM_TYPE_ONE) {
-						// block every none-special object 
+					else if (plat->getType() == PLATFORM_TYPE_ONE) 
+					{
 						x += min_tx * dx + nx * 0.4f;
 						y += min_ty * dy + ny * 0.4f;
 
-						if (nx != 0) {
+						if (nx != 0 && !IsBeingHold()) 
+						{
 							vx = -vx;
 							this->nx = -this->nx;
+						}
+						else if (nx != 0 && IsBeingHold())
+						{
+							vx = 0;
 						}
 
 						if (ny != 0)
 							vy = 0;
 					}
 				}
-				if (dynamic_cast<CMario*>(e->obj))
-				{
-					if(isBeingHold)
-					{
-						if (nx == 0)
-							SetIsBeingHold(false);
-						DebugOut(L"\nkoopas is being hold is %d", IsBeingHold());
-					}
-					
-				}
 			}
 		}
 }
 	//}
-}
+
 
 void CKoopas::Render()
 {
