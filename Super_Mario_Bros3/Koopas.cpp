@@ -4,7 +4,8 @@
 #include "Utils.h"
 CKoopas::CKoopas()
 {
-	SetState(KOOPAS_STATE_WALKING);
+	nx = 1;
+	SetState(KOOPAS_STATE_DIE_UP);
 }
 
 
@@ -16,7 +17,25 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		vy += MARIO_GRAVITY * dt;
 
-		
+		if (state == KOOPAS_STATE_DIE_UP) 
+		{
+			if(vy<0)
+				vy += MARIO_GRAVITY * dt;
+			if (nx > 0) 
+			{
+				if (vx > 0)
+					vx -= MARIO_GRAVITY * dt;
+				else
+					vx = 0;
+			}
+			else
+			{
+				if (vx < 0)
+					vx += MARIO_GRAVITY * dt;
+				else
+					vx = 0;
+			}
+		}
 		for (int i = 0; i < coObjects->size(); i++)
 		{
 			LPGAMEOBJECT obj = coObjects->at(i);
@@ -98,6 +117,9 @@ void CKoopas::Render()
 	else if (state == KOOPAS_STATE_DIE_MOVING) {
 		ani = KOOPAS_ANI_DIE_MOVING;
 	}
+	else if (state == KOOPAS_STATE_DIE_UP) {
+		ani = KOOPAS_ANI_DIE_up;
+	}
 	animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
@@ -118,6 +140,9 @@ void CKoopas::SetState(int state)
 	case KOOPAS_STATE_DIE_MOVING:
 		vx = nx * KOOPAS_DIE_SPEED;
 		break;
+	case KOOPAS_STATE_DIE_UP:
+		vx =  nx*KOOPAS_DIE_SPEED;
+		vy = -(0.5f);
 	}
 
 }
@@ -127,8 +152,8 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 	left = x;
 	top = y;
 	right = x + KOOPAS_BBOX_WIDTH;
-	
-	if (state == KOOPAS_STATE_DIE || state==KOOPAS_STATE_DIE_MOVING) 
+
+	if (state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_MOVING|| state == KOOPAS_STATE_DIE_UP)
 	{
 		bottom = y + KOOPAS_BBOX_HEIGHT_DIE;
 	}

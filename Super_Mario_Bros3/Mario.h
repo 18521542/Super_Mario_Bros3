@@ -8,13 +8,14 @@
 #define MARIO_ACCELERATION_JUMP		0.0005f
 //0.1f
 #define MARIO_JUMP_SPEED_MAX		0.3f
-#define MARIO_JUMP_DEFLECT_SPEED 0.2f
-#define MARIO_GRAVITY			0.001f
-#define MARIO_DIE_DEFLECT_SPEED	 0.5f
+#define MARIO_JUMP_DEFLECT_SPEED	0.2f
+#define MARIO_GRAVITY				0.001f
+#define MARIO_DIE_DEFLECT_SPEED		0.5f
 
 //time
-#define MARIO_UNTOUCHABLE_TIME 5000
-#define MARIO_USING_TAIL_TIME 200
+#define MARIO_UNTOUCHABLE_TIME		5000
+#define MARIO_USING_TAIL_TIME		500
+#define MARIO_SHOOTING_TIME			400
 
 //define state - xxx
 #define MARIO_STATE_IDLE			0
@@ -60,7 +61,6 @@
 #define MARIO_ANI_FIRE_IDLE_LEFT		10
 #define MARIO_ANI_FIRE_WALKING_RIGHT	11
 #define MARIO_ANI_FIRE_WALKING_LEFT		12
-
 #define MARIO_ANI_FIRE_SIT_RIGHT		39
 #define MARIO_ANI_FIRE_SIT_LEFT			40
 #define MARIO_ANI_FIRE_JUMP_RIGHT		41
@@ -69,6 +69,9 @@
 #define MARIO_ANI_FIRE_JUMP_DOWN_LEFT	44
 #define MARIO_ANI_FIRE_STOP_RIGHT		45
 #define MARIO_ANI_FIRE_STOP_LEFT		46
+#define MARIO_ANI_FIRE_SHOOT_RIGHT		65
+#define MARIO_ANI_FIRE_SHOOT_LEFT		66
+		
 
 #define MARIO_ANI_TAIL_IDLE_RIGHT		13
 #define MARIO_ANI_TAIL_IDLE_LEFT		14
@@ -113,8 +116,13 @@
 #define	MARIO_LEVEL_HAMMER	5555
 #define	MARIO_LEVEL_TAIL	6666
 
+//Bounding box
 #define MARIO_BIG_BBOX_WIDTH  15
 #define MARIO_BIG_BBOX_HEIGHT 27
+
+#define MARIO_TAIL_BBOX_WIDTH	21
+#define TAIL_BBOX_WIDTH			4
+#define TAIL_BBOX_HEIGHT		2
 
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 15
@@ -127,21 +135,29 @@ class CMario : public CGameObject
 	float a;	// vx = vx + a*dt
 	float ay;	//vy = ay*dt;
 
+	//sit
 	bool isReadyToSit = true;
+
+	//hight-jump
 	bool isReadyToJump = true;
 
-	bool isReadyToUseTail = false;
-	bool isStartUsingTail = false;
+	//using tail
+	bool isUsingTail = false;
 
+	//shoot
 	bool isShootingFireBall = false;
+
+	//hold
 	bool isHolding = false;
 	bool isReadyToHold = false;
 
 	int level;
 	int untouchable;
-	bool isUsingTail = false;
+	
+	//time
 	DWORD untouchable_start;
 	DWORD using_tail_start;
+	DWORD shooting_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -157,8 +173,9 @@ public:
 	void RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left, int ani_jump_down_right, int ani_jump_down_left);
 	
 	//timer
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartUntouchable() { untouchable_start = GetTickCount(); untouchable = 1;}
 	void StartUsingTail() { using_tail_start = GetTickCount(); isUsingTail = true; }
+	void StartShootingFireBall() { shooting_start = GetTickCount(); isShootingFireBall = true; }
 
 	void Reset();
 
@@ -166,7 +183,7 @@ public:
 	bool IsReadyToHold() { return isReadyToHold; }
 	bool IsReadyToJump() {return isReadyToJump;}
 	bool IsReadyToSit() {	return isReadyToSit; }
-	bool IsStartUsingTail() { return this->isStartUsingTail; }
+	//bool IsStartUsingTail() { return this->isStartUsingTail; }
 	bool IsUsingTail() { return this->isUsingTail; }
 	bool IsShootingFireBall() { return this->isShootingFireBall; }
 	int GetLevel() { return this->level; }
@@ -174,7 +191,7 @@ public:
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
 
-	void SetIsStartUsingTail(bool tail) { this->isStartUsingTail = tail; }
+	//void SetIsStartUsingTail(bool tail) { this->isStartUsingTail = tail; }
 
 	void setIsReadyToJump(bool jump) {isReadyToJump = jump;}
 

@@ -348,7 +348,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			mario->StartUsingTail();
 			break;
 		}
-		//DebugOut(L"\n mario is ready to hold = %d", mario->IsReadyToHold());
+		if (mario->GetLevel() == MARIO_LEVEL_FIRE)
+		{
+			mario->StartShootingFireBall();
+			break;
+		}
+		
+		
 		//mario->SetState(MARIO_STATE_IDLE);
 		//DebugOut(L"\n mario isReadyToHold = %d", mario->IsReadyToHold());
 		break;

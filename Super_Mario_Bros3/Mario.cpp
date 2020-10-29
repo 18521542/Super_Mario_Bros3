@@ -24,7 +24,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	ay = MARIO_GRAVITY;
 	setIsReadyToJump(true);
 	setIsReadyToSit(true);
-	SetIsStartUsingTail(false);
+	//SetIsStartUsingTail(false);
 	a = MARIO_ACCELERATION;
 	//ay = MARIO_GRAVITY;
 	start_x = x;
@@ -80,12 +80,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			float kLeft, kTop, kRight, kBottom;
 			obj->GetBoundingBox(kLeft, kTop, kRight, kBottom);
-			if (obj->GetState() == KOOPAS_STATE_DIE) 
-			{
 				if (CheckBB(kLeft, kTop, kRight, kBottom))
 				{
-					if (isReadyToHold)
+					if (isUsingTail)
 					{
+						obj->SetDirection(nx);
+						obj->SetState(KOOPAS_STATE_DIE_UP);
+					}
+					
+					else if (isReadyToHold 
+						&& (obj->state == KOOPAS_STATE_DIE 
+						|| obj->state==KOOPAS_STATE_DIE_UP)){
 						//isHoldObject = true;
 						//int direction = (x - kLeft) < 0 ? 1 : -1;
 						if (level != MARIO_LEVEL_SMALL)
@@ -98,9 +103,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-			}
-			
 		}
+		
 		if (dynamic_cast<CPlatform*>(obj)) 
 		{
 			if (CheckBB(pLeft, pTop, pRight, pBottom))
@@ -121,7 +125,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	//DebugOut(L"\nUntouchable  time = %d", GetTickCount() - untouchable_start);
 	if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
@@ -129,22 +132,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		
 	}
 
-	//If mario is ready to start use his tail
-	/*if (isStartUsingTail)
-	{
-		StartUsingTail();
-		DebugOut(L"\nusing tail time = %d", GetTickCount() - using_tail_start);
-	}*/
+	
 	//reset IsStartUsingTail = false if mario finish using his tail
-	DebugOut(L"\n Is using tail time = %d", isUsingTail);
 	if (GetTickCount() - using_tail_start > MARIO_USING_TAIL_TIME)
 	{
-		isStartUsingTail = false;
 		using_tail_start = 0;
 		isUsingTail = false;
 	}
+
+	//DebugOut(L"\nIs shooting fire ball = %d", isShootingFireBall);
+	//reset IsStartUsingTail = false if mario finish using his tail
+	if (GetTickCount() - shooting_start > MARIO_SHOOTING_TIME)
+	{
+		isShootingFireBall = false;
+		shooting_start = 0;
+		//isStartShooting = false;
+	}
 	
-	//DebugOut(L"\nmario is uing tail = %d", isUsingTail);
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -439,6 +443,14 @@ void CMario::Render()
 		}
 		else
 		{
+			if (isShootingFireBall) 
+			{
+				if (nx > 0)
+					ani = MARIO_ANI_FIRE_SHOOT_RIGHT;
+				else
+					ani = MARIO_ANI_FIRE_SHOOT_LEFT;
+			}
+			else
 			SameRenderLogicsForAllLevel(ani,
 				MARIO_ANI_FIRE_JUMP_DOWN_RIGHT, MARIO_ANI_FIRE_JUMP_DOWN_LEFT,
 				MARIO_ANI_FIRE_IDLE_RIGHT, MARIO_ANI_FIRE_IDLE_LEFT,
@@ -563,25 +575,60 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-
-	if (level != MARIO_LEVEL_SMALL)
+	if (level == MARIO_LEVEL_TAIL)
+	{
+		left = x;
+		top = y;
+		if (!isUsingTail) 
+		{
+			if (state != MARIO_STATE_SIT)
+			{
+				right = x + MARIO_TAIL_BBOX_WIDTH;
+				bottom = y + MARIO_BIG_BBOX_HEIGHT;
+			}
+			else 
+			{
+				right = x + MARIO_BIG_BBOX_WIDTH;
+				bottom = y + MARIO_SMALL_BBOX_HEIGHT + 4;
+			}
+		}
+		else 
+		{
+			bottom = y + MARIO_BIG_BBOX_HEIGHT;
+			top = y;
+			if (nx > 0) {
+				left = x;
+				right = x + MARIO_TAIL_BBOX_WIDTH + TAIL_BBOX_WIDTH;
+			}
+			else 
+			{
+				left = (x - TAIL_BBOX_WIDTH);
+				right = x + MARIO_TAIL_BBOX_WIDTH;
+			}
+			
+		}
+	}
+	else 
+	{
+		left = x;
+		top = y;
+		if (level == MARIO_LEVEL_SMALL)
+		{
+			right = x + MARIO_SMALL_BBOX_WIDTH;
+			bottom = y + MARIO_SMALL_BBOX_HEIGHT;
+		}
+		else
 	{
 		if (state == MARIO_STATE_SIT)
 		{
 			right = x + MARIO_BIG_BBOX_WIDTH;
-			bottom = y + MARIO_SMALL_BBOX_HEIGHT+4;
+			bottom = y + MARIO_SMALL_BBOX_HEIGHT + 4;
 		}
 		else {
 			right = x + MARIO_BIG_BBOX_WIDTH;
 			bottom = y + MARIO_BIG_BBOX_HEIGHT;
 		}
 	}
-	else
-	{
-		right = x + MARIO_SMALL_BBOX_WIDTH;
-		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
 	}
 }
 
@@ -592,7 +639,7 @@ void CMario::Reset()
 {
 	SetState(MARIO_STATE_IDLE);
 	SetLevel(MARIO_LEVEL_BIG);
-	SetIsStartUsingTail(false);
+	//SetIsStartUsingTail(false);
 	nx = 1;
 	a = MARIO_ACCELERATION;
 	//setIsReadyToJump(true);
