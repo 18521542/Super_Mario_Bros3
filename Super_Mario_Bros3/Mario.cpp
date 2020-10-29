@@ -24,6 +24,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	ay = MARIO_GRAVITY;
 	setIsReadyToJump(true);
 	setIsReadyToSit(true);
+	SetIsStartUsingTail(false);
 	a = MARIO_ACCELERATION;
 	//ay = MARIO_GRAVITY;
 	start_x = x;
@@ -120,12 +121,30 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
+	//DebugOut(L"\nUntouchable  time = %d", GetTickCount() - untouchable_start);
 	if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
+		
 	}
 
+	//If mario is ready to start use his tail
+	/*if (isStartUsingTail)
+	{
+		StartUsingTail();
+		DebugOut(L"\nusing tail time = %d", GetTickCount() - using_tail_start);
+	}*/
+	//reset IsStartUsingTail = false if mario finish using his tail
+	DebugOut(L"\n Is using tail time = %d", isUsingTail);
+	if (GetTickCount() - using_tail_start > MARIO_USING_TAIL_TIME)
+	{
+		isStartUsingTail = false;
+		using_tail_start = 0;
+		isUsingTail = false;
+	}
+	
+	//DebugOut(L"\nmario is uing tail = %d", isUsingTail);
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -254,7 +273,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								//and start Untouchable time
 								StartUntouchable();
 
-								//and tho
+								//and throw a bit
 								vx = -nx * MARIO_JUMP_DEFLECT_SPEED;
 							}
 							else
@@ -289,6 +308,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	//DebugOut(L"\n mario is using tail = %d", IsUsingTail());
 }
 
 void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int ani_jump_down_left,
@@ -453,13 +474,13 @@ void CMario::Render()
 		}
 		else
 		{
-			/*if (IsUsingTail()) {
+			if (IsUsingTail()) {
 				if (nx > 0)
-					ani = MARIO_ANI_TAIL_USETAIL_LEFT;
-				else
 					ani = MARIO_ANI_TAIL_USETAIL_RIGHT;
+				else
+					ani = MARIO_ANI_TAIL_USETAIL_LEFT;
 			}
-			else*/ 
+			else 
 			SameRenderLogicsForAllLevel(ani,
 				MARIO_ANI_TAIL_JUMP_DOWN_RIGHT, MARIO_ANI_TAIL_JUMP_DOWN_LEFT,
 				MARIO_ANI_TAIL_IDLE_RIGHT, MARIO_ANI_TAIL_IDLE_LEFT,
@@ -501,7 +522,7 @@ void CMario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -533,6 +554,9 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
+		vx = -nx * MARIO_DIE_DEFLECT_SPEED;
+		//a = 0;
+
 		break;
 	}
 }
@@ -568,6 +592,7 @@ void CMario::Reset()
 {
 	SetState(MARIO_STATE_IDLE);
 	SetLevel(MARIO_LEVEL_BIG);
+	SetIsStartUsingTail(false);
 	nx = 1;
 	a = MARIO_ACCELERATION;
 	//setIsReadyToJump(true);

@@ -12,6 +12,9 @@
 #define MARIO_GRAVITY			0.001f
 #define MARIO_DIE_DEFLECT_SPEED	 0.5f
 
+//time
+#define MARIO_UNTOUCHABLE_TIME 5000
+#define MARIO_USING_TAIL_TIME 200
 
 //define state - xxx
 #define MARIO_STATE_IDLE			0
@@ -26,6 +29,7 @@
 #define MARIO_STATE_SWIM			700
 #define MARIO_STATE_DIE				800
 #define	MARIO_STATE_FALING_DOWN		900
+#define MARIO_STATE_START_USING_TAIL		3
 
 //define animation 
 #define MARIO_ANI_BIG_IDLE_RIGHT		0
@@ -115,7 +119,7 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 15
 
-#define MARIO_UNTOUCHABLE_TIME 5000
+
 
 
 class CMario : public CGameObject
@@ -125,15 +129,19 @@ class CMario : public CGameObject
 
 	bool isReadyToSit = true;
 	bool isReadyToJump = true;
-	bool isReadyToUseTail = false;
-	bool isUsingTail = false;
 
+	bool isReadyToUseTail = false;
+	bool isStartUsingTail = false;
+
+	bool isShootingFireBall = false;
 	bool isHolding = false;
 	bool isReadyToHold = false;
 
 	int level;
 	int untouchable;
+	bool isUsingTail = false;
 	DWORD untouchable_start;
+	DWORD using_tail_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -148,7 +156,9 @@ public:
 	void RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit_left);
 	void RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left, int ani_jump_down_right, int ani_jump_down_left);
 	
+	//timer
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartUsingTail() { using_tail_start = GetTickCount(); isUsingTail = true; }
 
 	void Reset();
 
@@ -156,18 +166,26 @@ public:
 	bool IsReadyToHold() { return isReadyToHold; }
 	bool IsReadyToJump() {return isReadyToJump;}
 	bool IsReadyToSit() {	return isReadyToSit; }
+	bool IsStartUsingTail() { return this->isStartUsingTail; }
 	bool IsUsingTail() { return this->isUsingTail; }
-	bool IsReadyToUseTail() { return this->isReadyToUseTail; }
+	bool IsShootingFireBall() { return this->isShootingFireBall; }
 	int GetLevel() { return this->level; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
-	void SetIsUsingTail(bool tail) { this->isUsingTail = tail; }
-	void SetIsReadyToUseTail(bool rTail) { this->isReadyToUseTail = rTail; }
+
+	void SetIsStartUsingTail(bool tail) { this->isStartUsingTail = tail; }
+
 	void setIsReadyToJump(bool jump) {isReadyToJump = jump;}
-	void setIsReadyToSit(bool use) { this->isUsingTail = use; }
+
+	void setIsReadyToSit(bool use) { this->isReadyToSit = use; }
+
 	void SetState(int state);
+
 	void SetLevel(int l) { level = l; }
 
+	void SetIsShootingFireBall(bool shoot) { this->isShootingFireBall = shoot; }
+
+	//bounding box
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

@@ -345,15 +345,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetIsReadyToHold(true);
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL) 
 		{
-			if (mario->IsReadyToUseTail()) 
-			{
-				mario->SetIsUsingTail(true);
-				//mario->SetIsReadyToUseTail(false);
-			}
+			mario->StartUsingTail();
+			break;
 		}
-		DebugOut(L"\n mario is ready to hold = %d", mario->IsReadyToHold());
+		//DebugOut(L"\n mario is ready to hold = %d", mario->IsReadyToHold());
 		//mario->SetState(MARIO_STATE_IDLE);
-		//DebugOut(L"\n mario is using tail = %d", mario->IsUsingTail());
 		//DebugOut(L"\n mario isReadyToHold = %d", mario->IsReadyToHold());
 		break;
 	}
@@ -388,16 +384,13 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_A:
 		mario->SetIsReadyToHold(false);
-		if (mario->GetLevel() == MARIO_LEVEL_TAIL) 
-		{
-			mario->SetIsReadyToUseTail(true);
-			mario->SetIsUsingTail(false);
-		}
-		else if (mario->GetLevel() == MARIO_LEVEL_FIRE)
+		
+		if (mario->GetLevel() == MARIO_LEVEL_FIRE)
 		{
 			mario->SetState(MARIO_STATE_IDLE);
+			break;
 		}
-		DebugOut(L"\n mario is using tail = %d", mario->IsReadyToHold());
+
 		//mario->SetState(MARIO_STATE_IDLE);
 		//DebugOut(L"\n mario is using tail = %d", mario->IsUsingTail());
 		//DebugOut(L"\n mario isReadyToHold = %d", mario->IsReadyToHold());
@@ -439,7 +432,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 				mario->SetState(MARIO_STATE_SIT);
 		}
 			
-		
 		/*else
 			mario->SetState(MARIO_STATE_IDLE);*/
 	}
