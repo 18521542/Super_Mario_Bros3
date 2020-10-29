@@ -2,7 +2,6 @@
 
 CCoin::CCoin() 
 {
-	
 	SetState(COIN_STATE_APPEAR);
 }
 void CCoin::Render()
@@ -14,7 +13,6 @@ void CCoin::Render()
 
 void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	
 	l = x;
 	t = y;
 	r = x + BBCOIN_WIDTH;

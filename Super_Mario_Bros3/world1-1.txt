@@ -29,6 +29,11 @@
 12	290	202	306	218	30
 #die up
 13	152	202	168	218	30
+# FIRE-BALL=================================== 
+14	180	553	188	562	0
+15	198	554	206	562	0
+16	198	573	206	582	0
+17	180	574	188	582	0
 # BIG MARIO=================================== 
 # idle right
 10001	246	154	260	181	0
@@ -355,7 +360,8 @@
 
 #die
 599	10099	100
-
+# ==== FIRE-BALL =========
+200	14	100	15	100	16	100	17	100
 
 # ==== BRICK =========
 601	20001	100
@@ -398,10 +404,13 @@
 5	1001
 # koopas
 6	100	110	120	130	140
+# Fire Ball
+7	200
 #############################################################################################
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 4 = background, 5 = platform, 6 = coin, 3 = koopas
+# 7 = fire ball
 # --- platform (hint: I created the list using Excel!) ----
 
 #---platform----
@@ -509,6 +518,8 @@
 #KOOPAS
 3	2390	300	6
 #3	700	300	6
+#fire ball
+7	2400	300	7
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 #50	300	98	0	316	150	2

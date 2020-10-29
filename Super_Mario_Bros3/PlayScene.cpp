@@ -6,7 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-
+#include"FireBall.h"
 #define PushBackPixel 9.0f
 using namespace std;
 
@@ -36,6 +36,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PLATFORM	5
 #define OBJECT_TYPE_COIN		6
 #define OBJECT_TYPE_PORTAL		50
+#define OBJECT_TYPE_FIREBALL	7
 
 #define MAX_SCENE_LINE 1024
 
@@ -185,10 +186,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	break;
 	case OBJECT_TYPE_COIN:
 	{
-		//DebugOut(L"Create");
 		obj = new CCoin();
 	}
 	break;
+	case OBJECT_TYPE_FIREBALL:
+		obj = new CFireBall();
+		//x,y
+		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

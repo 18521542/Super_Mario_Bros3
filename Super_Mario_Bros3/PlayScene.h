@@ -10,6 +10,7 @@
 #include "Background.h"
 #include "Platform.h"
 #include "coin.h"
+
 class CPlayScene : public CScene
 {
 protected:

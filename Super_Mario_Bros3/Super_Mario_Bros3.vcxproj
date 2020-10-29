@@ -162,7 +162,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
-    <ClInclude Include="weapon.h" />
+    <ClInclude Include="FireBall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="background.cpp" />
@@ -182,7 +182,7 @@
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Textures.cpp" />
-    <ClCompile Include="weapon.cpp" />
+    <ClCompile Include="FireBall.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
