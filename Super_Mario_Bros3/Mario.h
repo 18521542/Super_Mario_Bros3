@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-
+#include "FireBall.h"
 #define MARIO_WALKING_SPEED_START	0.001f 
 #define MARIO_WALKING_SPEED_MAX		0.15f
 #define MARIO_ACCELERATION			0.0003f
@@ -14,8 +14,8 @@
 
 //time
 #define MARIO_UNTOUCHABLE_TIME		5000
-#define MARIO_USING_TAIL_TIME		500
-#define MARIO_SHOOTING_TIME			400
+#define MARIO_USING_TAIL_TIME		300
+#define MARIO_SHOOTING_TIME			200
 
 //define state - xxx
 #define MARIO_STATE_IDLE			0
@@ -147,10 +147,13 @@ class CMario : public CGameObject
 	//shoot
 	bool isShootingFireBall = false;
 
+	
+
 	//hold
 	bool isHolding = false;
 	bool isReadyToHold = false;
 
+	//
 	int level;
 	int untouchable;
 	
@@ -165,7 +168,6 @@ public:
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
-
 	void SameRenderLogicsForAllLevel(int &ani, 
 		int ani_idle_right, int ani_idle_left, int ani_jump_down_right, int ani_jump_down_left,
 		int ani_stop_right, int ani_stop_left, int ani_walking_right, int ani_walking_left);

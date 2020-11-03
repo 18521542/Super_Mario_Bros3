@@ -35,7 +35,7 @@ public:
 
 	CMario* GetPlayer() { return player; }
 
-	//friend class CPlayScenceKeyHandler;
+	friend class CPlayScenceKeyHandler;
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

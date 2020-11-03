@@ -5,7 +5,7 @@
 CKoopas::CKoopas()
 {
 	nx = 1;
-	SetState(KOOPAS_STATE_DIE_UP);
+	SetState(KOOPAS_STATE_WALKING);
 }
 
 
@@ -36,6 +36,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vx = 0;
 			}
 		}
+
+
 		for (int i = 0; i < coObjects->size(); i++)
 		{
 			LPGAMEOBJECT obj = coObjects->at(i);
@@ -49,6 +51,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				}
 		}
+
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
 		
@@ -97,11 +100,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							vy = 0;
 					}
 				}
+				
 			}
 		}
 }
-	//}
-
+	
 
 void CKoopas::Render()
 {

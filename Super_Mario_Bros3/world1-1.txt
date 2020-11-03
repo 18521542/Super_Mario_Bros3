@@ -350,9 +350,9 @@
 #tail hammer left
 62	29015	100
 #tail use tail left
-63	17008	50	17012	200	18008	50	17004	200
+63	17008	50	17012	100	18008	50	17004	100
 #tail use tail right
-64	17008	50	17004	200	18008	50	17012	200
+64	17008	100	17004	150	18008	100	17012	150
 #shoot right
 65	13014	100	13013	100	13012	100
 #shoot left
@@ -409,8 +409,8 @@
 #############################################################################################
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 4 = background, 5 = platform, 6 = coin, 3 = koopas
-# 7 = fire ball
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 4 = background, 5 = platform, 6 = coin, 3 = koopas, 7 = fire ball
+# 
 # --- platform (hint: I created the list using Excel!) ----
 
 #---platform----
@@ -473,7 +473,12 @@
 # ---- background ---------rgb = 156 252 240
 4	0	0	4
 # ---- MARIO---------------	
-0	2372	300	1
+0	2400	300	1
+#fire ball
+7	2500	300	7
+7	2600	300	7
+7	2700	300	7
+
 #-----	QUESTION BRICK ----
 1	177	353	22
 1	193	353	22
@@ -518,8 +523,7 @@
 #KOOPAS
 3	2390	300	6
 #3	700	300	6
-#fire ball
-7	2400	300	7
+
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 #50	300	98	0	316	150	2

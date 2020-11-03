@@ -71,6 +71,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vy -= MARIO_ACCELERATION_JUMP * dt;
 	}
 
+	
+
 	for (int i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
@@ -78,9 +80,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
 		if (dynamic_cast<CKoopas*>(obj)) 
 		{
-			float kLeft, kTop, kRight, kBottom;
-			obj->GetBoundingBox(kLeft, kTop, kRight, kBottom);
-				if (CheckBB(kLeft, kTop, kRight, kBottom))
+			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+				if (CheckBB(pLeft, pTop, pRight, pBottom))
 				{
 					if (isUsingTail)
 					{
@@ -88,21 +89,38 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						obj->SetState(KOOPAS_STATE_DIE_UP);
 					}
 					
-					else if (isReadyToHold 
-						&& (obj->state == KOOPAS_STATE_DIE 
-						|| obj->state==KOOPAS_STATE_DIE_UP)){
-						//isHoldObject = true;
-						//int direction = (x - kLeft) < 0 ? 1 : -1;
+					else if (isReadyToHold && 
+						(obj->state == KOOPAS_STATE_DIE || obj->state==KOOPAS_STATE_DIE_UP))
+					{
+						
 						if (level != MARIO_LEVEL_SMALL)
 						{
 							obj->SetPosition(this->x + this->nx * 10.0f, this->y + 10.0f);
 						}
 						else
 						{
-							obj->SetPosition(this->x + this->nx * 10.0f, this->y);
+							obj->SetPosition(this->x + this->nx * 10.0f, this->y -1.0f);
 						}
 					}
 				}
+		}
+
+		if (dynamic_cast<CFireBall*>(obj)) {
+			CFireBall* fb = dynamic_cast<CFireBall*>(obj);
+			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+			//if (CheckBB(pLeft, pTop, pRight, pBottom)) {
+			//	
+			//	fb->setIsAppear(true);
+			//	fb->SetPosition(this->x, this->y);
+			//	//fb->SetSpeed(0, 0);
+			//}
+			if (isShootingFireBall && fb->IsHolded()) 
+			{
+				obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH + 1.0f), y/*+5.0f*/);
+				obj->SetSpeed(nx*0.1f, 0.1f);
+				fb->setIsAppear(true);
+				fb->setIsHolded(false);
+			}
 		}
 		
 		if (dynamic_cast<CPlatform*>(obj)) 
@@ -112,7 +130,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
 		}
-		
 	}
 	
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -131,7 +148,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable = 0;
 		
 	}
-
 	
 	//reset IsStartUsingTail = false if mario finish using his tail
 	if (GetTickCount() - using_tail_start > MARIO_USING_TAIL_TIME)
@@ -139,9 +155,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		using_tail_start = 0;
 		isUsingTail = false;
 	}
-
-	//DebugOut(L"\nIs shooting fire ball = %d", isShootingFireBall);
-	//reset IsStartUsingTail = false if mario finish using his tail
+	
+	//reset shooting to  if mario finish shotting
 	if (GetTickCount() - shooting_start > MARIO_SHOOTING_TIME)
 	{
 		isShootingFireBall = false;
@@ -166,6 +181,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
+
+		//Reset status when mario is on the ground
 		if (ny < 0) {
 			setIsReadyToJump(true);
 			setIsReadyToSit(true);
@@ -306,7 +323,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny != 0)vy = 0;
 				if (e->nx != 0)vx = 0;
 			}
-
+			else if (dynamic_cast<CFireBall*>(e->obj)){
+				CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
+				x += dx;
+				y += dy;
+				/*fb->setIsAppear(true);
+				fb->SetPosition(this->x, this->y);
+				fb->SetSpeed(0, 0);*/
+			}
 		}	
 	}
 
@@ -445,10 +469,15 @@ void CMario::Render()
 		{
 			if (isShootingFireBall) 
 			{
-				if (nx > 0)
+				if (nx > 0) {
 					ani = MARIO_ANI_FIRE_SHOOT_RIGHT;
-				else
+
+				}
+					
+				else {
 					ani = MARIO_ANI_FIRE_SHOOT_LEFT;
+				}
+					
 			}
 			else
 			SameRenderLogicsForAllLevel(ani,
