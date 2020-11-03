@@ -107,20 +107,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (dynamic_cast<CFireBall*>(obj)) {
 			CFireBall* fb = dynamic_cast<CFireBall*>(obj);
-			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+			
+			if (isShootingFireBall && !fb->IsAppear() && isForFireBallAppear)
+			{
+				obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH + 1.0f), y/*+5.0f*/);
+				obj->SetSpeed(nx*0.1f, 0.1f);
+				fb->StartAppear();
+				isForFireBallAppear = false;
+			}
+
+			//obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
 			//if (CheckBB(pLeft, pTop, pRight, pBottom)) {
 			//	
 			//	fb->setIsAppear(true);
 			//	fb->SetPosition(this->x, this->y);
 			//	//fb->SetSpeed(0, 0);
 			//}
-			if (isShootingFireBall && fb->IsHolded()) 
-			{
-				obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH + 1.0f), y/*+5.0f*/);
-				obj->SetSpeed(nx*0.1f, 0.1f);
-				fb->setIsAppear(true);
-				fb->setIsHolded(false);
-			}
 		}
 		
 		if (dynamic_cast<CPlatform*>(obj)) 
@@ -161,6 +163,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		isShootingFireBall = false;
 		shooting_start = 0;
+		isForFireBallAppear = false;
 		//isStartShooting = false;
 	}
 	

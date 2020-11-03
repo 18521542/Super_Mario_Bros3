@@ -2,6 +2,7 @@
 #include "Platform.h"
 #include "Mario.h"
 #include "Utils.h"
+#include "Platform.h"
 CKoopas::CKoopas()
 {
 	nx = 1;
@@ -99,6 +100,15 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (ny != 0)
 							vy = 0;
 					}
+				}
+				if (dynamic_cast<CFireBall*>(e->obj)) {
+					CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
+					if (nx != 0 || ny != 0) {
+						SetState(KOOPAS_STATE_DIE);
+					}
+						
+					fb->setIsAppear(false);
+					
 				}
 				
 			}

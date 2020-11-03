@@ -2,7 +2,7 @@
 #include"GameObject.h"
 
 #define FB_STATE_FLY		100
-#define FB_APPEAR_TIME		3000
+#define FB_APPEAR_TIME		1000
 
 #define FB_BBOX_WIDTH		8
 #define FB_BBOX_HEIGHT		9
@@ -26,7 +26,7 @@ public:
 	//virtual void SetState(int state);
 	CFireBall(float x,float y);
 	CFireBall();
-	void StartAppear() { isAppear = true; startFly = GetTickCount(); }
+	void StartAppear() { isAppear = true; startFly = GetTickCount(); isHolded = false; }
 
 	bool IsAppear() { return this->isAppear; }
 	bool IsHolded() { return this->isHolded; }

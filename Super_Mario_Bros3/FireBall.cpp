@@ -2,7 +2,8 @@
 #include "FireBall.h"
 #include "Utils.h"
 #include "Mario.h"
-
+#include "Platform.h"
+#include "Koopas.h"
 CFireBall::CFireBall()
 {
 	isAppear = true;
@@ -24,10 +25,19 @@ void CFireBall::Render()
 
 void CFireBall::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
-	t = y;
-	r = x + FB_BBOX_WIDTH;
-	b = y + FB_BBOX_HEIGHT;
+	if (!isAppear) {
+		l = 0;
+		t = 0;
+		r = 0;
+		b = 0;
+	}
+	else {
+		l = x;
+		t = y;
+		r = x + FB_BBOX_WIDTH;
+		b = y + FB_BBOX_HEIGHT;
+	}
+	
 }
 
 void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -35,16 +45,19 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 	//do nothing;
 
-	x += dx;
-	y += dy;
+	if (GetTickCount() - startFly > FB_APPEAR_TIME) {
+		isAppear = false;
+		startFly = 0;
+	}
 
+	if (vy < 0) {
+		
+			vy = 0;
+	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
-	if(isAppear)
-		CalcPotentialCollisions(coObjects, coEvents);
-
-	coEvents.clear();
+	CalcPotentialCollisions(coObjects, coEvents);
 
 	if (coEvents.size() == 0)
 	{
@@ -64,18 +77,26 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<CMario*>(e->obj))
-			{
-				CMario* mario = dynamic_cast<CMario*>(e->obj);
-				vx = 0;
-				vy = 0;
 
-			}
-			else if (dynamic_cast<CFireBall*>(e->obj))
+			if (dynamic_cast<CFireBall*>(e->obj))
 			{
 				CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
 				x += dx;
 				y += dy;
+			}
+			else if (dynamic_cast<CPlatform*>(e->obj)) {
+				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
+				if (plat->getType() == PLATFORM_TYPE_ONE) {
+					DebugOut(L"\n FB is on the ground");
+					if (nx != 0) {
+						isAppear = false;
+					}
+					if (ny != 0) {
+						this->vy = -this->vy;
+					}
+					/*y += min_ty * dy + ny * 0.4f;
+					x += min_tx * dx + nx * 0.4f;*/
+				}
 			}
 		}
 	}

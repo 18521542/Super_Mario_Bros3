@@ -356,7 +356,6 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			break;
 		}
 		
-		
 		//mario->SetState(MARIO_STATE_IDLE);
 		//DebugOut(L"\n mario isReadyToHold = %d", mario->IsReadyToHold());
 		break;
@@ -398,7 +397,6 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 			mario->SetState(MARIO_STATE_IDLE);
 			break;
 		}
-
 		//mario->SetState(MARIO_STATE_IDLE);
 		//DebugOut(L"\n mario is using tail = %d", mario->IsUsingTail());
 		//DebugOut(L"\n mario isReadyToHold = %d", mario->IsReadyToHold());

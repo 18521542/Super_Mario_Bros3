@@ -146,7 +146,7 @@ class CMario : public CGameObject
 
 	//shoot
 	bool isShootingFireBall = false;
-
+	bool isForFireBallAppear = true;
 	
 
 	//hold
@@ -177,7 +177,7 @@ public:
 	//timer
 	void StartUntouchable() { untouchable_start = GetTickCount(); untouchable = 1;}
 	void StartUsingTail() { using_tail_start = GetTickCount(); isUsingTail = true; }
-	void StartShootingFireBall() { shooting_start = GetTickCount(); isShootingFireBall = true; }
+	void StartShootingFireBall() { shooting_start = GetTickCount(); isShootingFireBall = true; isForFireBallAppear = true; }
 
 	void Reset();
 
