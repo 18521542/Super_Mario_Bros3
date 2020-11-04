@@ -45,10 +45,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Simple fall down	
 	vy += ay * dt;
 	
-	// limit the speed of mario	 don't care about direction
-	if (abs(vx) >= MARIO_WALKING_SPEED_MAX)
+	// limit the speed of mario when he wall - don't care about direction
+	if (abs(vx) >= MARIO_WALKING_SPEED_MAX&& !isRunning)
 	{
 		vx = nx * MARIO_WALKING_SPEED_MAX;
+	}
+
+	if (abs(vx) >= MARIO_RUN_SPEED_MAX) 
+	{
+		vx = nx * MARIO_RUN_SPEED_MAX;
 	}
 
 	// If player want to slow down mario then acceleration and speed have opposite sign
@@ -399,6 +404,7 @@ void CMario::RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani
 			ani = ani_jump_down_left;
 	
 }
+
 void CMario::Render()
 {
 	int ani = -1;
@@ -424,6 +430,21 @@ void CMario::Render()
 		}
 		else 
 		{
+			if (isRunning) {
+				if (nx > 0 && vx == MARIO_RUN_SPEED_MAX) {
+					ani = MARIO_ANI_BIG_RUN_RIGHT;
+				}
+				else if (nx < 0 && vx == -MARIO_RUN_SPEED_MAX) {
+					ani = MARIO_ANI_BIG_RUN_LEFT;
+				}
+				else if (nx > 0 && vx != MARIO_RUN_SPEED_MAX) {
+					ani = MARIO_ANI_BIG_WALK_FAST_RIGHT;
+				}
+				else if (nx < 0 && vx != -MARIO_RUN_SPEED_MAX) {
+					ani = MARIO_ANI_BIG_WALK_FAST_LEFT;
+				}
+			}
+			else
 			SameRenderLogicsForAllLevel(ani,
 				MARIO_ANI_BIG_JUMP_DOWN_RIGHT, MARIO_ANI_BIG_JUMP_DOWN_LEFT,
 				MARIO_ANI_BIG_IDLE_RIGHT, MARIO_ANI_BIG_IDLE_LEFT,

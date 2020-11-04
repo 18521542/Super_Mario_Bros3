@@ -11,6 +11,7 @@
 #define MARIO_JUMP_DEFLECT_SPEED	0.2f
 #define MARIO_GRAVITY				0.001f
 #define MARIO_DIE_DEFLECT_SPEED		0.5f
+#define MARIO_RUN_SPEED_MAX			0.3f
 
 //time
 #define MARIO_UNTOUCHABLE_TIME		5000
@@ -31,6 +32,8 @@
 #define MARIO_STATE_DIE				800
 #define	MARIO_STATE_FALING_DOWN		900
 #define MARIO_STATE_START_USING_TAIL		3
+#define MARIO_STATE_RUN				1000
+
 
 //define animation 
 #define MARIO_ANI_BIG_IDLE_RIGHT		0
@@ -45,6 +48,11 @@
 #define	MARIO_ANI_BIG_JUMP_DOWN_LEFT	32
 #define	MARIO_ANI_BIG_SIT_RIGHT			33
 #define	MARIO_ANI_BIG_SIT_LEFT			34
+
+#define MARIO_ANI_BIG_RUN_RIGHT			67	
+#define MARIO_ANI_BIG_RUN_LEFT			68
+#define MARIO_ANI_BIG_WALK_FAST_RIGHT	69
+#define MARIO_ANI_BIG_WALK_FAST_LEFT	70
 
 #define MARIO_ANI_SMALL_IDLE_RIGHT		2
 #define MARIO_ANI_SMALL_IDLE_LEFT		3
@@ -128,8 +136,6 @@
 #define MARIO_SMALL_BBOX_HEIGHT 15
 
 
-
-
 class CMario : public CGameObject
 {
 	float a;	// vx = vx + a*dt
@@ -147,11 +153,14 @@ class CMario : public CGameObject
 	//shoot
 	bool isShootingFireBall = false;
 	bool isForFireBallAppear = true;
-	
 
 	//hold
 	bool isHolding = false;
 	bool isReadyToHold = false;
+
+	//run
+	bool isReadyToRun = false;
+	bool isRunning = false;
 
 	//
 	int level;
@@ -168,11 +177,16 @@ public:
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
+
 	void SameRenderLogicsForAllLevel(int &ani, 
 		int ani_idle_right, int ani_idle_left, int ani_jump_down_right, int ani_jump_down_left,
 		int ani_stop_right, int ani_stop_left, int ani_walking_right, int ani_walking_left);
+
 	void RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit_left);
+
 	void RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left, int ani_jump_down_right, int ani_jump_down_left);
+
+	void RenderLogicForRunningState(int& ani, int ani_run_up_right, int ani_run_up_left, int ani_run_down);
 	
 	//timer
 	void StartUntouchable() { untouchable_start = GetTickCount(); untouchable = 1;}
@@ -185,7 +199,8 @@ public:
 	bool IsReadyToHold() { return isReadyToHold; }
 	bool IsReadyToJump() {return isReadyToJump;}
 	bool IsReadyToSit() {	return isReadyToSit; }
-	//bool IsStartUsingTail() { return this->isStartUsingTail; }
+	bool IsReadyToRun() { return isReadyToRun; }
+	bool IsRunning() { return isRunning; }
 	bool IsUsingTail() { return this->isUsingTail; }
 	bool IsShootingFireBall() { return this->isShootingFireBall; }
 	int GetLevel() { return this->level; }
@@ -193,11 +208,13 @@ public:
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
 
-	//void SetIsStartUsingTail(bool tail) { this->isStartUsingTail = tail; }
-
 	void setIsReadyToJump(bool jump) {isReadyToJump = jump;}
 
 	void setIsReadyToSit(bool use) { this->isReadyToSit = use; }
+
+	void setIsReadyToRun(bool run) { this->isReadyToRun = run; }
+
+	void setIsRunning(bool run) { this->isRunning = run; }
 
 	void SetState(int state);
 

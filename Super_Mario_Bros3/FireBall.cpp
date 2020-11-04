@@ -86,8 +86,8 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CPlatform*>(e->obj)) {
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
-				if (plat->getType() == PLATFORM_TYPE_ONE) {
-					DebugOut(L"\n FB is on the ground");
+				
+					//DebugOut(L"\n FB is on the ground");
 					if (nx != 0) {
 						isAppear = false;
 					}
@@ -96,7 +96,7 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					/*y += min_ty * dy + ny * 0.4f;
 					x += min_tx * dx + nx * 0.4f;*/
-				}
+				
 			}
 		}
 	}

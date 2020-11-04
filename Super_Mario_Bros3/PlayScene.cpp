@@ -345,6 +345,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_A:
 		mario->SetIsReadyToHold(true);
+		mario->setIsReadyToRun(true);
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL) 
 		{
 			mario->StartUsingTail();
@@ -391,7 +392,8 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_A:
 		mario->SetIsReadyToHold(false);
-		
+		mario->setIsReadyToRun(false);
+		mario->setIsRunning(false);
 		if (mario->GetLevel() == MARIO_LEVEL_FIRE)
 		{
 			mario->SetState(MARIO_STATE_IDLE);
@@ -423,13 +425,28 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 				
 		}
 		else if (game->IsKeyDown(DIK_RIGHT)) {
-			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-			mario->setIsReadyToSit(false);
+			if (mario->IsReadyToRun()) {
+				mario->setIsRunning(true);
+				mario->SetState(MARIO_STATE_WALKING_RIGHT);
+				mario->setIsReadyToSit(false);
+			}
+			else {
+				mario->SetState(MARIO_STATE_WALKING_RIGHT);
+				mario->setIsReadyToSit(false);
+			}
+			//DebugOut(L"\nIs running %d",mario->IsRunning());
 		}
 			
 		else if (game->IsKeyDown(DIK_LEFT)) {
-			mario->SetState(MARIO_STATE_WALKING_LEFT);
-			mario->setIsReadyToSit(false);
+			if (mario->IsReadyToRun()) {
+				mario->setIsRunning(true);
+				mario->SetState(MARIO_STATE_WALKING_LEFT);
+				mario->setIsReadyToSit(false);
+			}
+			else {
+				mario->SetState(MARIO_STATE_WALKING_LEFT);
+				mario->setIsReadyToSit(false);
+			}
 		}
 			
 		else if (game->IsKeyDown(DIK_DOWN)) {
