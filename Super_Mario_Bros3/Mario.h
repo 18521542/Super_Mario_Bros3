@@ -64,6 +64,10 @@
 #define	MARIO_ANI_SMALL_JUMP_LEFT		36
 #define	MARIO_ANI_SMALL_JUMP_DOWN_RIGHT	37
 #define	MARIO_ANI_SMALL_JUMP_DOWN_LEFT	38
+#define	MARIO_ANI_SMALL_WALK_FAST_RIGHT	71
+#define	MARIO_ANI_SMALL_WALK_FAST_LEFT	72
+#define	MARIO_ANI_SMALL_RUN_RIGHT		73
+#define	MARIO_ANI_SMALL_RUN_LEFT		74
 
 #define MARIO_ANI_FIRE_IDLE_RIGHT		9 
 #define MARIO_ANI_FIRE_IDLE_LEFT		10
@@ -79,7 +83,11 @@
 #define MARIO_ANI_FIRE_STOP_LEFT		46
 #define MARIO_ANI_FIRE_SHOOT_RIGHT		65
 #define MARIO_ANI_FIRE_SHOOT_LEFT		66
-		
+#define MARIO_ANI_FIRE_WALK_FAST_RIGHT	79
+#define MARIO_ANI_FIRE_WALK_FAST_LEFT	80
+#define MARIO_ANI_FIRE_RUN_RIGHT		81	
+#define MARIO_ANI_FIRE_RUN_LEFT			82
+
 
 #define MARIO_ANI_TAIL_IDLE_RIGHT		13
 #define MARIO_ANI_TAIL_IDLE_LEFT		14
@@ -95,6 +103,10 @@
 #define MARIO_ANI_TAIL_STOP_LEFT		54
 #define MARIO_ANI_TAIL_USETAIL_LEFT		63
 #define MARIO_ANI_TAIL_USETAIL_RIGHT	64
+#define	MARIO_ANI_TAIL_WALK_FAST_RIGHT	75
+#define	MARIO_ANI_TAIL_WALK_FAST_LEFT	76
+#define	MARIO_ANI_TAIL_RUN_RIGHT		77
+#define	MARIO_ANI_TAIL_RUN_LEFT			78		
 
 #define MARIO_ANI_FROG_IDLE_RIGHT		17
 #define MARIO_ANI_FROG_IDLE_LEFT		18
@@ -186,7 +198,7 @@ public:
 
 	void RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left, int ani_jump_down_right, int ani_jump_down_left);
 
-	void RenderLogicForRunningState(int& ani, int ani_run_up_right, int ani_run_up_left, int ani_run_down);
+	void RenderLogicForRunningState(int& ani, int ani_run_right, int ani_run_left, int ani_walk_fast_right, int ani_walk_fast_left);
 	
 	//timer
 	void StartUntouchable() { untouchable_start = GetTickCount(); untouchable = 1;}
