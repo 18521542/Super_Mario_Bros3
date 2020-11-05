@@ -67,13 +67,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == MARIO_STATE_SIT) {
 		if (vy < 0)
-			vy -= MARIO_ACCELERATION_JUMP * dt;
+			vy -= MARIO_JUMPING_ACCELERATION * dt;
 	}
 	
 	if (state == MARIO_STATE_JUMP) 
 	{
 		if (vy < 0)
-			vy -= MARIO_ACCELERATION_JUMP * dt;
+			vy -= MARIO_JUMPING_ACCELERATION * dt;
 	}
 
 	
@@ -132,7 +132,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		
 		if (dynamic_cast<CPlatform*>(obj)) 
 		{
-			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			CPlatform* pf = dynamic_cast<CPlatform*>(obj);
+			if (CheckBB(pLeft, pTop, pRight, pBottom)&&pf->getType()!=PLATFORM_TYPE_TWO)
 			{
 				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
@@ -240,15 +241,29 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 				if (plat->getType() == PLATFORM_TYPE_TWO) 
 				{
-					x += dx;
-					if (e->ny < 0) 
-					{
+					if (e->ny == 0) {
+						x += dx;
+						y += dy;
+						isReadyToSit = true;
+						isReadyToJump = true;
+					}
+					else if (e->ny < 0) {
+						x += min_tx * dx + nx * 0.4f;
 						y += min_ty * dy + ny * 0.4f;
 						vy = 0;
+						//vx = 0;
+						isReadyToSit = true;
+						isReadyToJump = true;
 					}
-					else {
+					else if(e->ny>0)
+					{
+						x += min_tx * dx + nx * 0.4f;
 						y += dy;
+						ny = 0;
+						isReadyToSit = true;
+						isReadyToJump = true;
 					}
+					
 					
 				}
 				else if (plat->getType() == PLATFORM_TYPE_THREE) {
@@ -256,8 +271,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (e->ny != 0||e->nx != 0) {
 						x += dx;
 						y += dy;
-						ny = 0;
-						nx = 0;
 					}
 				}
 				else if (plat->getType() == PLATFORM_TYPE_ONE) {
