@@ -19,20 +19,20 @@
 #define MARIO_SHOOTING_TIME			200
 
 //define state - xxx
-#define MARIO_STATE_IDLE			0
-#define MARIO_STATE_SLOWINGDOWN		1
-#define MARIO_STATE_SIT				2
-#define MARIO_STATE_WALKING_RIGHT	100
-#define MARIO_STATE_WALKING_LEFT	200
-#define MARIO_STATE_JUMP			300
-#define MARIO_STATE_KICK			400
-#define MARIO_STATE_TALE			500
-#define MARIO_STATE_THROW_FIRE		600
-#define MARIO_STATE_SWIM			700
-#define MARIO_STATE_DIE				800
-#define	MARIO_STATE_FALING_DOWN		900
-#define MARIO_STATE_START_USING_TAIL		3
-#define MARIO_STATE_RUN				1000
+#define MARIO_STATE_IDLE				0
+#define MARIO_STATE_SIT					2
+#define MARIO_STATE_WALKING_RIGHT		100
+#define MARIO_STATE_WALKING_LEFT		200
+#define MARIO_STATE_JUMP				300
+#define MARIO_STATE_KICK				400
+#define MARIO_STATE_TALE				500
+#define MARIO_STATE_THROW_FIRE			600
+#define MARIO_STATE_SWIM				700
+#define MARIO_STATE_DIE					800
+#define	MARIO_STATE_FALING_DOWN			900
+#define MARIO_STATE_START_USING_TAIL	3
+#define MARIO_STATE_RUN					1000
+#define MARIO_STATE_JUMP_FLY			1100
 
 
 //define animation 
@@ -88,7 +88,6 @@
 #define MARIO_ANI_FIRE_RUN_RIGHT		81	
 #define MARIO_ANI_FIRE_RUN_LEFT			82
 
-
 #define MARIO_ANI_TAIL_IDLE_RIGHT		13
 #define MARIO_ANI_TAIL_IDLE_LEFT		14
 #define MARIO_ANI_TAIL_WALKING_RIGHT	15
@@ -106,7 +105,10 @@
 #define	MARIO_ANI_TAIL_WALK_FAST_RIGHT	75
 #define	MARIO_ANI_TAIL_WALK_FAST_LEFT	76
 #define	MARIO_ANI_TAIL_RUN_RIGHT		77
-#define	MARIO_ANI_TAIL_RUN_LEFT			78		
+#define	MARIO_ANI_TAIL_RUN_LEFT			78	
+
+#define MARIO_ANI_TAIL_JUMP_FLY_RIGHT	83
+#define MARIO_ANI_TAIL_JUMP_FLY_LEFT	84
 
 #define MARIO_ANI_FROG_IDLE_RIGHT		17
 #define MARIO_ANI_FROG_IDLE_LEFT		18
@@ -164,7 +166,7 @@ class CMario : public CGameObject
 
 	//shoot
 	bool isShootingFireBall = false;
-	bool isForFireBallAppear = true;
+	bool isForFireBallAppear = false;
 
 	//hold
 	bool isHolding = false;
@@ -173,6 +175,15 @@ class CMario : public CGameObject
 	//run
 	bool isReadyToRun = false;
 	bool isRunning = false;
+
+	//fly
+	DWORD FlyStart;
+	bool isFlying = false;
+	bool isReadyToFly = false;
+
+	//JumpFly
+	bool isJumpFlying = false;
+	bool isReadyToJumpFly = false;
 
 	//
 	int level;
@@ -188,6 +199,9 @@ class CMario : public CGameObject
 public:
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	
+
+	//Render
 	virtual void Render();
 
 	void SameRenderLogicsForAllLevel(int &ani, 
@@ -205,34 +219,52 @@ public:
 	void StartUsingTail() { using_tail_start = GetTickCount(); isUsingTail = true; }
 	void StartShootingFireBall() { shooting_start = GetTickCount(); isShootingFireBall = true; isForFireBallAppear = true; }
 
+	//from beginning
 	void Reset();
+
+	int GetLevel() { return this->level; }
+
+	void SetState(int state);
+
+	void SetLevel(int l) { level = l; }
 
 	//get
 	bool IsReadyToHold() { return isReadyToHold; }
+
 	bool IsReadyToJump() {return isReadyToJump;}
+
 	bool IsReadyToSit() {	return isReadyToSit; }
+
 	bool IsReadyToRun() { return isReadyToRun; }
+
 	bool IsRunning() { return isRunning; }
+
 	bool IsUsingTail() { return this->isUsingTail; }
+
 	bool IsShootingFireBall() { return this->isShootingFireBall; }
-	int GetLevel() { return this->level; }
+
+	bool IsReadyToJumpFly() { return this->isReadyToJumpFly; }
+
+	bool IsJumpFlying() { return this->isJumpFlying; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
 
 	void setIsReadyToJump(bool jump) {isReadyToJump = jump;}
 
-	void setIsReadyToSit(bool use) { this->isReadyToSit = use; }
+	void setIsReadyToSit(bool sit) { this->isReadyToSit = sit; }
 
 	void setIsReadyToRun(bool run) { this->isReadyToRun = run; }
 
 	void setIsRunning(bool run) { this->isRunning = run; }
 
-	void SetState(int state);
-
-	void SetLevel(int l) { level = l; }
-
 	void SetIsShootingFireBall(bool shoot) { this->isShootingFireBall = shoot; }
+
+	void setIsJumpFlying(bool jumpfly) { this->isJumpFlying = jumpfly; }
+
+	void setIsReadyToJumpFlying(bool jumpfly) { this->isReadyToJumpFly=jumpfly; }
+
+	
 
 	//bounding box
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

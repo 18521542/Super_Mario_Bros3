@@ -17,7 +17,7 @@
 
 CMario::CMario(float x, float y) : CGameObject()
 {
-	level = MARIO_LEVEL_BIG;
+	level = MARIO_LEVEL_SMALL;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
 	nx = 1;
@@ -54,8 +54,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (abs(vx) >= MARIO_RUN_SPEED_MAX) 
 	{
 		vx = nx * MARIO_RUN_SPEED_MAX;
+		isReadyToJumpFly = true;
+		
 	}
-
+	DebugOut(L"\nMario is jumpfly %d", isJumpFlying);
 	// If player want to slow down mario then acceleration and speed have opposite sign
 	if (state == MARIO_STATE_IDLE) 
 	{
@@ -75,7 +77,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (vy < 0)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
 	}
-
+	
 	
 
 	for (int i = 0; i < coObjects->size(); i++)
@@ -133,7 +135,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (dynamic_cast<CPlatform*>(obj)) 
 		{
 			CPlatform* pf = dynamic_cast<CPlatform*>(obj);
-			if (CheckBB(pLeft, pTop, pRight, pBottom)&&pf->getType()!=PLATFORM_TYPE_TWO)
+			if (CheckBB(pLeft, pTop, pRight, pBottom) && pf->getType()!=PLATFORM_TYPE_TWO)
 			{
 				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
@@ -190,11 +192,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-
 		//Reset status when mario is on the ground
 		if (ny < 0) {
 			setIsReadyToJump(true);
 			setIsReadyToSit(true);
+			setIsJumpFlying(false);
+		}
+		if (nx != 0 || ny!=0) {
+			setIsReadyToJumpFlying(false);
 		}
 		//
 		// Collision logic with  special-objects
@@ -251,9 +256,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						x += min_tx * dx + nx * 0.4f;
 						y += min_ty * dy + ny * 0.4f;
 						vy = 0;
-						//vx = 0;
 						isReadyToSit = true;
 						isReadyToJump = true;
+
+						
 					}
 					else if(e->ny>0)
 					{
@@ -262,7 +268,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						ny = 0;
 						isReadyToSit = true;
 						isReadyToJump = true;
+
+						
 					}
+					
 					
 					
 				}
@@ -405,6 +414,7 @@ void CMario::RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit
 	else
 		ani = ani_sit_left;
 }
+
 void CMario::RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left,int ani_jump_down_right,int ani_jump_down_left)
 {
 		if (nx > 0 && vy < 0)
@@ -565,6 +575,14 @@ void CMario::Render()
 		}
 		else if (state == MARIO_STATE_JUMP)
 		{
+			if (isJumpFlying) {
+				if (nx > 0) {
+					ani = MARIO_ANI_TAIL_JUMP_FLY_RIGHT;
+				}
+				else
+					ani = MARIO_ANI_TAIL_JUMP_FLY_LEFT;
+			}
+			else
 			RenderLogicForJumpingState(ani,
 				MARIO_ANI_TAIL_JUMP_RIGHT,
 				MARIO_ANI_TAIL_JUMP_LEFT,
@@ -732,7 +750,7 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 void CMario::Reset()
 {
 	SetState(MARIO_STATE_IDLE);
-	SetLevel(MARIO_LEVEL_BIG);
+	SetLevel(MARIO_LEVEL_SMALL);
 	//SetIsStartUsingTail(false);
 	nx = 1;
 	a = MARIO_ACCELERATION;
