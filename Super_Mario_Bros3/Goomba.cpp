@@ -30,11 +30,29 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	
-
 	CGameObject::Update(dt, coObjects);
 
 	vy += MARIO_GRAVITY * dt;
 	vx = 0.03f;
+
+
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		LPGAMEOBJECT obj = coObjects->at(i);
+		float pLeft, pTop, pRight, pBottom;
+		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+		if (dynamic_cast<CPlatform*>(obj))
+			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			{
+				//Push back a little bit when bounding box has collision
+				y = GOOMBA_BBOX_HEIGHT - pTop + PushBackPixel;
+				if (nx > 0) {
+					x = GOOMBA_BBOX_WIDTH - pLeft - PushBackPixel;
+				}
+				else
+					x = GOOMBA_BBOX_WIDTH - pRight + PushBackPixel;
+			}
+	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

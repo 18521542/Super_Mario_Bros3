@@ -39,23 +39,21 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 
 
-		for (int i = 0; i < coObjects->size(); i++)
-		{
-			LPGAMEOBJECT obj = coObjects->at(i);
-			float pLeft, pTop, pRight, pBottom;
-			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-			if (dynamic_cast<CPlatform*>(obj))
-				if (CheckBB(pLeft, pTop, pRight, pBottom))
-				{
-					//Push back a little bit when bounding box has collision
-					y = KOOPAS_BBOX_HEIGHT - pTop + PushBackPixel;
-					if (nx > 0) {
-						x = KOOPAS_BBOX_WIDTH - pLeft - PushBackPixel;
-					}
-					else
-						x = KOOPAS_BBOX_WIDTH - pRight + PushBackPixel;
-				}
-		}
+		//for (int i = 0; i < coObjects->size(); i++)
+		//{
+		//	LPGAMEOBJECT obj = coObjects->at(i);
+		//	float pLeft, pTop, pRight, pBottom;
+		//	obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+		//	
+		//	float thisL, thisR, thisT, thisB;
+		//	this->GetBoundingBox(thisL, thisR, thisT, thisB);
+		//	if (dynamic_cast<CPlatform*>(obj))
+		//		if (CheckBB(pLeft, pTop, pRight, pBottom))
+		//		{
+		//			//Push back a little bit when bounding box has collision
+		//			//y = KOOPAS_BBOX_HEIGHT - pTop + PushBackPixel;
+		//		}
+		//}
 
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
@@ -83,29 +81,24 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 					if (plat->getType() == PLATFORM_TYPE_TWO) {
-						if (e->ny < 0)
-							SetState(KOOPAS_STATE_WALKING);
+						x += dx;
+						y += dy;
 					}
 					else if (plat->getType() == PLATFORM_TYPE_ONE) 
 					{
-						x += min_tx * dx + nx * 0.4f;
-						y += min_ty * dy + ny * 0.4f;
-
-						if (nx != 0 && !IsBeingHold()) 
+						if (nx != 0) 
 						{
 							vx = -vx;
 							this->nx = -this->nx;
 						}
-						else if (nx != 0 && IsBeingHold())
-						{
-							vx = 0;
-						}
 
 						if (ny != 0)
 							vy = 0;
+						x += min_tx * dx + nx * 0.4f;
+						y += min_ty * dy + ny * 0.4f;
 					}
 				}
-				if (dynamic_cast<CFireBall*>(e->obj)) {
+				else if (dynamic_cast<CFireBall*>(e->obj)) {
 					CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
 					if (nx != 0 || ny != 0) {
 						SetState(KOOPAS_STATE_DIE);
@@ -113,8 +106,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						
 					fb->setIsAppear(false);
 					
-				}
-				
+				}	
 			}
 		}
 

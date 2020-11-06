@@ -81,7 +81,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
 	}
 	
-	
 
 	for (int i = 0; i < coObjects->size(); i++)
 	{
@@ -92,30 +91,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
 			CKoopas* kp = dynamic_cast<CKoopas*>(obj);
-				if (CheckBB(pLeft, pTop, pRight, pBottom))
+			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			{
+				if (isUsingTail)
 				{
-					if (isUsingTail)
+					obj->SetDirection(nx);
+					obj->SetState(KOOPAS_STATE_DIE_UP);
+				}
+				if (isReadyToHold)
+				{
+					if (kp->GetState()==KOOPAS_STATE_DIE||kp->GetState()==KOOPAS_STATE_DIE_UP)
 					{
-						obj->SetDirection(nx);
-						obj->SetState(KOOPAS_STATE_DIE_UP);
-					}
-					else {
-						if (isReadyToHold) 
+						if (level != MARIO_LEVEL_SMALL)
 						{
-							if (level != MARIO_LEVEL_SMALL)
-							{
-								obj->SetPosition(x + nx * 10.0f, y + 10.0f);
-							}
-							else
-							{
-								obj->SetPosition(x + nx * 10.0f, y - 1.0f);
-							}
+							obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH - SAFETY_DISTANCE_TO_HOLD), y + 10.0f);
+						}
+						else
+						{
+							obj->SetPosition(x + nx * (MARIO_SMALL_BBOX_WIDTH-SAFETY_DISTANCE_TO_HOLD), y - 1.0f);
 						}
 					}
 				}
+			}
 		}
 
-		if (dynamic_cast<CFireBall*>(obj)) {
+		else if (dynamic_cast<CFireBall*>(obj)) {
 			CFireBall* fb = dynamic_cast<CFireBall*>(obj);
 			
 			if (isShootingFireBall && !fb->IsAppear() && isForFireBallAppear)
@@ -135,7 +135,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			//}
 		}
 		
-		if (dynamic_cast<CPlatform*>(obj)) 
+		else if (dynamic_cast<CPlatform*>(obj)) 
 		{
 			CPlatform* pf = dynamic_cast<CPlatform*>(obj);
 			if (CheckBB(pLeft, pTop, pRight, pBottom) && pf->getType()!=PLATFORM_TYPE_TWO)
@@ -310,10 +310,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (e->nx != 0)vx = 0;
 				}
 			}
-			else if (dynamic_cast<CKoopas*>(e->obj)) {
+			else if (dynamic_cast<CKoopas*>(e->obj)) 
+			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 				float kVx, kVy;
 				koopas->GetSpeed(kVx, kVy);
+
+				float kpL, kpT, kpR, kpB;
+				koopas->GetBoundingBox(kpL, kpT, kpR, kpB);
+				
 				if(e->ny<0)
 				{
 					if (koopas->GetState() == KOOPAS_STATE_WALKING) {
@@ -326,35 +331,39 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
 				}
-				if (e->nx != 0)
+				if (!isReadyToHold) 
 				{
-					if (!isReadyToHold) {
-						if (koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_UP)
+					if (e->nx != 0)
+					{
+						//if koopas is moving then mario die
+						if (abs(kVx) > 0)
+						{
+							if (untouchable == 0)
+							{
+								if (koopas->GetState() != GOOMBA_STATE_DIE)
+								{
+									if (level > MARIO_LEVEL_SMALL)
+									{
+										level = MARIO_LEVEL_SMALL;
+										StartUntouchable();
+									}
+									else
+										SetState(MARIO_STATE_DIE);
+								}
+							}
+						}
+						else 
 						{
 							koopas->SetDirection(this->nx);
 							koopas->SetState(KOOPAS_STATE_DIE_MOVING);
 							StartKicking();
-							//DebugOut(L"\n is kicking = %d", isKicking);
 						}
 					}
-					else if (untouchable == 0)
-					{
-						if (koopas->GetState() != GOOMBA_STATE_DIE)
-						{
-							if (level > MARIO_LEVEL_SMALL)
-							{
-								level = MARIO_LEVEL_SMALL;
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
-						}
-					}
-						
-					
 				}
-				x += dx;
-				y += dy;
+				else {
+					x += dx;
+					y += dy;
+				}
 			}
 			else if(dynamic_cast<CCoin*>(e->obj)){
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
@@ -381,7 +390,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}	
 	}
-	DebugOut(L"\n is kicking = %d", isKicking);
+	//DebugOut(L"\n is kicking = %d", isKicking);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
@@ -715,8 +724,8 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
-		vx = -nx * MARIO_DIE_DEFLECT_SPEED;
-		//a = 0;
+		//vx = -nx * MARIO_DIE_DEFLECT_SPEED;
+		a = 0;
 		break;
 	case MARIO_STATE_FLY:
 		//isReadyToFly = false;
