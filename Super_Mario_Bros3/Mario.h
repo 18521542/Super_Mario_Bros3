@@ -1,22 +1,33 @@
 #pragma once
 #include "GameObject.h"
 #include "FireBall.h"
-#define MARIO_WALKING_SPEED_START	0.001f 
-#define MARIO_WALKING_SPEED_MAX		0.1f
-#define MARIO_ACCELERATION			0.0003f
-#define MARIO_WALKING_SPEED_MIN		0.02f
+#define MARIO_WALKING_SPEED_START		0.001f 
+
+#define MARIO_WALKING_SPEED_MAX			0.1f
+
+#define MARIO_ACCELERATION				0.0003f
+
+#define MARIO_WALKING_SPEED_MIN			0.02f
+
 #define MARIO_JUMPING_ACCELERATION		0.0007f
-//0.1f
-#define MARIO_JUMP_SPEED_MAX		0.2f
-#define MARIO_JUMP_DEFLECT_SPEED	0.2f
-#define MARIO_GRAVITY				0.001f
-#define MARIO_DIE_DEFLECT_SPEED		0.5f
-#define MARIO_RUN_SPEED_MAX			0.3f
+
+#define MARIO_FLY_SPEED					0.1f	
+
+#define MARIO_JUMP_SPEED_MAX			0.2f
+
+#define MARIO_JUMP_DEFLECT_SPEED		0.2f
+
+#define MARIO_GRAVITY					0.001f
+
+#define MARIO_DIE_DEFLECT_SPEED			0.5f
+
+#define MARIO_RUN_SPEED_MAX				0.3f
 
 //time
-#define MARIO_UNTOUCHABLE_TIME		5000
-#define MARIO_USING_TAIL_TIME		300
-#define MARIO_SHOOTING_TIME			200
+#define MARIO_UNTOUCHABLE_TIME			5000
+#define MARIO_USING_TAIL_TIME			300
+#define MARIO_SHOOTING_TIME				200
+#define MARIO_FLYING_TIME				5000
 
 //define state - xxx
 #define MARIO_STATE_IDLE				0
@@ -33,6 +44,7 @@
 #define MARIO_STATE_START_USING_TAIL	3
 #define MARIO_STATE_RUN					1000
 #define MARIO_STATE_JUMP_FLY			1100
+#define MARIO_STATE_FLY					1200
 
 
 //define animation 
@@ -48,7 +60,6 @@
 #define	MARIO_ANI_BIG_JUMP_DOWN_LEFT	32
 #define	MARIO_ANI_BIG_SIT_RIGHT			33
 #define	MARIO_ANI_BIG_SIT_LEFT			34
-
 #define MARIO_ANI_BIG_RUN_RIGHT			67	
 #define MARIO_ANI_BIG_RUN_LEFT			68
 #define MARIO_ANI_BIG_WALK_FAST_RIGHT	69
@@ -106,7 +117,6 @@
 #define	MARIO_ANI_TAIL_WALK_FAST_LEFT	76
 #define	MARIO_ANI_TAIL_RUN_RIGHT		77
 #define	MARIO_ANI_TAIL_RUN_LEFT			78	
-
 #define MARIO_ANI_TAIL_JUMP_FLY_RIGHT	83
 #define MARIO_ANI_TAIL_JUMP_FLY_LEFT	84
 
@@ -115,18 +125,18 @@
 #define MARIO_ANI_FROG_WALKING_RIGHT	19
 #define MARIO_ANI_FROG_WALKING_LEFT		20
 
-#define MARIO_ANI_HAMMER_IDLE_RIGHT		21
-#define MARIO_ANI_HAMMER_IDLE_LEFT		22
-#define MARIO_ANI_HAMMER_WALKING_RIGHT	23
-#define MARIO_ANI_HAMMER_WALKING_LEFT	24
-#define MARIO_ANI_HAMMER_SIT_RIGHT		55
-#define MARIO_ANI_HAMMER_SIT_LEFT		56
-#define MARIO_ANI_HAMMER_JUMP_RIGHT		57
-#define MARIO_ANI_HAMMER_JUMP_LEFT		58
+#define MARIO_ANI_HAMMER_IDLE_RIGHT			21
+#define MARIO_ANI_HAMMER_IDLE_LEFT			22
+#define MARIO_ANI_HAMMER_WALKING_RIGHT		23
+#define MARIO_ANI_HAMMER_WALKING_LEFT		24
+#define MARIO_ANI_HAMMER_SIT_RIGHT			55
+#define MARIO_ANI_HAMMER_SIT_LEFT			56
+#define MARIO_ANI_HAMMER_JUMP_RIGHT			57
+#define MARIO_ANI_HAMMER_JUMP_LEFT			58
 #define MARIO_ANI_HAMMER_JUMP_DOWN_RIGHT	59
 #define MARIO_ANI_HAMMER_JUMP_DOWN_LEFT		60
-#define MARIO_ANI_HAMMER_STOP_RIGHT		61
-#define MARIO_ANI_HAMMER_STOP_LEFT		62
+#define MARIO_ANI_HAMMER_STOP_RIGHT			61
+#define MARIO_ANI_HAMMER_STOP_LEFT			62
 
 #define MARIO_ANI_DIE				8
 
@@ -177,9 +187,13 @@ class CMario : public CGameObject
 	bool isRunning = false;
 
 	//fly
-	DWORD FlyStart;
+	DWORD StartFly;
 	bool isFlying = false;
 	bool isReadyToFly = false;
+
+	//tail - falling
+	bool isFalling = false;
+
 
 	//JumpFly
 	bool isJumpFlying = false;
@@ -218,7 +232,8 @@ public:
 	void StartUntouchable() { untouchable_start = GetTickCount(); untouchable = 1;}
 	void StartUsingTail() { using_tail_start = GetTickCount(); isUsingTail = true; }
 	void StartShootingFireBall() { shooting_start = GetTickCount(); isShootingFireBall = true; isForFireBallAppear = true; }
-
+	void StartFlying() { StartFly = GetTickCount(); isFlying = true; }
+	DWORD GetStartFly() { return this->StartFly; }
 	//from beginning
 	void Reset();
 
@@ -246,6 +261,10 @@ public:
 	bool IsReadyToJumpFly() { return this->isReadyToJumpFly; }
 
 	bool IsJumpFlying() { return this->isJumpFlying; }
+
+	bool IsReadyToFly() { return this->isReadyToFly; }
+
+	bool IsFlying() { return this->isFlying; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
@@ -263,8 +282,10 @@ public:
 	void setIsJumpFlying(bool jumpfly) { this->isJumpFlying = jumpfly; }
 
 	void setIsReadyToJumpFlying(bool jumpfly) { this->isReadyToJumpFly=jumpfly; }
-
 	
+	void setIsFlying(bool fly) { this->isFlying = fly; }
+
+	void setIsReadyToFly(bool fly) { this->isReadyToFly = fly; }
 
 	//bounding box
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

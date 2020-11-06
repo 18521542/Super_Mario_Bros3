@@ -55,9 +55,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vx = nx * MARIO_RUN_SPEED_MAX;
 		isReadyToJumpFly = true;
-		
+		if (level == MARIO_LEVEL_TAIL) 
+		{
+			isReadyToFly = true;
+		}
+		//DebugOut(L"\nMario is Ready to fly %d", isReadyToFly);
 	}
-	DebugOut(L"\nMario is jumpfly %d", isJumpFlying);
+	//DebugOut(L"\nMario is jumpfly %d", isJumpFlying);
+
 	// If player want to slow down mario then acceleration and speed have opposite sign
 	if (state == MARIO_STATE_IDLE) 
 	{
@@ -174,7 +179,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isForFireBallAppear = false;
 		//isStartShooting = false;
 	}
-	
+
+	//if flying time is over then...
+	if (GetTickCount() - StartFly > MARIO_FLYING_TIME) {
+		isFlying = false;
+		StartFly = 0;
+		//isReadyToFly = false;
+	}
+	//DebugOut(L"\nMario  fly start %d", StartFly);
+	//DebugOut(L"\nMario is ready to fly %d", isReadyToFly);
+	DebugOut(L"\nMario is flying %d", isFlying);
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -197,6 +211,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			setIsReadyToJump(true);
 			setIsReadyToSit(true);
 			setIsJumpFlying(false);
+			setIsReadyToJumpFlying(false);
 		}
 		if (nx != 0 || ny!=0) {
 			setIsReadyToJumpFlying(false);
@@ -591,7 +606,14 @@ void CMario::Render()
 		}
 		else
 		{
-			if (IsUsingTail()) {
+			if (isFlying) {
+				if (nx > 0) {
+					ani = MARIO_ANI_TAIL_JUMP_FLY_RIGHT;
+				}
+				else
+					ani = MARIO_ANI_TAIL_JUMP_FLY_LEFT;
+			}
+			else if (IsUsingTail()) {
 				if (nx > 0)
 					ani = MARIO_ANI_TAIL_USETAIL_RIGHT;
 				else
@@ -680,7 +702,10 @@ void CMario::SetState(int state)
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		vx = -nx * MARIO_DIE_DEFLECT_SPEED;
 		//a = 0;
-
+		break;
+	case MARIO_STATE_FLY:
+		//isReadyToFly = false;
+		vy = -MARIO_FLY_SPEED;
 		break;
 	}
 }
