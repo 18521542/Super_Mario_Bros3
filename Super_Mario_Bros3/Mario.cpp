@@ -212,6 +212,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			setIsReadyToSit(true);
 			setIsJumpFlying(false);
 			setIsReadyToJumpFlying(false);
+			setIsFlying(false);
 		}
 		if (nx != 0 || ny!=0) {
 			setIsReadyToJumpFlying(false);
