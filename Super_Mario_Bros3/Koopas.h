@@ -3,7 +3,7 @@
 #include "GameObject.h"
 
 #define KOOPAS_WALKING_SPEED 0.03f;
-#define KOOPAS_DIE_SPEED 0.3f;
+#define KOOPAS_DIE_SPEED 0.2f;
 
 #define KOOPAS_BBOX_WIDTH			16
 #define KOOPAS_BBOX_HEIGHT			27
@@ -34,6 +34,7 @@ public:
 	CKoopas();
 	void SetDirection(int dir) { this->nx = dir; }
 	virtual void SetState(int state);
+
 	bool IsBeingHold() { return this->isBeingHold; }
 	void SetIsBeingHold(bool hold) { this->isBeingHold = hold; }
 };

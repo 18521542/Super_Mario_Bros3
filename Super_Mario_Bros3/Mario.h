@@ -30,6 +30,7 @@
 #define MARIO_USING_TAIL_TIME			300
 #define MARIO_SHOOTING_TIME				200
 #define MARIO_FLYING_TIME				5000
+#define MARIO_KICKING_TIME				300
 
 //define state - xxx
 #define MARIO_STATE_IDLE				0
@@ -121,9 +122,10 @@
 #define	MARIO_ANI_TAIL_RUN_LEFT			78	
 #define MARIO_ANI_TAIL_JUMP_FLY_RIGHT	83
 #define MARIO_ANI_TAIL_JUMP_FLY_LEFT	84
-
 #define MARIO_ANI_TAIL_FALLING_RIGHT	85
 #define MARIO_ANI_TAIL_FALLING_LEFT		86
+#define MARIO_ANI_TAIL_KICK_RIGHT		87
+#define MARIO_ANI_TAIL_KICK_LEFT		88	
 
 
 #define MARIO_ANI_FROG_IDLE_RIGHT		17
@@ -204,7 +206,10 @@ class CMario : public CGameObject
 	bool isJumpFlying = false;
 	bool isReadyToJumpFly = false;
 
-	//
+	//kick
+	DWORD StartKick;
+	bool isKicking = false;
+
 	int level;
 	int untouchable;
 	
@@ -238,6 +243,7 @@ public:
 	void StartUsingTail() { using_tail_start = GetTickCount(); isUsingTail = true; }
 	void StartShootingFireBall() { shooting_start = GetTickCount(); isShootingFireBall = true; isForFireBallAppear = true; }
 	void StartFlying() { StartFly = GetTickCount(); isFlying = true; }
+	void StartKicking() { StartKick = GetTickCount(); isKicking = true; }
 	DWORD GetStartFly() { return this->StartFly; }
 	//from beginning
 	void Reset();

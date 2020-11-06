@@ -91,6 +91,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (dynamic_cast<CKoopas*>(obj)) 
 		{
 			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+			CKoopas* kp = dynamic_cast<CKoopas*>(obj);
 				if (CheckBB(pLeft, pTop, pRight, pBottom))
 				{
 					if (isUsingTail)
@@ -98,18 +99,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						obj->SetDirection(nx);
 						obj->SetState(KOOPAS_STATE_DIE_UP);
 					}
-					
-					else if (isReadyToHold && 
-						(obj->state == KOOPAS_STATE_DIE || obj->state==KOOPAS_STATE_DIE_UP))
-					{
-						
-						if (level != MARIO_LEVEL_SMALL)
+					else {
+						if (isReadyToHold) 
 						{
-							obj->SetPosition(this->x + this->nx * 10.0f, this->y + 10.0f);
-						}
-						else
-						{
-							obj->SetPosition(this->x + this->nx * 10.0f, this->y -1.0f);
+							if (level != MARIO_LEVEL_SMALL)
+							{
+								obj->SetPosition(x + nx * 10.0f, y + 10.0f);
+							}
+							else
+							{
+								obj->SetPosition(x + nx * 10.0f, y - 1.0f);
+							}
 						}
 					}
 				}
@@ -185,6 +185,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//isReadyToFly = false;
 	}
 
+	//Kicking time is over then...
+	if (GetTickCount() - StartKick > MARIO_KICKING_TIME) {
+		StartKick = 0;
+		isKicking = false;
+	}
 
 	// No collision occured, proceed normally
 	//DebugOut(L"\nMario is ready falling slow %d", isReadyToFallingSlow);
@@ -309,8 +314,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 				float kVx, kVy;
 				koopas->GetSpeed(kVx, kVy);
-				float left, top, right, bottom;
-				koopas->GetBoundingBox(left, top, right, bottom);
 				if(e->ny<0)
 				{
 					if (koopas->GetState() == KOOPAS_STATE_WALKING) {
@@ -325,31 +328,30 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (e->nx != 0)
 				{
-					// if koopas is moving and not being hold
-					if (kVx!=0 && !koopas->IsBeingHold())
-					{
-						//If mario is not in Untouchable-mode
-						if (untouchable == 0)
+					if (!isReadyToHold) {
+						if (koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_UP)
 						{
-							//and not in MARIO_LEVEL_SMALL
-							if (level != MARIO_LEVEL_SMALL)
+							koopas->SetDirection(this->nx);
+							koopas->SetState(KOOPAS_STATE_DIE_MOVING);
+							StartKicking();
+							//DebugOut(L"\n is kicking = %d", isKicking);
+						}
+					}
+					else if (untouchable == 0)
+					{
+						if (koopas->GetState() != GOOMBA_STATE_DIE)
+						{
+							if (level > MARIO_LEVEL_SMALL)
 							{
-								//Then set level to small 
 								level = MARIO_LEVEL_SMALL;
-
-								//and start Untouchable time
 								StartUntouchable();
-
-								//and throw a bit
-								vx = -nx * MARIO_JUMP_DEFLECT_SPEED;
 							}
 							else
 								SetState(MARIO_STATE_DIE);
 						}
 					}
-					else if (kVx == 0 && koopas->IsBeingHold()) {
-						vx = 0;
-					}
+						
+					
 				}
 				x += dx;
 				y += dy;
@@ -379,7 +381,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}	
 	}
-
+	DebugOut(L"\n is kicking = %d", isKicking);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
@@ -584,7 +586,6 @@ void CMario::Render()
 		}
 	else if (level == MARIO_LEVEL_TAIL)
 	{
-		
 		if (state == MARIO_STATE_SIT)
 		{
 			RenderLogicForSittingState(ani, MARIO_ANI_TAIL_SIT_RIGHT, MARIO_ANI_TAIL_SIT_LEFT);
@@ -614,6 +615,12 @@ void CMario::Render()
 				else
 					ani = MARIO_ANI_TAIL_JUMP_FLY_LEFT;
 					//ani = MARIO_ANI_TAIL_FALLING_RIGHT;
+			}
+			else if (isKicking) {
+				if (nx > 0)
+					ani = MARIO_ANI_TAIL_KICK_RIGHT;
+				else
+					ani = MARIO_ANI_TAIL_KICK_LEFT;
 			}
 			else if (IsUsingTail()) {
 				if (nx > 0)

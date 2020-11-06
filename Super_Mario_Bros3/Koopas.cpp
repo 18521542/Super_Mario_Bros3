@@ -49,7 +49,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					//Push back a little bit when bounding box has collision
 					y = KOOPAS_BBOX_HEIGHT - pTop + PushBackPixel;
-
+					if (nx > 0) {
+						x = KOOPAS_BBOX_WIDTH - pLeft - PushBackPixel;
+					}
+					else
+						x = KOOPAS_BBOX_WIDTH - pRight + PushBackPixel;
 				}
 		}
 
@@ -113,6 +117,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				
 			}
 		}
+
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 	
 
