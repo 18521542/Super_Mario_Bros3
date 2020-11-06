@@ -59,9 +59,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			isReadyToFly = true;
 		}
-		//DebugOut(L"\nMario is Ready to fly %d", isReadyToFly);
 	}
-	//DebugOut(L"\nMario is jumpfly %d", isJumpFlying);
 
 	// If player want to slow down mario then acceleration and speed have opposite sign
 	if (state == MARIO_STATE_IDLE) 
@@ -186,10 +184,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		StartFly = 0;
 		//isReadyToFly = false;
 	}
-	//DebugOut(L"\nMario  fly start %d", StartFly);
-	//DebugOut(L"\nMario is ready to fly %d", isReadyToFly);
-	DebugOut(L"\nMario is flying %d", isFlying);
+
+
 	// No collision occured, proceed normally
+	//DebugOut(L"\nMario is ready falling slow %d", isReadyToFallingSlow);
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -207,12 +205,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//Reset status when mario is on the ground
-		if (ny < 0) {
+		if (ny < 0) 
+		{
 			setIsReadyToJump(true);
 			setIsReadyToSit(true);
 			setIsJumpFlying(false);
 			setIsReadyToJumpFlying(false);
 			setIsFlying(false);
+			setIsOnAir(false);
 		}
 		if (nx != 0 || ny!=0) {
 			setIsReadyToJumpFlying(false);
@@ -613,12 +613,20 @@ void CMario::Render()
 				}
 				else
 					ani = MARIO_ANI_TAIL_JUMP_FLY_LEFT;
+					//ani = MARIO_ANI_TAIL_FALLING_RIGHT;
 			}
 			else if (IsUsingTail()) {
 				if (nx > 0)
 					ani = MARIO_ANI_TAIL_USETAIL_RIGHT;
 				else
 					ani = MARIO_ANI_TAIL_USETAIL_LEFT;
+			}
+			else if ((isOnAir && !isReadyToJump) || (isOnAir && !isFlying)) {
+				if (nx > 0) {
+					ani = MARIO_ANI_TAIL_FALLING_RIGHT;
+				}
+				else
+					ani = MARIO_ANI_TAIL_FALLING_LEFT;
 			}
 			else {
 				if (isRunning) {
@@ -632,12 +640,7 @@ void CMario::Render()
 					MARIO_ANI_TAIL_STOP_RIGHT, MARIO_ANI_TAIL_STOP_LEFT,
 					MARIO_ANI_TAIL_WALKING_RIGHT, MARIO_ANI_TAIL_WALKING_LEFT);
 			}
-			
-			
-		}
-
-		
-			
+		}	
 	}   
 	else if (level == MARIO_LEVEL_HAMMER)
 	{
@@ -689,7 +692,11 @@ void CMario::SetState(int state)
 	case MARIO_STATE_JUMP:
 		a = 0;
 		if(vy==0)
-		vy = -MARIO_JUMP_SPEED_MAX;
+			vy = -MARIO_JUMP_SPEED_MAX;
+		if (level == MARIO_LEVEL_TAIL) 
+		{
+			isOnAir = true;
+		}
 		break;
 	case MARIO_STATE_IDLE:
 		break;
@@ -707,6 +714,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_FLY:
 		//isReadyToFly = false;
 		vy = -MARIO_FLY_SPEED;
+		isOnAir = true;
 		break;
 	}
 }

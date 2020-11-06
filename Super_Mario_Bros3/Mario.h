@@ -23,6 +23,8 @@
 
 #define MARIO_RUN_SPEED_MAX				0.3f
 
+#define MARIO_FALLING_SPEED				0.00004f
+
 //time
 #define MARIO_UNTOUCHABLE_TIME			5000
 #define MARIO_USING_TAIL_TIME			300
@@ -120,6 +122,10 @@
 #define MARIO_ANI_TAIL_JUMP_FLY_RIGHT	83
 #define MARIO_ANI_TAIL_JUMP_FLY_LEFT	84
 
+#define MARIO_ANI_TAIL_FALLING_RIGHT	85
+#define MARIO_ANI_TAIL_FALLING_LEFT		86
+
+
 #define MARIO_ANI_FROG_IDLE_RIGHT		17
 #define MARIO_ANI_FROG_IDLE_LEFT		18
 #define MARIO_ANI_FROG_WALKING_RIGHT	19
@@ -192,8 +198,7 @@ class CMario : public CGameObject
 	bool isReadyToFly = false;
 
 	//tail - falling
-	bool isFalling = false;
-
+	bool isOnAir = false;
 
 	//JumpFly
 	bool isJumpFlying = false;
@@ -265,6 +270,8 @@ public:
 	bool IsReadyToFly() { return this->isReadyToFly; }
 
 	bool IsFlying() { return this->isFlying; }
+
+	bool IsOnAir() { return this->isOnAir; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
@@ -286,6 +293,8 @@ public:
 	void setIsFlying(bool fly) { this->isFlying = fly; }
 
 	void setIsReadyToFly(bool fly) { this->isReadyToFly = fly; }
+
+	void setIsOnAir(bool onair) { this->isOnAir = onair; }
 
 	//bounding box
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
