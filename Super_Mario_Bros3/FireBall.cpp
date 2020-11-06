@@ -45,15 +45,17 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 	//do nothing;
 
+	
+
 	if (GetTickCount() - startFly > FB_APPEAR_TIME) {
 		isAppear = false;
 		startFly = 0;
 	}
 
-	if (vy < 0) {
-		
-			vy = 0;
-	}
+	vy += MARIO_GRAVITY * dt;
+	//DebugOut(L"\nY = %f", y);
+	
+	//DebugOut(L"\nVy = %f", vy);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -73,6 +75,9 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
+		if (nx != 0) {
+			isAppear = false;
+		}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -92,11 +97,8 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						isAppear = false;
 					}
 					if (ny != 0) {
-						this->vy = -this->vy;
+						this->vy = -UP_SPEED;
 					}
-					/*y += min_ty * dy + ny * 0.4f;
-					x += min_tx * dx + nx * 0.4f;*/
-				
 			}
 		}
 	}

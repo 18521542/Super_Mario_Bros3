@@ -7,9 +7,10 @@
 #define FB_BBOX_WIDTH		8
 #define FB_BBOX_HEIGHT		9
 
-#define FB_SPEED_X			0.015f
+#define FB_SPEED_X			0.15f
 #define FB_SPEED_Y			0.015f
 
+#define UP_SPEED			0.15f
 #define FB_ANI				0
 
 class CFireBall : public CGameObject 

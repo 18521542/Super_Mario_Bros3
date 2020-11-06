@@ -51,6 +51,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx = nx * MARIO_WALKING_SPEED_MAX;
 	}
 
+	//when mario run
 	if (abs(vx) >= MARIO_RUN_SPEED_MAX) 
 	{
 		vx = nx * MARIO_RUN_SPEED_MAX;
@@ -70,11 +71,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vx = 0;
 	}
 
+	//when mario sit
 	if (state == MARIO_STATE_SIT) {
 		if (vy < 0)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
 	}
 	
+	//when mario jump
 	if (state == MARIO_STATE_JUMP) 
 	{
 		if (vy < 0)
@@ -120,8 +123,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			
 			if (isShootingFireBall && !fb->IsAppear() && isForFireBallAppear)
 			{
-				obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH + 1.0f), y/*+5.0f*/);
-				obj->SetSpeed(nx*0.1f, 0.1f);
+				obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH + 1.0f), y);
+				obj->SetSpeed(nx*FB_SPEED_X, FB_SPEED_Y);
 				fb->StartAppear();
 				isForFireBallAppear = false;
 			}

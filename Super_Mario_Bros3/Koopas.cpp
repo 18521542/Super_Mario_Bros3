@@ -38,23 +38,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 
-
-		//for (int i = 0; i < coObjects->size(); i++)
-		//{
-		//	LPGAMEOBJECT obj = coObjects->at(i);
-		//	float pLeft, pTop, pRight, pBottom;
-		//	obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-		//	
-		//	float thisL, thisR, thisT, thisB;
-		//	this->GetBoundingBox(thisL, thisR, thisT, thisB);
-		//	if (dynamic_cast<CPlatform*>(obj))
-		//		if (CheckBB(pLeft, pTop, pRight, pBottom))
-		//		{
-		//			//Push back a little bit when bounding box has collision
-		//			//y = KOOPAS_BBOX_HEIGHT - pTop + PushBackPixel;
-		//		}
-		//}
-
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
 		
@@ -88,14 +71,19 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (nx != 0) 
 						{
+							x += min_tx * dx + nx * 0.4f;
+							y += min_ty * dy + ny * 0.4f;
 							vx = -vx;
 							this->nx = -this->nx;
 						}
 
-						if (ny != 0)
+						if (ny != 0) {
+							x += min_tx * dx + nx * 0.4f;
+							y += min_ty * dy + ny * 0.4f;
 							vy = 0;
-						x += min_tx * dx + nx * 0.4f;
-						y += min_ty * dy + ny * 0.4f;
+						}
+							
+						
 					}
 				}
 				else if (dynamic_cast<CFireBall*>(e->obj)) {
@@ -110,6 +98,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 
+
+		//clean collistion
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 	
