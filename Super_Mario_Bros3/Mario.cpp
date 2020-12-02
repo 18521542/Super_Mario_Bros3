@@ -5,13 +5,10 @@
 #include "Mario.h"
 #include "Game.h"
 
-#include "Goomba.h"
 #include "Portal.h"
-#include "GameObject.h"
 #include "Platform.h"
-#include "Koopas.h"
-#include "coin.h"
-#include "Brick.h"
+
+
 
 
 
@@ -45,8 +42,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Simple fall down	
 	vy += ay * dt;
 	
-	// limit the speed of mario when he wall - don't care about direction
-	if (abs(vx) >= MARIO_WALKING_SPEED_MAX&& !isRunning)
+	// limit the speed of mario when he walk - don't care about direction
+	if (abs(vx) >= MARIO_WALKING_SPEED_MAX && !isRunning)
 	{
 		vx = nx * MARIO_WALKING_SPEED_MAX;
 	}
@@ -71,20 +68,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vx = 0;
 	}
 
-	//when mario sit
-	if (state == MARIO_STATE_SIT) {
+	else if (state == MARIO_STATE_SIT) {
 		if (vy < 0)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
 	}
 	
-	//when mario jump
-	if (state == MARIO_STATE_JUMP) 
+	else if (state == MARIO_STATE_JUMP) 
 	{
 		if (vy < 0)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
+		
 	}
-	
-
+	//handle overlap logic
 	for (int i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
@@ -128,14 +123,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				fb->StartAppear();
 				isForFireBallAppear = false;
 			}
-
-			//obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-			//if (CheckBB(pLeft, pTop, pRight, pBottom)) {
-			//	
-			//	fb->setIsAppear(true);
-			//	fb->SetPosition(this->x, this->y);
-			//	//fb->SetSpeed(0, 0);
-			//}
 		}
 		
 		else if (dynamic_cast<CPlatform*>(obj)) 
@@ -195,7 +182,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	// No collision occured, proceed normally
-	//DebugOut(L"\nMario is ready falling slow %d", isReadyToFallingSlow);
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -213,16 +199,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//Reset status when mario is on the ground
-		if (ny < 0) 
+		if (ny < 0 ) 
 		{
 			setIsReadyToJump(true);
+			//state = MARIO_STATE_IDLE;
 			setIsReadyToSit(true);
 			setIsJumpFlying(false);
 			setIsReadyToJumpFlying(false);
-			setIsFlying(false);
+			//if flying time is not over then
+			if (GetTickCount() - StartFly <= MARIO_FLYING_TIME) {
+				isFlying = false;
+			}
 			setIsOnAir(false);
 		}
-		if (nx != 0 || ny!=0) {
+		if (nx != 0 || ny!=0) 
+		{
 			setIsReadyToJumpFlying(false);
 		}
 		//
@@ -393,7 +384,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}	
 	}
-	//DebugOut(L"\n is kicking = %d", isKicking);
+
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
@@ -447,14 +438,14 @@ void CMario::RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit
 
 void CMario::RenderLogicForJumpingState(int& ani, int ani_jump_up_right, int ani_jump_up_left,int ani_jump_down_right,int ani_jump_down_left)
 {
-		if (nx > 0 && vy < 0)
-			ani = ani_jump_up_right;
-		else if (nx < 0 && vy < 0)
-			ani = ani_jump_up_left;
-		else if (nx > 0 && vy > 0)
-			ani = ani_jump_down_right;
-		else
-			ani = ani_jump_down_left;
+	if (nx > 0 && vy < 0)
+		ani = ani_jump_up_right;
+	else if (nx < 0 && vy < 0)
+		ani = ani_jump_up_left;
+	else if (nx > 0 && vy > 0)
+		ani = ani_jump_down_right;
+	else 
+		ani = ani_jump_down_left;
 	
 }
 
@@ -491,20 +482,24 @@ void CMario::Render()
 		}
 		else if (state == MARIO_STATE_JUMP) 
 		{
+			if (isJumpFlying)
+			{
+				RenderLogicForSittingState(ani, MARIO_ANI_BIG_JUMP_FLY_RIGHT, MARIO_ANI_BIG_JUMP_FLY_LEFT);
+			}
+			else
 			RenderLogicForJumpingState(ani, 
 				MARIO_ANI_BIG_JUMP_RIGHT, 
 				MARIO_ANI_BIG_JUMP_LEFT, 
 				MARIO_ANI_BIG_JUMP_DOWN_RIGHT, 
 				MARIO_ANI_BIG_JUMP_DOWN_LEFT);
 		}
+		else if (isRunning)
+		{
+			RenderLogicForRunningState(ani, MARIO_ANI_BIG_RUN_RIGHT, MARIO_ANI_BIG_RUN_LEFT,
+				MARIO_ANI_BIG_WALK_FAST_RIGHT, MARIO_ANI_BIG_WALK_FAST_LEFT);
+		}
 		else 
 		{
-			if (isRunning) 
-			{
-				RenderLogicForRunningState(ani, MARIO_ANI_BIG_RUN_RIGHT, MARIO_ANI_BIG_RUN_LEFT,
-					MARIO_ANI_BIG_WALK_FAST_RIGHT, MARIO_ANI_BIG_WALK_FAST_LEFT);
-			}
-			else
 			SameRenderLogicsForAllLevel(ani,
 				MARIO_ANI_BIG_JUMP_DOWN_RIGHT, MARIO_ANI_BIG_JUMP_DOWN_LEFT,
 				MARIO_ANI_BIG_IDLE_RIGHT, MARIO_ANI_BIG_IDLE_LEFT,
@@ -604,12 +599,9 @@ void CMario::Render()
 		}
 		else if (state == MARIO_STATE_JUMP)
 		{
-			if (isJumpFlying) {
-				if (nx > 0) {
-					ani = MARIO_ANI_TAIL_JUMP_FLY_RIGHT;
-				}
-				else
-					ani = MARIO_ANI_TAIL_JUMP_FLY_LEFT;
+			if (isJumpFlying) 
+			{
+				RenderLogicForSittingState(ani, MARIO_ANI_TAIL_JUMP_FLY_RIGHT, MARIO_ANI_TAIL_JUMP_FLY_LEFT);
 			}
 			else
 			RenderLogicForJumpingState(ani,
@@ -618,48 +610,46 @@ void CMario::Render()
 				MARIO_ANI_TAIL_JUMP_DOWN_RIGHT,
 				MARIO_ANI_TAIL_JUMP_DOWN_LEFT);
 		}
+		else if (isFlying) {
+			if (nx > 0) {
+				ani = MARIO_ANI_TAIL_JUMP_FLY_RIGHT;
+			}
+			else
+				ani = MARIO_ANI_TAIL_JUMP_FLY_LEFT;
+		}
+		else if (isKicking) {
+			if (nx > 0)
+				ani = MARIO_ANI_TAIL_KICK_RIGHT;
+			else
+				ani = MARIO_ANI_TAIL_KICK_LEFT;
+		}
+		else if (IsUsingTail()) {
+			if (nx > 0)
+				ani = MARIO_ANI_TAIL_USETAIL_RIGHT;
+			else
+				ani = MARIO_ANI_TAIL_USETAIL_LEFT;
+		}
+		else if (isRunning) {
+			RenderLogicForRunningState(ani, MARIO_ANI_TAIL_RUN_RIGHT, MARIO_ANI_TAIL_RUN_LEFT,
+				MARIO_ANI_TAIL_WALK_FAST_RIGHT, MARIO_ANI_TAIL_WALK_FAST_LEFT);
+		}
+		else if ((isOnAir && isFalling))
+		{
+			if (nx > 0) {
+				ani = MARIO_ANI_TAIL_FALLING_RIGHT;
+			}
+			else
+				ani = MARIO_ANI_TAIL_FALLING_LEFT;
+		}
 		else
 		{
-			if (isFlying) {
-				if (nx > 0) {
-					ani = MARIO_ANI_TAIL_JUMP_FLY_RIGHT;
-				}
-				else
-					ani = MARIO_ANI_TAIL_JUMP_FLY_LEFT;
-					//ani = MARIO_ANI_TAIL_FALLING_RIGHT;
-			}
-			else if (isKicking) {
-				if (nx > 0)
-					ani = MARIO_ANI_TAIL_KICK_RIGHT;
-				else
-					ani = MARIO_ANI_TAIL_KICK_LEFT;
-			}
-			else if (IsUsingTail()) {
-				if (nx > 0)
-					ani = MARIO_ANI_TAIL_USETAIL_RIGHT;
-				else
-					ani = MARIO_ANI_TAIL_USETAIL_LEFT;
-			}
-			else if ((isOnAir && !isReadyToJump) || (isOnAir && !isFlying)) {
-				if (nx > 0) {
-					ani = MARIO_ANI_TAIL_FALLING_RIGHT;
-				}
-				else
-					ani = MARIO_ANI_TAIL_FALLING_LEFT;
-			}
-			else {
-				if (isRunning) {
-					RenderLogicForRunningState(ani, MARIO_ANI_TAIL_RUN_RIGHT, MARIO_ANI_TAIL_RUN_LEFT,
-						MARIO_ANI_TAIL_WALK_FAST_RIGHT, MARIO_ANI_TAIL_WALK_FAST_LEFT);
-				}
-				else
-				SameRenderLogicsForAllLevel(ani,
-					MARIO_ANI_TAIL_JUMP_DOWN_RIGHT, MARIO_ANI_TAIL_JUMP_DOWN_LEFT,
-					MARIO_ANI_TAIL_IDLE_RIGHT, MARIO_ANI_TAIL_IDLE_LEFT,
-					MARIO_ANI_TAIL_STOP_RIGHT, MARIO_ANI_TAIL_STOP_LEFT,
-					MARIO_ANI_TAIL_WALKING_RIGHT, MARIO_ANI_TAIL_WALKING_LEFT);
-			}
+			SameRenderLogicsForAllLevel(ani,
+				MARIO_ANI_TAIL_JUMP_DOWN_RIGHT, MARIO_ANI_TAIL_JUMP_DOWN_LEFT,
+				MARIO_ANI_TAIL_IDLE_RIGHT, MARIO_ANI_TAIL_IDLE_LEFT,
+				MARIO_ANI_TAIL_STOP_RIGHT, MARIO_ANI_TAIL_STOP_LEFT,
+				MARIO_ANI_TAIL_WALKING_RIGHT, MARIO_ANI_TAIL_WALKING_LEFT);
 		}	
+
 	}   
 	else if (level == MARIO_LEVEL_HAMMER)
 	{
@@ -691,7 +681,7 @@ void CMario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -709,9 +699,13 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		a = 0;
+		if (vx == 0) {
+			a = 0;
+		}
+		else
+			a = nx * MARIO_ACCELERATION;
 		if(vy==0)
-			vy = -MARIO_JUMP_SPEED_MAX;
+			vy =  -MARIO_JUMP_SPEED_MAX;
 		if (level == MARIO_LEVEL_TAIL) 
 		{
 			isOnAir = true;
@@ -727,11 +721,10 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
-		//vx = -nx * MARIO_DIE_DEFLECT_SPEED;
-		a = 0;
 		break;
 	case MARIO_STATE_FLY:
 		//isReadyToFly = false;
+		a = 0;
 		vy = -MARIO_FLY_SPEED;
 		isOnAir = true;
 		break;

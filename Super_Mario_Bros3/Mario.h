@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "FireBall.h"
+#include "Object.h"
 #define MARIO_WALKING_SPEED_START		0.001f 
 
 #define MARIO_WALKING_SPEED_MAX			0.1f
@@ -67,6 +67,8 @@
 #define MARIO_ANI_BIG_RUN_LEFT			68
 #define MARIO_ANI_BIG_WALK_FAST_RIGHT	69
 #define MARIO_ANI_BIG_WALK_FAST_LEFT	70
+#define MARIO_ANI_BIG_JUMP_FLY_RIGHT	90
+#define MARIO_ANI_BIG_JUMP_FLY_LEFT		89
 
 #define MARIO_ANI_SMALL_IDLE_RIGHT		2
 #define MARIO_ANI_SMALL_IDLE_LEFT		3
@@ -201,6 +203,7 @@ class CMario : public CGameObject
 
 	//tail - falling
 	bool isOnAir = false;
+	bool isFalling = false;
 
 	//JumpFly
 	bool isJumpFlying = false;
@@ -239,11 +242,11 @@ public:
 	void RenderLogicForRunningState(int& ani, int ani_run_right, int ani_run_left, int ani_walk_fast_right, int ani_walk_fast_left);
 	
 	//timer
-	void StartUntouchable() { untouchable_start = GetTickCount(); untouchable = 1;}
-	void StartUsingTail() { using_tail_start = GetTickCount(); isUsingTail = true; }
-	void StartShootingFireBall() { shooting_start = GetTickCount(); isShootingFireBall = true; isForFireBallAppear = true; }
-	void StartFlying() { StartFly = GetTickCount(); isFlying = true; }
-	void StartKicking() { StartKick = GetTickCount(); isKicking = true; }
+	void StartUntouchable() { untouchable_start = GetTickCount64(); untouchable = 1;}
+	void StartUsingTail() { using_tail_start = GetTickCount64(); isUsingTail = true; }
+	void StartShootingFireBall() { shooting_start = GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
+	void StartFlying() { StartFly = GetTickCount64(); isFlying = true; }
+	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
 	DWORD GetStartFly() { return this->StartFly; }
 	//from beginning
 	void Reset();
@@ -278,6 +281,8 @@ public:
 	bool IsFlying() { return this->isFlying; }
 
 	bool IsOnAir() { return this->isOnAir; }
+
+	bool IsFalling() { return this->isFalling; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
@@ -301,6 +306,8 @@ public:
 	void setIsReadyToFly(bool fly) { this->isReadyToFly = fly; }
 
 	void setIsOnAir(bool onair) { this->isOnAir = onair; }
+
+	void setIsFalling(bool falling) { this->isFalling = falling; }
 
 	//bounding box
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

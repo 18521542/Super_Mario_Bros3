@@ -149,6 +149,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="coin.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Tilemap.h" />
     <ClInclude Include="Utils.h" />

@@ -71,19 +71,16 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (nx != 0) 
 						{
-							x += min_tx * dx + nx * 0.4f;
-							y += min_ty * dy + ny * 0.4f;
 							vx = -vx;
 							this->nx = -this->nx;
+							x += min_tx * dx + nx * 0.4f;
+							y += min_ty * dy + ny * 0.4f;
 						}
-
 						if (ny != 0) {
 							x += min_tx * dx + nx * 0.4f;
 							y += min_ty * dy + ny * 0.4f;
 							vy = 0;
 						}
-							
-						
 					}
 				}
 				else if (dynamic_cast<CFireBall*>(e->obj)) {

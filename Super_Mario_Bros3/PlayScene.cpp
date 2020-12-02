@@ -7,8 +7,9 @@
 #include "Sprites.h"
 #include "Portal.h"
 #include"FireBall.h"
-#define PushBackPixel 9.0f
-using namespace std;
+
+//#define PushBackPixel 9.0f
+//using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
@@ -286,7 +287,8 @@ void CPlayScene::Update(DWORD dt)
 	cy -= (game->GetScreenHeight()+70)/2;
 	//if (cy > 220.0f) cy = 220.0f;
 	//else 
-	if (cx ==0 ) cx = 0;
+	if (cx <=0 ) 
+		cx = 0;
 	if (player->GetState() == MARIO_STATE_DIE)
 		return;
 	CGame::GetInstance()->SetCamPos(cx, cy);
@@ -354,8 +356,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			}
 			if (mario->IsOnAir())
 			{
-				if (!mario->IsFlying() || !mario->IsReadyToJump()) {
+				if (!mario->IsFlying() || !mario->IsReadyToJump()) 
+				{
 					mario->SetSpeed(currentVx, MARIO_FALLING_SPEED);
+					mario->setIsFalling(true);
 				}
 			}
 			break;
@@ -390,7 +394,10 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetState(MARIO_STATE_IDLE);
 		mario->setIsReadyToJump(false);
 		mario->setIsReadyToSit(true);
-		mario->setIsJumpFlying(false);		
+		mario->setIsJumpFlying(false);
+		if (mario->IsFalling()) {
+			mario->setIsFalling(false);
+		}
 		break;
 	case (DIK_LEFT):
 		mario->SetState(MARIO_STATE_IDLE);
@@ -426,7 +433,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
-	float currentX, currentY;
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE)
 		return;
@@ -434,8 +440,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	{
 		if (game->IsKeyDown(DIK_S))
 		{
-			//DebugOut(L"\nMario is ready to fly %d", mario->IsReadyToFly());
-			if (!mario->IsFlying()) 
+			if (!mario->IsFlying())
 			{
 				if (mario->IsReadyToJump())
 				{
@@ -449,7 +454,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 				}
 			}
 			//If mario is ready to fly
-			else 
+			else
 			{
 				mario->SetState(MARIO_STATE_FLY);
 			}
@@ -465,7 +470,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 				mario->SetState(MARIO_STATE_WALKING_RIGHT);
 				mario->setIsReadyToSit(false);
 			}
-			//DebugOut(L"\nIs running %d",mario->IsRunning());
 		}
 			
 		else if (game->IsKeyDown(DIK_LEFT)) {
@@ -481,12 +485,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		}
 			
 		else if (game->IsKeyDown(DIK_DOWN)) {
-
-			if(mario->IsReadyToSit())
-				mario->SetState(MARIO_STATE_SIT);
+			if(mario->GetLevel()!=MARIO_LEVEL_SMALL)
+				if(mario->IsReadyToSit())
+					mario->SetState(MARIO_STATE_SIT);
 		}
-
+		
 	}
-	
-	
 }
