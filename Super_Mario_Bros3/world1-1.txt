@@ -536,7 +536,7 @@
 #############################################################################################
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 4 = background, 5 = platform, 6 = coin, 3 = koopas, 7 = fire ball
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 4 = background, 5 = platform, 6 = coin, 3 = koopas, 7 = fire ball, 8 = tail of mario
 # 
 # --- platform (hint: I created the list using Excel!) ----
 
@@ -598,10 +598,11 @@
 #5	512	366	1	514	377	3
 #5	607	373	1	608	383	3	
 # ---- background ---------rgb = 156 252 240
-4	0	0	4
-
+#4	0	0	4
+# ---- Tail ---------------
+8	2700	400	2
 # ---- MARIO---------------	
-0	6	300	1
+0	5	300	1
 #fire ball
 7	2500	300	7
 7	2600	300	7

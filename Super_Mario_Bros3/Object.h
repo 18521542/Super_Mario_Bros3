@@ -4,3 +4,4 @@
 #include "coin.h"
 #include "FireBall.h"
 #include "Koopas.h"
+#include "Mario.h"

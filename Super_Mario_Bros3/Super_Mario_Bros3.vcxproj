@@ -151,6 +151,7 @@
     <ClInclude Include="coin.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="Tail.h" />
     <ClInclude Include="Tilemap.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Tail.cpp" />
     <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />

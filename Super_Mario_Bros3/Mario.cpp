@@ -91,11 +91,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CKoopas* kp = dynamic_cast<CKoopas*>(obj);
 			if (CheckBB(pLeft, pTop, pRight, pBottom))
 			{
-				if (isUsingTail)
-				{
-					obj->SetDirection(nx);
-					obj->SetState(KOOPAS_STATE_DIE_UP);
-				}
 				if (isReadyToHold)
 				{
 					if (kp->GetState()==KOOPAS_STATE_DIE||kp->GetState()==KOOPAS_STATE_DIE_UP)
@@ -681,7 +676,7 @@ void CMario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -732,50 +727,19 @@ void CMario::SetState(int state)
 }
 
 void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
-{
-	if (level == MARIO_LEVEL_TAIL)
+{	
+	left = x;
+	top = y;
+	if (level == MARIO_LEVEL_SMALL)
 	{
-		left = x;
-		top = y;
-		if (!isUsingTail) 
-		{
-			if (state != MARIO_STATE_SIT)
-			{
-				right = x + MARIO_TAIL_BBOX_WIDTH;
-				bottom = y + MARIO_BIG_BBOX_HEIGHT;
-			}
-			else 
-			{
-				right = x + MARIO_BIG_BBOX_WIDTH;
-				bottom = y + MARIO_SMALL_BBOX_HEIGHT + 4;
-			}
-		}
-		else 
-		{
-			bottom = y + MARIO_BIG_BBOX_HEIGHT;
-			top = y;
-			if (nx > 0) {
-				left = x;
-				right = x + MARIO_TAIL_BBOX_WIDTH + TAIL_BBOX_WIDTH;
-			}
-			else 
-			{
-				left = (x - TAIL_BBOX_WIDTH);
-				right = x + MARIO_TAIL_BBOX_WIDTH;
-			}
-			
-		}
+		right = x + MARIO_SMALL_BBOX_WIDTH;
+		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
 	}
-	else 
-	{
-		left = x;
-		top = y;
-		if (level == MARIO_LEVEL_SMALL)
-		{
-			right = x + MARIO_SMALL_BBOX_WIDTH;
-			bottom = y + MARIO_SMALL_BBOX_HEIGHT;
-		}
-		else
+	else if (level == MARIO_LEVEL_TAIL) {
+		right = x + MARIO_TAIL_BBOX_WIDTH;
+		bottom = y + MARIO_BIG_BBOX_HEIGHT;
+	}
+	else
 	{
 		if (state == MARIO_STATE_SIT)
 		{
@@ -786,8 +750,7 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			right = x + MARIO_BIG_BBOX_WIDTH;
 			bottom = y + MARIO_BIG_BBOX_HEIGHT;
 		}
-	}
-	}
+	}	
 }
 
 /*

@@ -7,6 +7,7 @@
 #include "Sprites.h"
 #include "Portal.h"
 #include"FireBall.h"
+#include "Tail.h"
 
 //#define PushBackPixel 9.0f
 //using namespace std;
@@ -38,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_COIN		6
 #define OBJECT_TYPE_PORTAL		50
 #define OBJECT_TYPE_FIREBALL	7
+#define OBJECT_TYPE_TAIL		8
 
 #define MAX_SCENE_LINE 1024
 
@@ -128,9 +130,6 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
 }
 
-/*
-	Parse a line in section [OBJECTS]
-*/
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
@@ -192,6 +191,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	break;
 	case OBJECT_TYPE_FIREBALL:
 		obj = new CFireBall();
+		//x,y
+		break;
+	case OBJECT_TYPE_TAIL:
+		obj = new CTail();
+		//obj = new CFireBall();
 		//x,y
 		break;
 	default:
@@ -300,9 +304,6 @@ void CPlayScene::Render()
 		objects[i]->Render();
 }
 
-/*
-	Unload current scene
-*/
 void CPlayScene::Unload()
 {
 	for (int i = 0; i < objects.size(); i++)
