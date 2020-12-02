@@ -4,7 +4,7 @@
 #define TAIL_ANI 0
 #define TAIL_STATE_DISAPPEAR	1
 #define TAIL_STATE_APPEAR		2
-#define BB_TAIL_WIDTH			15
+#define BB_TAIL_WIDTH			10
 #define BB_TAIL_HEIGHT			8
 class CTail : public CGameObject
 {

@@ -735,19 +735,26 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		right = x + MARIO_SMALL_BBOX_WIDTH;
 		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
 	}
-	else if (level == MARIO_LEVEL_TAIL) {
+	else if (level == MARIO_LEVEL_TAIL) 
+	{
 		right = x + MARIO_TAIL_BBOX_WIDTH;
-		bottom = y + MARIO_BIG_BBOX_HEIGHT;
+		if (state == MARIO_STATE_SIT)
+		{
+			bottom = y + MARIO_HEIGHT_SIT_BBOX ;
+		}
+		else 
+		{
+			bottom = y + MARIO_BIG_BBOX_HEIGHT;
+		}		
 	}
 	else
 	{
+		right = x + MARIO_BIG_BBOX_WIDTH;
 		if (state == MARIO_STATE_SIT)
 		{
-			right = x + MARIO_BIG_BBOX_WIDTH;
-			bottom = y + MARIO_SMALL_BBOX_HEIGHT + 4;
+			bottom = y + MARIO_HEIGHT_SIT_BBOX;
 		}
 		else {
-			right = x + MARIO_BIG_BBOX_WIDTH;
 			bottom = y + MARIO_BIG_BBOX_HEIGHT;
 		}
 	}	
