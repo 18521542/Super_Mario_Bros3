@@ -1,5 +1,5 @@
 #include "Tail.h"
-
+#include "Utils.h"
 CTail::CTail()
 {
 	SetState(TAIL_STATE_APPEAR);
@@ -30,6 +30,7 @@ void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	for (int i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
@@ -38,13 +39,13 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (dynamic_cast<CMario*>(obj))
 		{
 			CMario* mario = dynamic_cast<CMario*>(obj);
-			if (mario->IsUsingTail())
+			if (mario->IsForTailAppear())
 			{
-				this->state = TAIL_STATE_APPEAR;
+				state = TAIL_STATE_APPEAR;
 				this->nx = mario->nx;
 			}
 			else
-				this->state = TAIL_STATE_DISAPPEAR;
+				state = TAIL_STATE_DISAPPEAR;
 			if (mario->nx < 0)
 			{
 				this->x = left - BB_TAIL_WIDTH;
@@ -61,6 +62,14 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				obj->SetDirection(nx);
 				obj->SetState(KOOPAS_STATE_DIE_UP);
+			}
+		}
+		else if (dynamic_cast<CBreakableBrick*>(obj)) {
+			float pLeft, pTop, pRight, pBottom;
+			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+			if (this->CheckBB(pLeft, pTop, pRight, pBottom))
+			{
+				obj->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
 			}
 		}
 	}

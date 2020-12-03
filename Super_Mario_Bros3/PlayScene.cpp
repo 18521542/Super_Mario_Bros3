@@ -40,6 +40,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PORTAL		50
 #define OBJECT_TYPE_FIREBALL	7
 #define OBJECT_TYPE_TAIL		8
+#define OBJECT_TYPE_BREAKABLEBRICK		9
 
 #define MAX_SCENE_LINE 1024
 
@@ -197,6 +198,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CTail();
 		//obj = new CFireBall();
 		//x,y
+		break;
+	case OBJECT_TYPE_BREAKABLEBRICK:
+		obj = new CBreakableBrick();
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

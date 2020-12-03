@@ -79,6 +79,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
 		
 	}
+
 	//handle overlap logic
 	for (int i = 0; i < coObjects->size(); i++)
 	{
@@ -152,6 +153,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		using_tail_start = 0;
 		isUsingTail = false;
+	}
+
+	if (GetTickCount() - tail_appear > MARIO_FOR_TAIL_APPEAR_TIME) {
+		tail_appear = 0;
+		isForTailAppear = false;
 	}
 	
 	//reset shooting to  if mario finish shotting
@@ -256,6 +262,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 				if (plat->getType() == PLATFORM_TYPE_TWO) 
 				{
+					/*if (e->ny < 0) {
+						float l, t, r, b;
+						plat->GetBoundingBox(l, t, r, b);
+						if (CheckBB(l, t, r, b))
+						{
+							DebugOut(L"You are on the platform");
+							vy = 0;
+						}
+
+					}*/
 					if (e->ny == 0) {
 						x += dx;
 						y += dy;
@@ -268,8 +284,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						vy = 0;
 						isReadyToSit = true;
 						isReadyToJump = true;
-
-						
 					}
 					else if(e->ny>0)
 					{
@@ -281,6 +295,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 						
 					}
+					//x += dx;
+					//y += dy;
 					
 					
 					
@@ -363,9 +379,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				
 			}
-			else if (dynamic_cast<CBrick*>(e->obj)) {
+			else if (dynamic_cast<CBrick*>(e->obj) || dynamic_cast<CBreakableBrick*>(e->obj)) {
 				x += min_tx * dx + nx * 0.8f;
-				y += min_ty * dy + ny * 0.1f;
+				y += min_ty * dy + ny * 0.4f;
 				if (e->ny != 0)vy = 0;
 				if (e->nx != 0)vx = 0;
 			}

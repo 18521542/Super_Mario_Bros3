@@ -9,6 +9,7 @@
 90	textures\world-1-1n.png	76	220	72
 100	textures\mario-left.png	255	255	255
 110	textures\mario-right.png	255	255	255	
+120	textures\misc2.png	166	185	255
 #############################################################################################
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -45,6 +46,12 @@
 15	198	554	206	562	0
 16	198	573	206	582	0
 17	180	574	188	582	0
+
+# breakable brick ===========================================
+18	274	188	290	204	120
+19	293	188	309	204	120
+20	312	188	328	204	120
+21	331	188	347	204	120
 # BIG MARIO=================================== 
 # idle right
 10001	246	154	260	181	0
@@ -289,6 +296,8 @@
 
 # ==== coin ==========
 1001	2	100	3	100	4	100
+# ==== breakable brick =====
+1002	18	200	19	200	20	200	21	200
 # ==== MARIO =========
 #idle BIG right
 400	10001	100
@@ -424,7 +433,7 @@
 #tail use tail left
 63	17008	50	170121	100	18008	50	170041	100
 #tail use tail right
-64	17008	100	170041	150	18008	100	170121	150
+64	17008	50	170041	100	18008	50	170121	100
 #shoot right
 65	13014	100	13013	100	13012	100
 #shoot left
@@ -533,10 +542,12 @@
 6	100	110	120	130	140
 # Fire Ball
 7	200
+# breakable brick
+8	1002
 #############################################################################################
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 4 = background, 5 = platform, 6 = coin, 3 = koopas, 7 = fire ball, 8 = tail of mario
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 4 = background, 5 = platform, 6 = coin, 3 = koopas, 7 = fire ball, 8 = tail of mario, 9 = breakable brick
 # 
 # --- platform (hint: I created the list using Excel!) ----
 
@@ -617,6 +628,27 @@
 1	657	386	22
 1	705	353	22
 1	1474	369	22
+#-----	BREAKABLE BRICK ----
+9	1953	403	8
+9	1969	403	8
+9	1985	403	8
+9	2001	403	8
+9	2017	403	8
+9	2033	403	8
+9	2049	403	8
+9	1969	387	8
+9	1985	387	8
+9	2001	387	8
+9	2017	387	8
+9	2033	387	8
+9	1985	371	8
+9	2001	371	8
+9	2017	371	8
+9	2033	371	8
+9	2097	403	8
+9	2113	403	8
+9	2097	387	8
+
 # GOOMBA
 2	320	300	3
 #2	260	402	3

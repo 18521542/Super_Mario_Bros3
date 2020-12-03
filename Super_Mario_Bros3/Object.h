@@ -5,3 +5,5 @@
 #include "FireBall.h"
 #include "Koopas.h"
 #include "Mario.h"
+#include "Platform.h"
+#include "BreakableBrick.h"

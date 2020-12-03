@@ -97,7 +97,6 @@ public:
 	~CGameObject();
 public :
 	bool CheckBB(float friend_left, float friend_top, float friend_right, float friend_bottom);
-
 	
 };
 

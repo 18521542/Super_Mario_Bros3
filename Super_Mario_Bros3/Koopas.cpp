@@ -1,8 +1,5 @@
 #include "Koopas.h"
-#include "Platform.h"
-#include "Mario.h"
 #include "Utils.h"
-#include "Platform.h"
 CKoopas::CKoopas()
 {
 	nx = 1;
@@ -20,23 +17,23 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (state == KOOPAS_STATE_DIE_UP) 
 		{
-			if(vy<0)
-				vy += MARIO_GRAVITY * dt;
 			if (nx > 0) 
 			{
 				if (vx > 0)
-					vx -= MARIO_GRAVITY * dt;
+					vx -= 0.0002f * dt;
 				else
 					vx = 0;
 			}
 			else
 			{
 				if (vx < 0)
-					vx += MARIO_GRAVITY * dt;
+					vx += 0.0002f * dt;
 				else
 					vx = 0;
 			}
 		}
+		
+		
 
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
@@ -70,13 +67,26 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					else if (plat->getType() == PLATFORM_TYPE_ONE) 
 					{
 						if (nx != 0) 
-						{
+						{	
+							float l, t, r, b;
+							plat->GetBoundingBox(l, t, r, b);
 							vx = -vx;
 							this->nx = -this->nx;
 							x += min_tx * dx + nx * 0.4f;
 							y += min_ty * dy + ny * 0.4f;
+
+							//if overlap occur
+							if (this->CheckBB(l, t, r, b))
+							{
+								if (this->nx > 0) {
+									x = x - 1.0f;
+								}
+								else
+									x = x + 1.0f;
+							}
 						}
-						if (ny != 0) {
+						if (ny != 0) 
+						{
 							x += min_tx * dx + nx * 0.4f;
 							y += min_ty * dy + ny * 0.4f;
 							vy = 0;
@@ -139,8 +149,8 @@ void CKoopas::SetState(int state)
 		vx = nx * KOOPAS_DIE_SPEED;
 		break;
 	case KOOPAS_STATE_DIE_UP:
-		vx =  nx*KOOPAS_DIE_SPEED;
-		vy = -(0.5f);
+		vx =  nx * KOOPAS_DIE_SPEED;
+		vy = -(0.3f);
 	}
 
 }

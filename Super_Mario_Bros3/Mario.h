@@ -28,6 +28,9 @@
 //time
 #define MARIO_UNTOUCHABLE_TIME			5000
 #define MARIO_USING_TAIL_TIME			300
+
+#define MARIO_FOR_TAIL_APPEAR_TIME		10
+
 #define MARIO_SHOOTING_TIME				200
 #define MARIO_FLYING_TIME				5000
 #define MARIO_KICKING_TIME				300
@@ -183,9 +186,13 @@ class CMario : public CGameObject
 	bool isReadyToJump = true;
 
 	//using tail
+	DWORD using_tail_start;
+	DWORD tail_appear;
 	bool isUsingTail = false;
+	bool isForTailAppear = false;
 
 	//shoot
+	DWORD shooting_start;
 	bool isShootingFireBall = false;
 	bool isForFireBallAppear = false;
 
@@ -219,8 +226,8 @@ class CMario : public CGameObject
 	
 	//time
 	DWORD untouchable_start;
-	DWORD using_tail_start;
-	DWORD shooting_start;
+
+
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -244,7 +251,7 @@ public:
 	
 	//timer
 	void StartUntouchable() { untouchable_start = GetTickCount64(); untouchable = 1;}
-	void StartUsingTail() { using_tail_start = GetTickCount64(); isUsingTail = true; }
+	void StartUsingTail() { using_tail_start = GetTickCount64(); tail_appear = GetTickCount64();  isUsingTail = true; isForTailAppear = true; }
 	void StartShootingFireBall() { shooting_start = GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
 	void StartFlying() { StartFly = GetTickCount64(); isFlying = true; }
 	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
@@ -284,6 +291,8 @@ public:
 	bool IsOnAir() { return this->isOnAir; }
 
 	bool IsFalling() { return this->isFalling; }
+
+	bool IsForTailAppear() { return this->isForTailAppear; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
@@ -310,6 +319,7 @@ public:
 
 	void setIsFalling(bool falling) { this->isFalling = falling; }
 
+	void setIsForTailAppear(bool isforTailAppear) { this->isForTailAppear = isforTailAppear; }
 	//bounding box
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
