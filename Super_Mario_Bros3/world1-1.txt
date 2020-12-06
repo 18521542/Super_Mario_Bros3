@@ -4,7 +4,7 @@
 20	textures\misc.png	176	224	248
 10	textures\enemies.png	3	26	110
 30	textures\enemies-2.png	0	128	128
-70	textures\MyMap1-1.png	76	220	72
+70	textures\Background_Main.png	76	220	72
 80	textures\Background.png	76	220	72
 90	textures\world-1-1n.png	76	220	72
 100	textures\mario-left.png	255	255	255
@@ -14,7 +14,7 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #BACK_ground
-1	13	14	2813	459	70
+1	13	14	2813	459	80
 #top brick
 801	0	417	17	434	80
 #body brick
@@ -609,7 +609,7 @@
 #5	512	366	1	514	377	3
 #5	607	373	1	608	383	3	
 # ---- background ---------rgb = 156 252 240
-#4	0	0	4
+4	0	0	4
 # ---- Tail ---------------
 8	2700	400	2
 # ---- MARIO---------------	
