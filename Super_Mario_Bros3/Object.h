@@ -7,3 +7,4 @@
 #include "Mario.h"
 #include "Platform.h"
 #include "BreakableBrick.h"
+#include "Tail.h"

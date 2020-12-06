@@ -29,7 +29,7 @@
 #define MARIO_UNTOUCHABLE_TIME			5000
 #define MARIO_USING_TAIL_TIME			300
 
-#define MARIO_FOR_TAIL_APPEAR_TIME		10
+#define MARIO_FOR_TAIL_APPEAR_TIME		50
 
 #define MARIO_SHOOTING_TIME				200
 #define MARIO_FLYING_TIME				5000
@@ -267,6 +267,8 @@ public:
 
 	//get
 	bool IsReadyToHold() { return isReadyToHold; }
+
+	bool IsHolding() { return this->isHolding; }
 
 	bool IsReadyToJump() {return isReadyToJump;}
 

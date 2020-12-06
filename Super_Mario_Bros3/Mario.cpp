@@ -92,18 +92,29 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CKoopas* kp = dynamic_cast<CKoopas*>(obj);
 			if (CheckBB(pLeft, pTop, pRight, pBottom))
 			{
+				//DebugOut(L"\nIs hold to hold: %d", isHolding);
 				if (isReadyToHold)
 				{
 					if (kp->GetState()==KOOPAS_STATE_DIE||kp->GetState()==KOOPAS_STATE_DIE_UP)
 					{
+						isHolding = true;
+						//set position for koopas.
 						if (level != MARIO_LEVEL_SMALL)
 						{
 							obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH - SAFETY_DISTANCE_TO_HOLD), y + 10.0f);
 						}
 						else
 						{
-							obj->SetPosition(x + nx * (MARIO_SMALL_BBOX_WIDTH-SAFETY_DISTANCE_TO_HOLD), y - 1.0f);
+							obj->SetPosition(x + nx * (MARIO_SMALL_BBOX_WIDTH - SAFETY_DISTANCE_TO_HOLD), y - 1.0f);
 						}
+					}
+				}
+				else {
+					if (isHolding) {
+						isHolding = false;
+						StartKicking();
+						kp->SetDirection(this->nx);
+						kp->SetState(KOOPAS_STATE_DIE_MOVING);
 					}
 				}
 			}
@@ -222,7 +233,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
 			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -296,10 +306,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						
 					}
 					//x += dx;
-					//y += dy;
-					
-					
-					
+					//y += d
 				}
 				else if (plat->getType() == PLATFORM_TYPE_THREE) {
 					//ignore this platform
@@ -311,7 +318,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (plat->getType() == PLATFORM_TYPE_ONE) {
 					x += min_tx * dx + nx * 0.8f;
 					y += min_ty * dy + ny * 0.1f;
-					if (e->ny != 0)vy = 0;
+					if (e->ny < 0) vy = 0;
 					if (e->nx != 0)vx = 0;
 				}
 			}

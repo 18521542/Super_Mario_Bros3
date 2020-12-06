@@ -4,8 +4,8 @@
 20	textures\misc.png	176	224	248
 10	textures\enemies.png	3	26	110
 30	textures\enemies-2.png	0	128	128
-70	textures\Background.png	76	220	72
-80	textures\Background_Main.png	76	220	72
+70	textures\MyMap1-1.png	76	220	72
+80	textures\Background.png	76	220	72
 90	textures\world-1-1n.png	76	220	72
 100	textures\mario-left.png	255	255	255
 110	textures\mario-right.png	255	255	255	
@@ -609,7 +609,7 @@
 #5	512	366	1	514	377	3
 #5	607	373	1	608	383	3	
 # ---- background ---------rgb = 156 252 240
-4	0	0	4
+#4	0	0	4
 # ---- Tail ---------------
 8	2700	400	2
 # ---- MARIO---------------	
@@ -617,7 +617,7 @@
 #fire ball
 7	2500	300	7
 7	2600	300	7
-#7	2700	300	7
+7	2700	300	7
 
 #-----	QUESTION BRICK ----
 1	177	353	22

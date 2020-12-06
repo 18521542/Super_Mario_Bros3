@@ -33,7 +33,19 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 		
-		
+		for (int i = 0; i < coObjects->size(); i++)
+		{
+			LPGAMEOBJECT obj = coObjects->at(i);
+			float pLeft, pTop, pRight, pBottom;
+			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+			
+			if (dynamic_cast<CMario*>(obj)) {
+				CMario* mario = dynamic_cast<CMario*>(obj);
+				if (mario->IsHolding()) {
+					vy = 0;
+				}
+			}
+		}
 
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
