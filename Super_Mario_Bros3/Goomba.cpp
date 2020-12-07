@@ -36,12 +36,12 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx = 0.03f;
 
 
-	for (int i = 0; i < coObjects->size(); i++)
+	for (size_t i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
 		float pLeft, pTop, pRight, pBottom;
 		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-		if (dynamic_cast<CPlatform*>(obj))
+		if (dynamic_cast<CPlatform*>(obj)) {
 			if (CheckBB(pLeft, pTop, pRight, pBottom))
 			{
 				//Push back a little bit when bounding box has collision
@@ -52,6 +52,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else
 					x = GOOMBA_BBOX_WIDTH - pRight + PushBackPixel;
 			}
+		}
+		
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -102,7 +104,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				fb->setIsAppear(false);
 
 			}
-
+			
 		}
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

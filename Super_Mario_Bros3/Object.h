@@ -8,3 +8,4 @@
 #include "Platform.h"
 #include "BreakableBrick.h"
 #include "Tail.h"
+#include "QuestionBrick.h"

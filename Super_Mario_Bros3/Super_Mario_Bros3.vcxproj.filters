@@ -7,10 +7,6 @@
     <Filter Include="Framework\GameObject">
       <UniqueIdentifier>{29df6f1a-0ce1-4c4a-885f-cfb2acb1e36f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Framework\Map">
       <UniqueIdentifier>{a7c36992-7fd1-4ee1-b695-4d6617f7a433}</UniqueIdentifier>
     </Filter>
@@ -34,37 +30,41 @@
     <Filter Include="Framework\GameObject\Item">
       <UniqueIdentifier>{a944dc75-9809-4b0c-912e-82994c488db6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\GameObject\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sprites.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Animations.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Textures.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyEventHandler.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Portal.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayScene.h">
-      <Filter>Framework\Header Files</Filter>
+      <Filter>Framework\GameObject\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tilemap.h">
       <Filter>Framework\Map</Filter>
@@ -101,6 +101,21 @@
     </ClInclude>
     <ClInclude Include="Platform.h">
       <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestionBrick.h">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClInclude>
+    <ClInclude Include="leaf.h">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperMushroom.h">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="SwitchBlock.h">
+      <Filter>Framework\GameObject\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="Sprites.cpp">
       <Filter>Framework\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestionBrick.cpp">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf.cpp">
+      <Filter>Framework\GameObject\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -33,7 +33,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 		
-		for (int i = 0; i < coObjects->size(); i++)
+		for (size_t i = 0; i < coObjects->size(); i++)
 		{
 			LPGAMEOBJECT obj = coObjects->at(i);
 			float pLeft, pTop, pRight, pBottom;
@@ -45,6 +45,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = 0;
 				}
 			}
+
 		}
 
 		vector<LPCOLLISIONEVENT> coEvents;
@@ -114,6 +115,18 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					fb->setIsAppear(false);
 					
 				}	
+				else if (dynamic_cast<CQuestionBrick*>(e->obj)) {
+					CQuestionBrick* qb = dynamic_cast<CQuestionBrick*>(e->obj);
+					if (e->nx != 0) {
+						if (qb->GetState() == BRICK_STATE_WITH_EFFECT) {
+							qb->SetState(BRICK_STATE_WITH_NO_EFFECT);
+							if (!qb->IsMoving() && !qb->IsUsed())
+							{
+								qb->StartMoving();
+							}
+						}
+					}
+				}
 			}
 		}
 

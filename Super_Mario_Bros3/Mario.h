@@ -7,7 +7,7 @@
 
 #define MARIO_ACCELERATION				0.0003f
 
-#define MARIO_WALKING_SPEED_MIN			0.02f
+#define MARIO_WALKING_SPEED_MIN			0.01f
 
 #define MARIO_JUMPING_ACCELERATION		0.0007f
 
@@ -250,11 +250,11 @@ public:
 	void RenderLogicForRunningState(int& ani, int ani_run_right, int ani_run_left, int ani_walk_fast_right, int ani_walk_fast_left);
 	
 	//timer
-	void StartUntouchable() { untouchable_start = GetTickCount64(); untouchable = 1;}
-	void StartUsingTail() { using_tail_start = GetTickCount64(); tail_appear = GetTickCount64();  isUsingTail = true; isForTailAppear = true; }
-	void StartShootingFireBall() { shooting_start = GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
-	void StartFlying() { StartFly = GetTickCount64(); isFlying = true; }
-	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
+	void StartUntouchable() { untouchable_start = (ULONGLONG) GetTickCount64(); untouchable = 1;}
+	void StartUsingTail() { using_tail_start = (ULONGLONG)GetTickCount64(); tail_appear = GetTickCount64();  isUsingTail = true; isForTailAppear = true; }
+	void StartShootingFireBall() { shooting_start = (ULONGLONG)GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
+	void StartFlying() { StartFly = (ULONGLONG)GetTickCount64(); isFlying = true; }
+	void StartKicking() { StartKick = (ULONGLONG)GetTickCount64(); isKicking = true; }
 	DWORD GetStartFly() { return this->StartFly; }
 	//from beginning
 	void Reset();
@@ -322,6 +322,13 @@ public:
 	void setIsFalling(bool falling) { this->isFalling = falling; }
 
 	void setIsForTailAppear(bool isforTailAppear) { this->isForTailAppear = isforTailAppear; }
-	//bounding box
+
+	void UpdateStateUsingTimeOut();
+
+	void UpdateForEachState();
+
+	void HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects);
+
+	void HandleNormalColision(vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

@@ -31,7 +31,7 @@ void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
-	for (int i = 0; i < coObjects->size(); i++)
+	for (size_t i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
 		float left, top, right, bottom;

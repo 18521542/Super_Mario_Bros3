@@ -41,6 +41,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FIREBALL	7
 #define OBJECT_TYPE_TAIL		8
 #define OBJECT_TYPE_BREAKABLEBRICK		9
+#define OBJECT_TYPE_QUESTIONBRICK		10
 
 #define MAX_SCENE_LINE 1024
 
@@ -94,7 +95,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	LPANIMATION ani = new CAnimation();
 
 	int ani_id = atoi(tokens[0].c_str());
-	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+	for (size_t i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
 		int frame_time = atoi(tokens[i + 1].c_str());
@@ -120,7 +121,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 
 	CAnimations* animations = CAnimations::GetInstance();
 
-	for (int i = 1; i < tokens.size(); i++)
+	for (size_t i = 1; i < tokens.size(); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
 
@@ -140,8 +141,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());  //left
-	float y = atof(tokens[2].c_str());	//top
+	double x = atof(tokens[1].c_str());  //left
+	double y = atof(tokens[2].c_str());	//top
 
 	int ani_set_id = atoi(tokens[3].c_str());
 	
@@ -169,8 +170,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackground(); break;
 	case OBJECT_TYPE_PORTAL:
 	{
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
+		double r = atof(tokens[4].c_str());
+		double b = atof(tokens[5].c_str());
 		int scene_id = atoi(tokens[6].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
@@ -178,8 +179,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PLATFORM:
 	{
 		//DebugOut(L"aaaa");
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
+		double r = atof(tokens[4].c_str());
+		double b = atof(tokens[5].c_str());
 		int type = atoi(tokens[6].c_str());
 		obj = new CPlatform(x, y, r, b, type);
 
@@ -201,6 +202,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BREAKABLEBRICK:
 		obj = new CBreakableBrick();
+		break;
+	case OBJECT_TYPE_QUESTIONBRICK:
+		obj = new CQuestionBrick();
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -304,13 +308,13 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 }
 
 void CPlayScene::Unload()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 		delete objects[i];
 
 	objects.clear();
