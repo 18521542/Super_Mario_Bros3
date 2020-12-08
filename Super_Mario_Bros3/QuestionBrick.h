@@ -23,7 +23,9 @@ class CQuestionBrick : public CGameObject
 	DWORD TimeStartMove = 0;
 	bool isMoving = false;
 	bool isUsed = false;
+	bool isFinishMoving = false;
 	float startY;
+	bool isFixed = false;
 public:
 	CQuestionBrick(float y,float x);
 	virtual void Render();
@@ -31,5 +33,9 @@ public:
 	void StartMoving() { TimeStartMove = GetTickCount(); isMoving = true; vy = DEFECT_SPEED; isUsed = true; }
 	bool IsMoving() { return this->isMoving; }
 	bool IsUsed() { return this->isUsed; }
+	bool IsFinishMoving() { return this-isFinishMoving ; }
 	float getStartY() { return this->startY; }
+	DWORD GetTimeStartMove() { return this->TimeStartMove; }
+	bool IsFixed() { return this->isFixed; }
+	void SetIsFixed(bool fix) { this->isFixed = fix; }
 };

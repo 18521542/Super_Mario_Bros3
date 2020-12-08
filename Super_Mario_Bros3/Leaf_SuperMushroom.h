@@ -10,11 +10,11 @@
 #define LEAF_ANI_LEFT	0
 #define LEAF_ANI_RIGHT	1
 
-#define LEAF_WIDTH		16
-#define LEAF_HEIGHT		16
+#define LEAF_WIDTH		14
+#define LEAF_HEIGHT		14
 
-#define MUSHROOM_WIDTH	16
-#define MUSHROOM_HEIGHT	16
+#define MUSHROOM_WIDTH	14
+#define MUSHROOM_HEIGHT	14
 
 #define TIME_PHASE_ONE	100
 #define MUSHROOM_ANI	2
@@ -29,9 +29,15 @@ class CLeaf_Mushroom : public CGameObject
 	bool isLeafMoving = false;
 	bool isMushroomMoving = false;
 	bool isUsed = false;
+	DWORD TimeForMushroomAppear = 0;
 public:
 	CLeaf_Mushroom(int state);
 	void LeafStartMoving() { StartEffectTime = GetTickCount(); isLeafMoving = true; };
-	void MushroomStartMoving() { StartEffectTime = GetTickCount(); isMushroomMoving = true; };
+	void MushroomStartMoving() {
+		StartEffectTime = GetTickCount(); isMushroomMoving = true; 
+	};
+	void StartWaitingToMove() {
+		TimeForMushroomAppear = GetTickCount();
+	}
 	//virtual void SetState(int state);
 };

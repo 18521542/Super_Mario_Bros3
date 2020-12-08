@@ -41,12 +41,14 @@ void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (y != startY) 
 		{
 			y = startY;
+			SetState(10);
 		}
 	}
 
 	if (GetTickCount() - TimeStartMove > MOVING_TIME) {
 		TimeStartMove = 0;
 		isMoving = false;
+		isFinishMoving = true;
 	}
 
 	//CoinEffect->Update();

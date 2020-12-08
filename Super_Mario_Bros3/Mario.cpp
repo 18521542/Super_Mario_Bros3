@@ -263,16 +263,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 				if (plat->getType() == PLATFORM_TYPE_TWO)
 				{
-					/*if (e->ny < 0) {
-						float l, t, r, b;
-						plat->GetBoundingBox(l, t, r, b);
-						if (CheckBB(l, t, r, b))
-						{
-							DebugOut(L"You are on the platform");
-							vy = 0;
-						}
-
-					}*/
 					if (e->ny == 0) {
 						x += dx;
 						y += dy;
@@ -293,8 +283,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						ny = 0;
 						isReadyToSit = true;
 						isReadyToJump = true;
-
-
 					}
 					//x += dx;
 					//y += d
