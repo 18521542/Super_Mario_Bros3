@@ -1,18 +1,19 @@
 #include "QuestionBrick.h"
 #include "Utils.h"
-CQuestionBrick::CQuestionBrick()
+CQuestionBrick::CQuestionBrick(float y,float x)
 {
 	state = BRICK_STATE_WITH_EFFECT;
 	vx = 0;
 	vy = 0;
+	startY = y;
 }
 void CQuestionBrick::Render()
 {
 	if(state == BRICK_STATE_WITH_EFFECT)
-		animation_set->at(0)->Render(x, y);
+		animation_set->at(QUESTION_ANI_MOVE)->Render(x, y);
 	else 
-		animation_set->at(1)->Render(x, y);
-	//animation_set->at(1)->Render(x, y);
+		animation_set->at(QUESTION_ANI_NOT_MOVE)->Render(x, y);
+	//CoinEffect->Render();
 }
 
 void CQuestionBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -27,15 +28,26 @@ void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 	y += dy;
-	if (isMoving) {
-		vy += 0.000451f * dt;
+	if (isMoving) 
+	{
+		vy += GRAVITY * dt;
 	}
 	else {
 		vy = 0;
 	}
 
-	if (GetTickCount() - TimeStartMove > 421) {
+	if (isUsed && vy==0) 
+	{
+		if (y != startY) 
+		{
+			y = startY;
+		}
+	}
+
+	if (GetTickCount() - TimeStartMove > MOVING_TIME) {
 		TimeStartMove = 0;
 		isMoving = false;
 	}
+
+	//CoinEffect->Update();
 }

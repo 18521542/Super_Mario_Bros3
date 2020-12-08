@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Object.h"
 #define COIN_ANI 0
 
 #define COIN_STATE_DISAPPEAR	1
@@ -14,9 +15,10 @@ class CCoin : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	DWORD StartEffectTime = 0;
+	bool isUsed = false;
 public:
 	CCoin();
-	CCoin(int state, int x, int y);
+	CCoin(int state);
 	//virtual void SetState(int state);
-	void StartEffect() { StartEffectTime = GetTickCount(); }
+	void StartEffect() { StartEffectTime = GetTickCount(); state = COIN_STATE_EFFECT; vy = -0.3f; }
 };

@@ -19,6 +19,8 @@
 
 #define MARIO_GRAVITY					0.001f
 
+#define MARIO_FALLING_ACCELERATION		0.005f
+
 #define MARIO_DIE_DEFLECT_SPEED			0.5f
 
 #define MARIO_RUN_SPEED_MAX				0.3f
@@ -182,6 +184,8 @@ class CMario : public CGameObject
 	//sit
 	bool isReadyToSit = true;
 
+	bool isAllowtoStop = false;
+
 	//hight-jump
 	bool isReadyToJump = true;
 
@@ -295,6 +299,8 @@ public:
 	bool IsFalling() { return this->isFalling; }
 
 	bool IsForTailAppear() { return this->isForTailAppear; }
+
+	bool IsAllowToStop() { return this->isAllowtoStop; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
@@ -323,9 +329,11 @@ public:
 
 	void setIsForTailAppear(bool isforTailAppear) { this->isForTailAppear = isforTailAppear; }
 
+	void setIsAllowToStop(bool stop) { this->isAllowtoStop = stop; }
+
 	void UpdateStateUsingTimeOut();
 
-	void UpdateForEachState();
+	void UpdateForEachState(DWORD dt);
 
 	void HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects);
 

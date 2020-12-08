@@ -3,13 +3,8 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "GameObject.h"
-#include "Brick.h"
-#include "Mario.h"
-#include "Goomba.h"
-#include "Koopas.h"
-#include "Background.h"
-#include "Platform.h"
-#include "coin.h"
+
+#include "Object.h"
 
 class CPlayScene : public CScene
 {

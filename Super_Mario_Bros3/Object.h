@@ -9,3 +9,5 @@
 #include "BreakableBrick.h"
 #include "Tail.h"
 #include "QuestionBrick.h"
+#include "Background.h"
+#include "Leaf_SuperMushroom.h"

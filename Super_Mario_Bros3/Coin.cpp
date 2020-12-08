@@ -1,15 +1,17 @@
 #include "coin.h"
-
+#include "Utils.h"
 CCoin::CCoin() 
 {
 	SetState(COIN_STATE_APPEAR);
+	vy = 0;
+	vx = 0;
 }
 
-CCoin::CCoin(int state, int X,int Y)
+CCoin::CCoin(int state)
 {
 	SetState(state);
-	this->x = X;
-	this->y = Y;
+	vy = 0;
+	vx = 0;
 }
 void CCoin::Render()
 {
@@ -28,14 +30,38 @@ void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CGameObject::Update(dt,coObjects);
 	//do nothing;
-	if (state == COIN_STATE_EFFECT) 
+
+	if (isUsed)
 	{
-		vy += 0.1f;
-		if (GetTickCount() - StartEffectTime > 300) 
+		vy += 2*GRAVITY * dt;
+	}
+	else {
+		vy = 0;
+	}
+	y += dy;
+
+	if (GetTickCount() - StartEffectTime > 600)
+	{
+		StartEffectTime = 0;
+		state = COIN_STATE_DISAPPEAR;
+	}
+		
+
+	for (size_t i = 0 ; i < coObjects->size(); i++) 
+	{
+		LPGAMEOBJECT obj = coObjects->at(i);
+		if (dynamic_cast<CQuestionBrick*>(obj)) 
 		{
-			StartEffectTime = 0;
-			state = COIN_STATE_DISAPPEAR;
+			float qX, qY;
+			CQuestionBrick* qb = dynamic_cast<CQuestionBrick*>(obj);
+			qb->GetPosition(qX, qY);
+			if (qb->IsUsed()&& this->x==qX && !this->isUsed) 
+			{
+				StartEffect();
+				isUsed = true;
+			}
 		}
 	}
 }

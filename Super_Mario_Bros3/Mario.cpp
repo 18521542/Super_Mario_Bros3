@@ -17,11 +17,10 @@ CMario::CMario(float x, float y) : CGameObject()
 	SetState(MARIO_STATE_IDLE);
 	nx = 1;
 	ay = MARIO_GRAVITY;
-	setIsReadyToJump(true);
+	isReadyToJump = true;
 	setIsReadyToSit(true);
-	//SetIsStartUsingTail(false);
 	a = MARIO_ACCELERATION;
-	//ay = MARIO_GRAVITY;
+	isReadyToFly = true;
 	start_x = x;
 	start_y = y;
 	this->x = x;
@@ -72,12 +71,18 @@ void CMario::UpdateStateUsingTimeOut()
 	}
 }
 
-void CMario::UpdateForEachState() {
+void CMario::UpdateForEachState(DWORD dt) {
 
 	// limit the speed of mario when he walk - don't care about direction
 	if (abs(vx) >= MARIO_WALKING_SPEED_MAX && !isRunning)
 	{
 		vx = nx * MARIO_WALKING_SPEED_MAX;
+	}
+
+	if (abs(vx) <= MARIO_WALKING_SPEED_MIN) 
+	{
+		if(!(state == MARIO_STATE_WALKING_RIGHT || state == MARIO_STATE_WALKING_LEFT))
+			vx = 0;
 	}
 
 	//when mario run
@@ -109,6 +114,10 @@ void CMario::UpdateForEachState() {
 	{
 		if (vy < 0)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
+	}
+	if (GetTickCount() - StartFly <= MARIO_FLYING_TIME)
+	{
+		isFlying = false;
 	}
 }
 
@@ -158,7 +167,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 
 			if (isShootingFireBall && !fb->IsAppear() && isForFireBallAppear)
 			{
-				obj->SetPosition(x + nx * (MARIO_BIG_BBOX_WIDTH + 1.0f), y);
+				obj->SetPosition(x /*+ nx * (MARIO_BIG_BBOX_WIDTH + 1.0f)*/, y);
 				obj->SetSpeed(nx * FB_SPEED_X, FB_SPEED_Y);
 				fb->StartAppear();
 				isForFireBallAppear = false;
@@ -170,7 +179,18 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 			CPlatform* pf = dynamic_cast<CPlatform*>(obj);
 			if (CheckBB(pLeft, pTop, pRight, pBottom) && pf->getType() != PLATFORM_TYPE_TWO)
 			{
-				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
+				
+					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
+			}
+		}
+
+		else if (dynamic_cast<CQuestionBrick*>(obj))
+		{
+			CQuestionBrick* pf = dynamic_cast<CQuestionBrick*>(obj);
+			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			{
+				if(state==MARIO_STATE_IDLE)
+					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
 		}
 	}
@@ -202,27 +222,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-		//Reset status when mario is on the ground
-		if (ny < 0)
-		{
-			setIsReadyToJump(true);
-			//state = MARIO_STATE_IDLE;
-			setIsReadyToSit(true);
-			setIsJumpFlying(false);
-			setIsReadyToJumpFlying(false);
-			if (GetTickCount() - StartFly <= MARIO_FLYING_TIME)
-			{
-				isFlying = false;
-			}
-			setIsOnAir(false);
-		}
-		if (nx != 0 || ny != 0)
-		{
-			setIsReadyToJumpFlying(false);
-		}
-		//
-		// Collision logic with  special-objects
-		//
 		for (UINT i = 0; i < coEventsResult.size(); i++) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
@@ -310,7 +309,16 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				else if (plat->getType() == PLATFORM_TYPE_ONE) {
 					x += min_tx * dx + nx * 0.8f;
 					y += min_ty * dy + ny * 0.1f;
-					if (e->ny < 0) vy = 0;
+					isReadyToJump = true;
+					if (state == MARIO_STATE_JUMP)
+					{
+						state = MARIO_STATE_IDLE;
+					}
+					if (e->ny < 0) 
+					{
+						vy = 0;
+						
+					}
 					if (e->nx != 0)vx = 0;
 				}
 			}
@@ -402,17 +410,18 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				{
 					vx = 0;
 				}
-
 				if (e->ny < 0)
 				{
 					if (state == MARIO_STATE_JUMP) 
+					{
 						SetState(MARIO_STATE_IDLE);
+					}						
 					isReadyToJump = true;
 					vy = 0;
 				}
 				else if (e->ny > 0)
 				{
-					vy += ay*dt;
+					vy += MARIO_FALLING_ACCELERATION *dt;
 					isReadyToJump = false;
 					if (qb->GetState() != BRICK_STATE_WITH_NO_EFFECT)
 					{
@@ -441,13 +450,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += a * dt;
 	vy += ay * dt;
 
-	UpdateForEachState();
+	//DebugOut(L"\nState %d", state);
+	/*DebugOut(L"\nReady Fly %d", isReadyToFly);
+	DebugOut(L"\nFly %d", isFlying);*/
+	UpdateForEachState(dt);
 
 	UpdateStateUsingTimeOut();
 	
-	HandleOverlapColision(coObjects);
-	
 	HandleNormalColision(coObjects);
+
+	HandleOverlapColision(coObjects);
 
 }
 
@@ -759,19 +771,15 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		if (vx == 0) {
-			a = 0;
-		}
-		else
-			a = nx * MARIO_ACCELERATION;
-		if(vy==0)
-			vy =  -MARIO_JUMP_SPEED_MAX;
 		if (level == MARIO_LEVEL_TAIL) 
 		{
 			isOnAir = true;
 		}
+		vy = -MARIO_JUMP_SPEED_MAX;
 		break;
 	case MARIO_STATE_IDLE:
+		if (isRunning)
+			isRunning = false;
 		break;
 	case MARIO_STATE_SIT:
 		if (abs(vx) <= MARIO_WALKING_SPEED_MIN) {
@@ -784,7 +792,7 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_FLY:
 		//isReadyToFly = false;
-		a = 0;
+		//a = 0;
 		vy = -MARIO_FLY_SPEED;
 		isOnAir = true;
 		break;

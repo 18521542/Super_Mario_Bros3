@@ -6,8 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-#include"FireBall.h"
-#include "Tail.h"
+
 
 //#define PushBackPixel 9.0f
 //using namespace std;
@@ -30,18 +29,19 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
-#define OBJECT_TYPE_MARIO		0
-#define OBJECT_TYPE_BRICK		1
-#define OBJECT_TYPE_GOOMBA		2
-#define OBJECT_TYPE_KOOPAS		3
-#define OBJECT_TYPE_BACKGROUND	4
-#define OBJECT_TYPE_PLATFORM	5
-#define OBJECT_TYPE_COIN		6
-#define OBJECT_TYPE_PORTAL		50
-#define OBJECT_TYPE_FIREBALL	7
-#define OBJECT_TYPE_TAIL		8
+#define OBJECT_TYPE_MARIO				0
+#define OBJECT_TYPE_BRICK				1
+#define OBJECT_TYPE_GOOMBA				2
+#define OBJECT_TYPE_KOOPAS				3
+#define OBJECT_TYPE_BACKGROUND			4
+#define OBJECT_TYPE_PLATFORM			5
+#define OBJECT_TYPE_COIN				6
+#define OBJECT_TYPE_PORTAL				50
+#define OBJECT_TYPE_FIREBALL			7
+#define OBJECT_TYPE_TAIL				8
 #define OBJECT_TYPE_BREAKABLEBRICK		9
 #define OBJECT_TYPE_QUESTIONBRICK		10
+#define OBJECT_TYPE_LEAF_MUSHROOM		11
 
 #define MAX_SCENE_LINE 1024
 
@@ -188,7 +188,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	break;
 	case OBJECT_TYPE_COIN:
 	{
-		obj = new CCoin();
+		double state = atof(tokens[4].c_str());
+		obj = new CCoin(state);
 	}
 	break;
 	case OBJECT_TYPE_FIREBALL:
@@ -204,8 +205,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBreakableBrick();
 		break;
 	case OBJECT_TYPE_QUESTIONBRICK:
-		obj = new CQuestionBrick();
+		obj = new CQuestionBrick(y,x);
 		break;
+	case OBJECT_TYPE_LEAF_MUSHROOM:
+	{
+		double type = atof(tokens[4].c_str());
+		obj = new CLeaf_Mushroom(type);
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -409,12 +416,14 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		}
 		break;
 	case (DIK_LEFT):
-		mario->SetState(MARIO_STATE_IDLE);
+		if (mario->GetState() == MARIO_STATE_WALKING_LEFT)
+			mario->SetState(MARIO_STATE_IDLE);
 		mario->setIsReadyToSit(true);
-		//mario->SetState(MARIO_STATE_IDLE);
 		break;
 	case (DIK_RIGHT):
-		mario->SetState(MARIO_STATE_IDLE);
+		if(mario->GetState()==MARIO_STATE_WALKING_RIGHT)
+			mario->SetState(MARIO_STATE_IDLE);
+		//mario->setIsAllowToStop(true);
 		mario->setIsReadyToSit(true);
 		break;
 	case (DIK_DOWN):
@@ -447,29 +456,18 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		return;
 	else
 	{
-		if (game->IsKeyDown(DIK_S))
+		if (game->IsKeyDown(DIK_RIGHT)) 
 		{
-			if (!mario->IsFlying())
+			if (game->IsKeyDown(DIK_S))
 			{
-				if (mario->IsReadyToJump())
+				/*if (mario->IsFlying())
 				{
-					mario->SetState(MARIO_STATE_JUMP);
-					mario->setIsReadyToSit(false);
-
-					if (mario->IsReadyToJumpFly())
 					{
-						mario->setIsJumpFlying(true);
+						mario->SetState(MARIO_STATE_FLY);
 					}
-				}
+				}*/
 			}
-			//If mario is ready to fly
-			else
-			{
-				mario->SetState(MARIO_STATE_FLY);
-			}
-		}
-		else if (game->IsKeyDown(DIK_RIGHT)) {
-			if (mario->IsReadyToRun()) 
+			else if (mario->IsReadyToRun()) 
 			{
 				mario->setIsRunning(true);
 				mario->SetState(MARIO_STATE_WALKING_RIGHT);
@@ -482,7 +480,24 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		}
 			
 		else if (game->IsKeyDown(DIK_LEFT)) {
-			if (mario->IsReadyToRun()) {
+			if (game->IsKeyDown(DIK_S))
+			{
+				if (!mario->IsFlying())
+				{
+					if (mario->IsReadyToJump())
+					{
+						if (mario->IsReadyToJumpFly())
+						{
+							mario->setIsJumpFlying(true);
+						}
+					}
+				}
+				else
+				{
+					mario->SetState(MARIO_STATE_FLY);
+				}
+			}
+			else if (mario->IsReadyToRun()) {
 				mario->setIsRunning(true);
 				mario->SetState(MARIO_STATE_WALKING_LEFT);
 				mario->setIsReadyToSit(false);
@@ -498,6 +513,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 				if(mario->IsReadyToSit())
 					mario->SetState(MARIO_STATE_SIT);
 		}
-		
+
 	}
 }
