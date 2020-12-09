@@ -39,5 +39,6 @@ public:
 	void StartWaitingToMove() {
 		TimeForMushroomAppear = GetTickCount();
 	}
+	void SetIsAllowToAppear(bool appear) { this->isAllowToAppear = appear; }
 	//virtual void SetState(int state);
 };

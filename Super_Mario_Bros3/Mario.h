@@ -153,15 +153,19 @@
 #define MARIO_ANI_HAMMER_STOP_RIGHT			61
 #define MARIO_ANI_HAMMER_STOP_LEFT			62
 
-#define MARIO_ANI_DIE				8
+#define MARIO_ANI_DIE						8
+
+#define MARIO_ANI_EFFECT					91
 
 //define level
 #define	MARIO_LEVEL_SMALL	1111
 #define	MARIO_LEVEL_BIG		2222
-#define	MARIO_LEVEL_FIRE	3333
+#define	MARIO_LEVEL_FIRE	6666
 #define	MARIO_LEVEL_FROG	4444
 #define	MARIO_LEVEL_HAMMER	5555
-#define	MARIO_LEVEL_TAIL	6666
+#define	MARIO_LEVEL_TAIL	3333
+
+#define LEVEL_DELTA			1111
 
 //Bounding box
 #define MARIO_BIG_BBOX_WIDTH  15
@@ -231,6 +235,8 @@ class CMario : public CGameObject
 	//time
 	DWORD untouchable_start;
 
+	bool isForEffectAppear = false;
+	DWORD EffectTime;
 
 
 	float start_x;			// initial position of Mario at scene
@@ -259,6 +265,7 @@ public:
 	void StartShootingFireBall() { shooting_start = (ULONGLONG)GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
 	void StartFlying() { StartFly = (ULONGLONG)GetTickCount64(); isFlying = true; }
 	void StartKicking() { StartKick = (ULONGLONG)GetTickCount64(); isKicking = true; }
+	void StartEffect() { EffectTime = GetTickCount(); isForEffectAppear = true; }
 	DWORD GetStartFly() { return this->StartFly; }
 	//from beginning
 	void Reset();

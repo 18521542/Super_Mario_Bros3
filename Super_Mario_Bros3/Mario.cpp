@@ -36,6 +36,7 @@ void CMario::UpdateStateUsingTimeOut()
 		untouchable = 0;
 	}
 
+	
 	//reset IsStartUsingTail = false if mario finish using his tail
 	if (GetTickCount() - using_tail_start > MARIO_USING_TAIL_TIME)
 	{
@@ -388,7 +389,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				fb->SetPosition(this->x, this->y);
 				fb->SetSpeed(0, 0);*/
 			}
-			if (dynamic_cast <CQuestionBrick*>(e->obj))
+			else if (dynamic_cast <CQuestionBrick*>(e->obj))
 			{
 				CQuestionBrick* qb = dynamic_cast <CQuestionBrick*>(e->obj);
 				x += min_tx * dx + nx * 0.4f;
@@ -417,11 +418,20 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						if (!qb->IsMoving() && !qb->IsUsed()) 
 						{
 							qb->StartMoving();
-						}
-							
+						}	
 					}
 				}
-				
+			}
+			else if (dynamic_cast<CLeaf_Mushroom*>(e->obj)) 
+			{
+				CLeaf_Mushroom* item = dynamic_cast<CLeaf_Mushroom*>(e->obj);
+				StartEffect();
+				x += dx;
+				y += dy;
+				if (level != MARIO_LEVEL_TAIL) {
+					level += LEVEL_DELTA;
+				}
+				item->SetIsAllowToAppear(false);
 			}
 		}
 	}
@@ -433,21 +443,27 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGameObject::Update(dt);
+	if (!isForEffectAppear) 
+	{
+		CGameObject::Update(dt);
 
-	vx += a * dt;
-	vy += ay * dt;
+		vx += a * dt;
+		vy += ay * dt;
 
-	//DebugOut(L"\nState %d", state);
-	/*DebugOut(L"\nReady Fly %d", isReadyToFly);
-	DebugOut(L"\nFly %d", isFlying);*/
-	UpdateForEachState(dt);
+		UpdateForEachState(dt);
 
-	UpdateStateUsingTimeOut();
-	
-	HandleNormalColision(coObjects);
+		UpdateStateUsingTimeOut();
 
-	HandleOverlapColision(coObjects);
+		HandleNormalColision(coObjects);
+
+		HandleOverlapColision(coObjects);
+	}
+	else {
+		if (GetTickCount() - EffectTime > 700) {
+			EffectTime = 0;
+			isForEffectAppear = false;
+		}
+	}
 
 }
 
@@ -736,12 +752,17 @@ void CMario::Render()
 				MARIO_ANI_HAMMER_WALKING_RIGHT, MARIO_ANI_HAMMER_WALKING_LEFT);
 		}
 	}
+
+	if (isForEffectAppear) 
+	{
+		ani = MARIO_ANI_EFFECT;
+	}
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMario::SetState(int state)

@@ -30,7 +30,6 @@ void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
 	for (size_t i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
@@ -70,6 +69,22 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (this->CheckBB(pLeft, pTop, pRight, pBottom))
 			{
 				obj->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
+			}
+		}
+		else if (dynamic_cast <CQuestionBrick*>(obj))
+		{
+			CQuestionBrick* qb = dynamic_cast <CQuestionBrick*>(obj);
+
+			if (CheckBB(left, top, right, bottom))
+			{
+				if (qb->GetState() != BRICK_STATE_WITH_NO_EFFECT)
+				{
+					qb->SetState(BRICK_STATE_WITH_NO_EFFECT);
+					if (!qb->IsMoving() && !qb->IsUsed())
+					{
+						qb->StartMoving();
+					}
+				}
 			}
 		}
 	}

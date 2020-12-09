@@ -31,18 +31,24 @@ void CLeaf_Mushroom::Render()
 
 void CLeaf_Mushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if (type == LEAF) {
-		l = x;
-		t = y;
-		r = x + LEAF_WIDTH;
-		b = y + LEAF_HEIGHT;
+	if (isAllowToAppear) {
+		if (type == LEAF) {
+			l = x;
+			t = y;
+			r = x + LEAF_WIDTH;
+			b = y + LEAF_HEIGHT;
+		}
+		else if (type == MUSHROOM) {
+			l = x;
+			t = y;
+			r = x + MUSHROOM_WIDTH;
+			b = y + MUSHROOM_HEIGHT;
+		}
 	}
-	else if (type == MUSHROOM) {
-		l = x;
-		t = y;
-		r = x + MUSHROOM_WIDTH;
-		b = y + MUSHROOM_HEIGHT;
+	else {
+		l = t = r = b = 0;
 	}
+	
 }
 
 void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -87,10 +93,9 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					LeafStartMoving();
 					isAllowToAppear = true;
 				}
-				
-
 			}
 		}
+		
 	}
 	
 	if ((GetTickCount() - TimeForMushroomAppear) < 1000 
