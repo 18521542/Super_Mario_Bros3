@@ -194,13 +194,13 @@ class CMario : public CGameObject
 	bool isReadyToJump = true;
 
 	//using tail
-	DWORD using_tail_start;
-	DWORD tail_appear;
+	ULONGLONG using_tail_start;
+	ULONGLONG tail_appear;
 	bool isUsingTail = false;
 	bool isForTailAppear = false;
 
 	//shoot
-	DWORD shooting_start;
+	ULONGLONG shooting_start;
 	bool isShootingFireBall = false;
 	bool isForFireBallAppear = false;
 
@@ -213,7 +213,7 @@ class CMario : public CGameObject
 	bool isRunning = false;
 
 	//fly
-	DWORD StartFly;
+	ULONGLONG StartFly;
 	bool isFlying = false;
 	bool isReadyToFly = false;
 
@@ -226,17 +226,17 @@ class CMario : public CGameObject
 	bool isReadyToJumpFly = false;
 
 	//kick
-	DWORD StartKick;
+	ULONGLONG StartKick;
 	bool isKicking = false;
 
 	int level;
 	int untouchable;
 	
 	//time
-	DWORD untouchable_start;
+	ULONGLONG untouchable_start;
 
 	bool isForEffectAppear = false;
-	DWORD EffectTime;
+	ULONGLONG EffectTime;
 
 
 	float start_x;			// initial position of Mario at scene
@@ -260,13 +260,13 @@ public:
 	void RenderLogicForRunningState(int& ani, int ani_run_right, int ani_run_left, int ani_walk_fast_right, int ani_walk_fast_left);
 	
 	//timer
-	void StartUntouchable() { untouchable_start = (ULONGLONG) GetTickCount64(); untouchable = 1;}
-	void StartUsingTail() { using_tail_start = (ULONGLONG)GetTickCount64(); tail_appear = GetTickCount64();  isUsingTail = true; isForTailAppear = true; }
-	void StartShootingFireBall() { shooting_start = (ULONGLONG)GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
-	void StartFlying() { StartFly = (ULONGLONG)GetTickCount64(); isFlying = true; }
-	void StartKicking() { StartKick = (ULONGLONG)GetTickCount64(); isKicking = true; }
-	void StartEffect() { EffectTime = GetTickCount(); isForEffectAppear = true; }
-	DWORD GetStartFly() { return this->StartFly; }
+	void StartUntouchable() { untouchable_start = GetTickCount64(); untouchable = 1;}
+	void StartUsingTail() { using_tail_start = GetTickCount64(); tail_appear = GetTickCount64();  isUsingTail = true; isForTailAppear = true; }
+	void StartShootingFireBall() { shooting_start = GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
+	void StartFlying() { StartFly = GetTickCount64(); isFlying = true; }
+	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
+	void StartEffect() { EffectTime = GetTickCount64(); isForEffectAppear = true; }
+	ULONGLONG GetStartFly() { return this->StartFly; }
 	//from beginning
 	void Reset();
 

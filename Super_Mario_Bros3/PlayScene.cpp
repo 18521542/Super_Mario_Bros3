@@ -42,6 +42,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BREAKABLEBRICK		9
 #define OBJECT_TYPE_QUESTIONBRICK		10
 #define OBJECT_TYPE_LEAF_MUSHROOM		11
+#define OBJECT_TYPE_VENUS_RED			12
 
 #define MAX_SCENE_LINE 1024
 
@@ -141,8 +142,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	double x = atof(tokens[1].c_str());  //left
-	double y = atof(tokens[2].c_str());	//top
+	float x = atof(tokens[1].c_str());  //left
+	float y = atof(tokens[2].c_str());	//top
 
 	int ani_set_id = atoi(tokens[3].c_str());
 	
@@ -164,14 +165,25 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
+	case OBJECT_TYPE_GOOMBA: 
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CGoomba(type);
+		break;
+	}
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	case OBJECT_TYPE_BACKGROUND: obj = new CBackground(); break;
+	case OBJECT_TYPE_BACKGROUND: 
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CBackground(type); 
+		break; 
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
-		double r = atof(tokens[4].c_str());
-		double b = atof(tokens[5].c_str());
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
 		int scene_id = atoi(tokens[6].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
@@ -179,8 +191,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PLATFORM:
 	{
 		//DebugOut(L"aaaa");
-		double r = atof(tokens[4].c_str());
-		double b = atof(tokens[5].c_str());
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
 		int type = atoi(tokens[6].c_str());
 		obj = new CPlatform(x, y, r, b, type);
 
@@ -188,7 +200,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	break;
 	case OBJECT_TYPE_COIN:
 	{
-		double state = atof(tokens[4].c_str());
+		int state = atoi(tokens[4].c_str());
 		obj = new CCoin(state);
 	}
 	break;
@@ -209,8 +221,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_LEAF_MUSHROOM:
 	{
-		double type = atof(tokens[4].c_str());
+		int type = atoi(tokens[4].c_str());
 		obj = new CLeaf_Mushroom(type);
+		break;
+	}
+	case OBJECT_TYPE_VENUS_RED:
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CVenus(type);
 		break;
 	}
 	default:

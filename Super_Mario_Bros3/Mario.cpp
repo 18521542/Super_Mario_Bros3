@@ -179,8 +179,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 		{
 			CPlatform* pf = dynamic_cast<CPlatform*>(obj);
 			if (CheckBB(pLeft, pTop, pRight, pBottom) && pf->getType() != PLATFORM_TYPE_TWO)
-			{
-				
+			{	
 					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
 		}
@@ -232,11 +231,23 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				// jump on top >> kill Goomba and deflect a bit 
 				if (e->ny < 0)
 				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
+					if (goomba->GetType() == PARA_GOOMBA) 
 					{
-						goomba->SetState(GOOMBA_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
+						goomba->SetType(GOOMBA);
 					}
+					else
+					{
+						if (goomba->GetType() == GOOMBA) 
+						{
+							if (goomba->GetState() != GOOMBA_STATE_DIE)
+							{
+								goomba->SetState(GOOMBA_STATE_DIE);
+								goomba->StartDisapear();
+								vy = -MARIO_JUMP_DEFLECT_SPEED;
+							}
+						}
+					}
+					
 				}
 				else if (e->nx != 0)
 				{
@@ -324,11 +335,13 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (koopas->GetState() == KOOPAS_STATE_WALKING) {
 						koopas->SetState(KOOPAS_STATE_DIE);
-
 					}
 					else if (koopas->GetState() == KOOPAS_STATE_DIE)
 					{
 						koopas->SetState(KOOPAS_STATE_DIE_MOVING);
+					}
+					else if (koopas->GetState() == KOOPAS_STATE_DIE_MOVING) {
+						koopas->SetState(KOOPAS_STATE_DIE);
 					}
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
 				}

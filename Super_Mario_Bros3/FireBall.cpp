@@ -47,15 +47,13 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	
 
-	if (GetTickCount() - startFly > FB_APPEAR_TIME) {
+	if (GetTickCount64() - startFly > FB_APPEAR_TIME) {
 		isAppear = false;
 		startFly = 0;
 	}
 
 	vy += MARIO_GRAVITY * dt;
-	//DebugOut(L"\nY = %f", y);
-	
-	//DebugOut(L"\nVy = %f", vy);
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 

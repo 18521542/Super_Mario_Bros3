@@ -1,29 +1,47 @@
 #include "Goomba.h"
 #include "Mario.h"
 #include "Platform.h"
-CGoomba::CGoomba()
+CGoomba::CGoomba(int type)
 {
-	SetState(GOOMBA_STATE_WALKING);
+	this->type = type;
+	SetState(PARA_GOOMBA_STATE_WALKING);
+	vx = 0.03f;
+	StartWalking();
 }
 
 void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state != GOOMBA_STATE_DIE) {
+	if (type == GOOMBA) {
+		if (state != GOOMBA_STATE_DIE) {
+			left = x;
+			top = y;
+			right = x + GOOMBA_BBOX_WIDTH;
+
+			if (state == GOOMBA_STATE_DIE)
+				bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
+			else
+				bottom = y + GOOMBA_BBOX_HEIGHT;
+		}
+		else
+		{
+			left = 0;
+			top = 0;
+			right = 0;
+			bottom = 0;
+		}
+	}
+	else if (type == PARA_GOOMBA) {
 		left = x;
 		top = y;
-		right = x + GOOMBA_BBOX_WIDTH;
-
-		if (state == GOOMBA_STATE_DIE)
-			bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
-		else
-			bottom = y + GOOMBA_BBOX_HEIGHT;
-	}
-	else
-	{
-		left = 0;
-		top = 0;
-		right = 0;
-		bottom = 0;
+		if (state == PARA_GOOMBA_STATE_WALKING) 
+		{
+			right = x + PARA_GOOMBA_BB_WIDTH;
+			bottom = y + PARA_GOOMBA_BB_HEIGHT;
+		}
+		else {
+			right = x + PARA_GOOMBA_BB_WIDTH;
+			bottom = y + PARA_GOOMBA_BB_FLY_HEIGHT;
+		}
 	}
 }
 
@@ -33,8 +51,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 
 	vy += MARIO_GRAVITY * dt;
-	vx = 0.03f;
-
+	//vx = 0.03f;
 
 	for (size_t i = 0; i < coObjects->size(); i++)
 	{
@@ -44,16 +61,52 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (dynamic_cast<CPlatform*>(obj)) {
 			if (CheckBB(pLeft, pTop, pRight, pBottom))
 			{
-				//Push back a little bit when bounding box has collision
-				y = GOOMBA_BBOX_HEIGHT - pTop + PushBackPixel;
-				if (nx > 0) {
-					x = GOOMBA_BBOX_WIDTH - pLeft - PushBackPixel;
+				if (state == PARA_GOOMBA_STATE_WALKING)
+				{
+					y -= y + PARA_GOOMBA_BB_HEIGHT - pTop + PushBackPixel;						
 				}
-				else
-					x = GOOMBA_BBOX_WIDTH - pRight + PushBackPixel;
+				else {
+					y -= y + PARA_GOOMBA_BB_FLY_HEIGHT - pTop + PushBackPixel;
+				}
 			}
 		}
-		
+	}
+
+	if (type == PARA_GOOMBA) 
+	{
+		if (state == PARA_GOOMBA_STATE_WALKING) 
+		{
+			if (GetTickCount64() - TimeWalking > 1000) 
+			{
+				StartReady();
+			}
+		}
+		else if (state == PARA_GOOMA_STATE_READY_TO_FLY) 
+		{
+			if (GetTickCount64() - TimeReadyToFly > 1000) 
+			{
+				StartFly();
+			}
+		}
+		else if (state == PARA_GOOMBA_STATE_FLY) {
+			if (GetTickCount64() - TimeFly > 500) 
+			{
+				StartWalking();
+			}
+		}
+	}
+
+	else {
+		if (state == GOOMBA_STATE_DIE)
+		{
+			vx = 0;
+			vy = 0;
+		}
+
+		if (GetTickCount() - TimeStartDisappear > 300 && GetTickCount() - TimeStartDisappear < 500) {
+			isDisapear = true;
+			TimeStartDisappear = 0;
+		}
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -81,18 +134,30 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 				
-				if (plat->getType() == PLATFORM_TYPE_ONE)
+				if (plat->getType() == PLATFORM_TYPE_ONE )
 				{
-					x += min_tx * dx + nx * 0.4f;
-					y += min_ty * dy + ny * 0.4f;
-
+					if (state != PARA_GOOMBA_STATE_FLY) {
+						x += min_tx * dx + nx * 0.4f;
+						y += min_ty * dy + ny * 0.4f;
+					}
+					
 					if (nx != 0 )
 					{
 						vx = -vx;
 						this->nx = -this->nx;
 					}
-					if (ny != 0)
-						vy = 0;
+					if (ny != 0) {
+						if (state != PARA_GOOMBA_STATE_FLY) {
+							vy = 0;
+						}
+						else {
+							vy = -0.35f;
+							x += dx;
+							y += dy;
+						}
+							
+					}
+						
 				}
 			}
 			else if (dynamic_cast<CFireBall*>(e->obj)) {
@@ -104,7 +169,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				fb->setIsAppear(false);
 
 			}
-			
 		}
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -113,11 +177,24 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CGoomba::Render()
 {
-	int ani = GOOMBA_ANI_WALKING;
-	if(state != GOOMBA_STATE_DIE)
+	int ani = 0;
+	if (type == GOOMBA) 
+	{
+		if (state != GOOMBA_STATE_DIE)
+			ani = GOOMBA_ANI_WALKING;
+		else
+			ani = GOOMBA_ANI_DIE;
+	}
+	else if (type == PARA_GOOMBA) {
+		if (state == PARA_GOOMBA_STATE_WALKING)
+			ani = PARA_GOOMBA_ANI_WALKING;
+		else if (state == PARA_GOOMA_STATE_READY_TO_FLY)
+			ani = PARA_GOOMBA_ANI_READY_TO_FLY;
+		else if (state == PARA_GOOMBA_STATE_FLY)
+			ani = PARA_GOOMBA_ANI_FLY;
+	}
+	if(!isDisapear)
 		animation_set->at(ani)->Render(x, y);
-
-	//RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -132,5 +209,9 @@ void CGoomba::SetState(int state)
 		break;
 	case GOOMBA_STATE_WALKING:
 		vx = -GOOMBA_WALKING_SPEED;
+		break;
+	case PARA_GOOMBA_STATE_FLY:
+		vy = -0.5f;
+		break;
 	}
 }

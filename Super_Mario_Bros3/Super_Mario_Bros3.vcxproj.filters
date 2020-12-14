@@ -73,9 +73,6 @@
     <ClInclude Include="coin.h">
       <Filter>Framework\GameObject\Item</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Framework\GameObject\OtherIdea</Filter>
-    </ClInclude>
     <ClInclude Include="Platform.h">
       <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClInclude>
@@ -126,6 +123,12 @@
     </ClInclude>
     <ClInclude Include="BreakableBrick.h">
       <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Venus.h">
+      <Filter>Framework\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Framework\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +203,12 @@
     </ClCompile>
     <ClCompile Include="BreakableBrick.cpp">
       <Filter>Framework\GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="SwitchBlock.cpp">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Venus.cpp">
+      <Filter>Framework\GameObject\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

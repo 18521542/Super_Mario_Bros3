@@ -45,9 +45,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = 0;
 				}
 			}
+			
 
 		}
 
+		
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
 		
@@ -88,15 +90,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							x += min_tx * dx + nx * 0.4f;
 							y += min_ty * dy + ny * 0.4f;
 
-							//if overlap occur
-							if (this->CheckBB(l, t, r, b))
-							{
-								if (this->nx > 0) {
-									x = x - 1.0f;
-								}
-								else
-									x = x + 1.0f;
-							}
 						}
 						if (ny != 0) 
 						{

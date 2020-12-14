@@ -40,7 +40,7 @@ void CTileMap::LoadMap()
 	f.open(filePath);
 
 	// current resource section flag
-	int value;
+	//int value;
 	char str[1024];
 	while (f.getline(str, 1024))
 	{
@@ -51,7 +51,7 @@ void CTileMap::LoadMap()
 		vector<int> lineOfCell;
 		DebugOut(L"--> %s\n", ToWSTR(line).c_str());
 
-		for (int i = 0; i < tokens.size(); i++)	// why i+=2 ?  sprite_id | frame_time  
+		for (size_t i = 0; i < tokens.size(); i++)	// why i+=2 ?  sprite_id | frame_time  
 		{
 			if (atoi(tokens[i].c_str())) lineOfCell.push_back(atoi(tokens[i].c_str()));
 		}

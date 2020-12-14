@@ -11,3 +11,5 @@
 #include "QuestionBrick.h"
 #include "Background.h"
 #include "Leaf_SuperMushroom.h"
+#include "SwitchBlock.h"
+#include "Venus.h"

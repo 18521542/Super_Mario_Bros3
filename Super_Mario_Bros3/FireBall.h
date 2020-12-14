@@ -16,7 +16,7 @@
 class CFireBall : public CGameObject 
 {
 
-	DWORD startFly;
+	ULONGLONG startFly;
 	bool isAppear = false;
 	bool isHolded = true;
 	
@@ -27,7 +27,7 @@ public:
 	//virtual void SetState(int state);
 	CFireBall(float x,float y);
 	CFireBall();
-	void StartAppear() { isAppear = true; startFly = GetTickCount(); isHolded = false; }
+	void StartAppear() { isAppear = true; startFly = GetTickCount64(); isHolded = false; }
 
 	bool IsAppear() { return this->isAppear; }
 	bool IsHolded() { return this->isHolded; }

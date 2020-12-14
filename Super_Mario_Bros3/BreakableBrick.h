@@ -15,7 +15,6 @@ class CBreakableBrick : public CGameObject
 	bool isBeingBroken = false;
 	DWORD StartBroken;
 public:
-	
 	CBreakableBrick();
 
 

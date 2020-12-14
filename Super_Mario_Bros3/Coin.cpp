@@ -42,7 +42,7 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	y += dy;
 
-	if (GetTickCount() - StartEffectTime > 600)
+	if (GetTickCount() - StartEffectTime > 600 && GetTickCount() - StartEffectTime < 800)
 	{
 		StartEffectTime = 0;
 		state = COIN_STATE_DISAPPEAR;

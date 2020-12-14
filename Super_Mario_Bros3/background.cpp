@@ -1,9 +1,15 @@
 #include "Background.h"
 
+CBackground::CBackground(int type) {
+	this->type = type;
+}
 void CBackground::Render()
 {
-	
-	animation_set->at(0)->Render(x, y);
+	if(type==BIG_MAP)
+		animation_set->at(0)->Render(x, y);
+	else if (type == GREEN_PIPE) {
+		animation_set->at(1)->Render(x, y);
+	}
 	//RenderBoundingBox();
 }
 
