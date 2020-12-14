@@ -34,6 +34,7 @@ class CGoomba : public CGameObject
 	int type;
 	bool isDisapear = false;
 	bool isWalking = true;
+	bool isSwitched = false;
 	ULONGLONG TimeStartDisappear;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -41,13 +42,15 @@ class CGoomba : public CGameObject
 	ULONGLONG TimeFly;
 	ULONGLONG TimeReadyToFly;
 	ULONGLONG TimeWalking;
+	ULONGLONG TimeToSwitch;
 public:
 	CGoomba(int type);
 	void SetType(int type) { this->type = type; }
 	int GetType() { return this->type; }
 	virtual void SetState(int state);
 	void StartDisapear() { TimeStartDisappear = GetTickCount64(); }
-
+	void SetSwitched(bool switched) { this->isSwitched = switched; TimeToSwitch = GetTickCount64(); }
+	bool IsSwitched() { return this->isSwitched; }
 	void StartReady() { TimeReadyToFly = GetTickCount64(); state = PARA_GOOMA_STATE_READY_TO_FLY; }
 	void StartFly() { TimeFly = GetTickCount64(); state = PARA_GOOMBA_STATE_FLY; }
 	void StartWalking() { TimeWalking = GetTickCount64(); state = PARA_GOOMBA_STATE_WALKING; }

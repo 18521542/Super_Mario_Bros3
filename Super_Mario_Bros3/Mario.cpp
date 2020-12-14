@@ -224,30 +224,28 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 
 		for (UINT i = 0; i < coEventsResult.size(); i++) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
+			if (dynamic_cast<CGoomba*>(e->obj)) 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
 				// jump on top >> kill Goomba and deflect a bit 
 				if (e->ny < 0)
 				{
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
 					if (goomba->GetType() == PARA_GOOMBA) 
 					{
+						goomba->SetState(GOOMBA_STATE_WALKING);
 						goomba->SetType(GOOMBA);
+						//vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
-					else
-					{
-						if (goomba->GetType() == GOOMBA) 
+					else if (goomba->GetType() == GOOMBA /*&& !goomba->IsSwitched()*/)
+					{					
+						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (goomba->GetState() != GOOMBA_STATE_DIE)
-							{
-								goomba->SetState(GOOMBA_STATE_DIE);
-								goomba->StartDisapear();
-								vy = -MARIO_JUMP_DEFLECT_SPEED;
-							}
-						}
+							goomba->SetState(GOOMBA_STATE_DIE);
+							goomba->StartDisapear();
+							
+						}						
 					}
-					
 				}
 				else if (e->nx != 0)
 				{
