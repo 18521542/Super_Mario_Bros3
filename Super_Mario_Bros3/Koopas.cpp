@@ -19,14 +19,14 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx > 0) 
 		{
 			if (vx > 0)
-				vx -= 0.0002f * dt;
+				vx -= DECREASE_ACCELERATION_SPEED * dt;
 			else
 				vx = 0;
 		}
 		else
 		{
 			if (vx < 0)
-				vx += 0.0002f * dt;
+				vx += DECREASE_ACCELERATION_SPEED * dt;
 			else
 				vx = 0;
 		}
@@ -75,26 +75,42 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 				if (plat->getType() == PLATFORM_TYPE_TWO) {
-					x += dx;
-					y += dy;
+					if (ny != 0)
+					{
+						vy = 0;
+					}
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
 				}
 				else if (plat->getType() == PLATFORM_TYPE_ONE) 
 				{
-					if (nx != 0) 
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
+					if (e->nx != 0) 
 					{	
-						float l, t, r, b;
-						plat->GetBoundingBox(l, t, r, b);
-						vx = -vx;
+						//this->vx = -this->vx;
+						DebugOut(L"\nnx %d", this->nx);
 						this->nx = -this->nx;
-						x += min_tx * dx + nx * 0.4f;
-						y += min_ty * dy + ny * 0.4f;
-
+						vx = this->nx * vx;
 					}
 					if (ny != 0) 
 					{
-						x += min_tx * dx + nx * 0.4f;
-						y += min_ty * dy + ny * 0.4f;
 						vy = 0;
+					}
+					
+				}
+				else if (plat->getType() == PLATFORM_TYPE_THREE) {
+					if (state == GOOMBA_STATE_WALKING) 
+					{
+						if (nx != 0)
+						{
+							this->vx = -this->vx;
+							this->nx = -this->nx;
+						}
+					}
+					else {
+						x += dx;
+						y += dy;
 					}
 				}
 			}
@@ -119,6 +135,25 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<CBreakableBrick*>(e->obj)) 
+			{
+				CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(e->obj);
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
+				if (state == KOOPAS_STATE_WALKING) 
+				{
+					if (e->nx != 0)
+					{
+						this->nx = -this->nx;
+						vx = this->nx * vx;
+					}
+					if (ny != 0)
+					{
+						vy = 0;
+					}
+					
+				}
+			}
 		}
 	}
 
@@ -133,7 +168,8 @@ void CKoopas::Render()
 	if (state == KOOPAS_STATE_DIE) {
 		ani = KOOPAS_ANI_DIE;
 	}
-	else if (state == KOOPAS_STATE_WALKING) {
+	else if (state == KOOPAS_STATE_WALKING) 
+	{
 		if (nx > 0) 
 			ani = KOOPAS_ANI_WALKING_RIGHT;
 		else  ani = KOOPAS_ANI_WALKING_LEFT;
@@ -159,14 +195,16 @@ void CKoopas::SetState(int state)
 		vy = 0;
 		break;
 	case KOOPAS_STATE_WALKING:
-		vx = nx * KOOPAS_WALKING_SPEED;
+		if(isNormal)
+			vx = nx * KOOPAS_WALKING_SPEED;
 		break;
 	case KOOPAS_STATE_DIE_MOVING:
-		vx = nx * KOOPAS_DIE_SPEED;
+		if(isNormal)
+			vx = nx * KOOPAS_DIE_SPEED;
 		break;
 	case KOOPAS_STATE_DIE_UP:
-		vx =  nx * KOOPAS_DIE_SPEED;
-		vy = -(0.3f);
+		vx =  nx * KOOPAS_WALKING_SPEED;
+		vy = -(DEFECT_SPEED);
 	}
 
 }

@@ -177,7 +177,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 		else if (dynamic_cast<CPlatform*>(obj))
 		{
 			CPlatform* pf = dynamic_cast<CPlatform*>(obj);
-			if (CheckBB(pLeft, pTop, pRight, pBottom) && pf->getType() != PLATFORM_TYPE_TWO)
+			if (CheckBB(pLeft, pTop, pRight, pBottom) && pf->getType() == PLATFORM_TYPE_ONE)
 			{	
 					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
@@ -338,17 +338,20 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 
 				if (e->ny < 0)
 				{
-					if (koopas->GetState() == KOOPAS_STATE_WALKING) {
+					vy = -2 * MARIO_JUMP_DEFLECT_SPEED;
+					if (koopas->GetState() == KOOPAS_STATE_WALKING) 
+					{
 						koopas->SetState(KOOPAS_STATE_DIE);
 					}
 					else if (koopas->GetState() == KOOPAS_STATE_DIE)
 					{
 						koopas->SetState(KOOPAS_STATE_DIE_MOVING);
 					}
-					else if (koopas->GetState() == KOOPAS_STATE_DIE_MOVING) {
+					else if (koopas->GetState() == KOOPAS_STATE_DIE_MOVING) 
+					{
 						koopas->SetState(KOOPAS_STATE_DIE);
 					}
-					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					
 				}
 				if (!isReadyToHold)
 				{
@@ -393,7 +396,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
-			else if (dynamic_cast<CBrick*>(e->obj)/* || dynamic_cast<CBreakableBrick*>(e->obj)*/) {
+			else if (dynamic_cast<CBrick*>(e->obj)) {
 				x += min_tx * dx + nx * 0.8f;
 				y += min_ty * dy + ny * 0.1f;
 				isReadyToJump = true;

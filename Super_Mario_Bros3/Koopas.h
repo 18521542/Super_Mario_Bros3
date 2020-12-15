@@ -3,8 +3,10 @@
 #include "GameObject.h"
 #include "Object.h"
 
-#define KOOPAS_WALKING_SPEED 0.03f;
-#define KOOPAS_DIE_SPEED 0.2f;
+#define KOOPAS_WALKING_SPEED			0.03f
+#define KOOPAS_DIE_SPEED				0.15f
+#define DECREASE_ACCELERATION_SPEED		0.00002f
+#define DEFECT_SPEED					0.3f
 
 #define KOOPAS_BBOX_WIDTH			16
 #define KOOPAS_BBOX_HEIGHT			27
@@ -26,7 +28,7 @@
 class CKoopas : public CGameObject
 {
 	bool isBeingHold = false;
-	
+	bool isNormal = true;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
