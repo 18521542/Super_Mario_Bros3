@@ -242,7 +242,7 @@ class CMario : public CGameObject
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 public:
-	CMario(float x = 0.0f, float y = 0.0f);
+	CMario(float x , float y );
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	
 
@@ -267,6 +267,7 @@ public:
 	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
 	void StartEffect() { EffectTime = GetTickCount64(); isForEffectAppear = true; }
 	ULONGLONG GetStartFly() { return this->StartFly; }
+
 	//from beginning
 	void Reset();
 

@@ -8,8 +8,6 @@
 #include "Portal.h"
 
 
-//#define PushBackPixel 9.0f
-//using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
@@ -43,6 +41,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_QUESTIONBRICK		10
 #define OBJECT_TYPE_LEAF_MUSHROOM		11
 #define OBJECT_TYPE_VENUS_RED			12
+#define OBJECT_TYPE_SWITCH_BLOCK		13
 
 #define MAX_SCENE_LINE 1024
 
@@ -214,8 +213,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		//x,y
 		break;
 	case OBJECT_TYPE_BREAKABLEBRICK:
-		obj = new CBreakableBrick();
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CBreakableBrick(type);
 		break;
+	}
 	case OBJECT_TYPE_QUESTIONBRICK:
 		obj = new CQuestionBrick(y,x);
 		break;
@@ -229,6 +231,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int type = atoi(tokens[4].c_str());
 		obj = new CVenus(type);
+		break;
+	}
+	case OBJECT_TYPE_SWITCH_BLOCK:
+	{
+		int state = atoi(tokens[4].c_str());
+		obj = new CSwitchBlock(state);
 		break;
 	}
 	default:

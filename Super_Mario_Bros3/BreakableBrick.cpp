@@ -1,22 +1,53 @@
 #include "BreakableBrick.h"
 
-CBreakableBrick::CBreakableBrick()
+CBreakableBrick::CBreakableBrick(int typ)
 {
-	SetState(COIN_STATE_APPEAR);
+	SetState(SHINING);
+	this->type = typ;
 }
 void CBreakableBrick::Render()
 {
-	if(state!=BREAKABLE_BRICK_STATE_DISAPPEAR)
-		animation_set->at(0)->Render(x, y);
+	int ani = 0;
+
+	if (state == COIN) 
+	{
+		ani = ANI_COIN;
+	}
+	else if (state == SHINING) 
+	{
+		ani = ANI_SHINING;
+	}
+	else if (state == WITHOUT_SHINING) 
+	{
+		ani = ANI_WITHOUT_SHINING;
+	}
+
+
+	if (state != BREAKABLE_BRICK_STATE_DISAPPEAR) 
+	{
+		animation_set->at(ani)->Render(x, y);
+	}
+
+	//RenderBoundingBox();
 }
 
 void CBreakableBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if (state != BREAKABLE_BRICK_STATE_DISAPPEAR) {
-		l = x;
-		t = y;
-		r = x + BRICK_BBOX_WIDTH;
-		b = y + BRICK_BBOX_HEIGHT;
+	if (state != BREAKABLE_BRICK_STATE_DISAPPEAR) 
+	{
+		if (state != COIN) {
+			l = x;
+			t = y;
+			r = x + BRICK_BBOX_WIDTH;
+			b = y + BRICK_BBOX_HEIGHT;
+		}
+		else
+		{
+			l = x;
+			t = y;
+			r = x + BBCOIN_WIDTH;
+			b = y + BBCOIN_HEIGT;
+		}
 	}
 	else {
 		l = 0;
@@ -28,5 +59,5 @@ void CBreakableBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	//if()
+	
 }

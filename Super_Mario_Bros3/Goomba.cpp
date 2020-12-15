@@ -58,20 +58,21 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (state == PARA_GOOMBA_STATE_WALKING)
 		{
-			if (GetTickCount64() - TimeWalking > 500)
+			if (GetTickCount64() - TimeWalking > WALKING_TIME_MAX)
 			{
 				StartReady();
 			}
 		}
 		else if (state == PARA_GOOMA_STATE_READY_TO_FLY)
 		{
-			if (GetTickCount64() - TimeReadyToFly > 1000)
+			if (GetTickCount64() - TimeReadyToFly > READY_FLY_TIME_MAX)
 			{
 				StartFly();
 			}
 		}
-		else if (state == PARA_GOOMBA_STATE_FLY) {
-			if (GetTickCount64() - TimeFly > 500)
+		else if (state == PARA_GOOMBA_STATE_FLY) 
+		{
+			if (GetTickCount64() - TimeFly > FLYING_TIME_MAX)
 			{
 				StartWalking();
 			}

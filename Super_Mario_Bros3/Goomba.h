@@ -2,7 +2,10 @@
 #pragma once
 #include "GameObject.h"
 
-#define GOOMBA_WALKING_SPEED 0.05f;
+#define GOOMBA_WALKING_SPEED		0.05f
+#define WALKING_TIME_MAX			500
+#define	READY_FLY_TIME_MAX			1000
+#define	FLYING_TIME_MAX				500
 
 #define GOOMBA_BBOX_WIDTH				16
 #define GOOMBA_BBOX_HEIGHT				15

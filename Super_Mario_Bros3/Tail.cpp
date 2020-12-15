@@ -63,12 +63,23 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				obj->SetState(KOOPAS_STATE_DIE_UP);
 			}
 		}
-		else if (dynamic_cast<CBreakableBrick*>(obj)) {
+		else if (dynamic_cast<CBreakableBrick*>(obj)) 
+		{
+			CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(obj);
 			float pLeft, pTop, pRight, pBottom;
 			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
 			if (this->CheckBB(pLeft, pTop, pRight, pBottom))
 			{
-				obj->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
+				if (bb->GetType() == NORMAL) 
+				{
+					bb->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
+				}
+				else if (bb->GetType() == SPECIAL) 
+				{
+					if(bb->GetState()==SHINING)
+						bb->SetState(WITHOUT_SHINING);
+				}
+					
 			}
 		}
 		else if (dynamic_cast <CQuestionBrick*>(obj))
