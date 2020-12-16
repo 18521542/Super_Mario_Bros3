@@ -41,12 +41,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			
 		if (dynamic_cast<CMario*>(obj)) {
 			CMario* mario = dynamic_cast<CMario*>(obj);
-			if (mario->IsHolding()) {
+			if (mario->IsHolding() && this->type != KOOPA_PARATROOPA) 
+			{
 				vy = 0;
 			}
 		}
-			
-
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -96,7 +95,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (e->nx != 0) 
 					{	
 						this->nx = -this->nx;
-						vx = this->nx * vx;
+						this->vx = this->nx * vx;
 					}
 					if (ny != 0) 
 					{
@@ -105,6 +104,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						else
 							vy = -0.3f;
 					}
+					
 					
 				}
 				else if (plat->getType() == PLATFORM_TYPE_THREE) {
@@ -125,6 +125,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CFireBall*>(e->obj)) {
 				CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
 				if (nx != 0 || ny != 0) {
+					if (this->GetType() != KOOPA)
+						this->SetType(KOOPA);
 					SetState(KOOPAS_STATE_DIE);
 				}
 						
@@ -169,12 +171,45 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					
 				}
 			}
-			/*else if (dynamic_cast<CKoopas*>(e->obj)) {
-
-			}*/
-			else {
+			else if (dynamic_cast<CGoomba*>(e->obj)) {
+				CGoomba* gb = dynamic_cast<CGoomba*>(e->obj);
+				gb->SetState(GOOMBA_STATE_DIE);
+				gb->StartDisapear();
 				x += dx;
+				//vy = 0;
 				y += dy;
+			}
+			else if (dynamic_cast<CKoopas*>(e->obj)){
+				CKoopas* kp = dynamic_cast<CKoopas*>(e->obj);
+				if (e->nx != 0) 
+				{
+					if (this->GetType() == KOOPA_PARATROOPA) {
+						x += dx;
+						y += dy;
+					}
+					else 
+					{
+						if (this->state == KOOPAS_STATE_DIE_MOVING) {
+							if (kp->GetType() != KOOPA) {
+								kp->SetType(KOOPA);
+							}
+							kp->SetState(KOOPAS_STATE_DIE_UP);
+							x += dx;
+							y += dy;
+						}
+					}
+				}
+
+				if (e->ny != 0 )
+				{
+					if (this->GetType() == KOOPA_PARATROOPA) {
+						
+							x += dx;
+							y += dy;
+						
+					}
+				}
+				
 			}
 		}
 	}

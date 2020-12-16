@@ -30,7 +30,7 @@ CMario::CMario(float x, float y) : CGameObject()
 void CMario::UpdateStateUsingTimeOut() 
 {
 	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
@@ -38,19 +38,19 @@ void CMario::UpdateStateUsingTimeOut()
 
 	
 	//reset IsStartUsingTail = false if mario finish using his tail
-	if (GetTickCount() - using_tail_start > MARIO_USING_TAIL_TIME)
+	if (GetTickCount64() - using_tail_start > MARIO_USING_TAIL_TIME)
 	{
 		using_tail_start = 0;
 		isUsingTail = false;
 	}
 
-	if (GetTickCount() - tail_appear > MARIO_FOR_TAIL_APPEAR_TIME) {
+	if (GetTickCount64() - tail_appear > MARIO_FOR_TAIL_APPEAR_TIME) {
 		tail_appear = 0;
 		isForTailAppear = false;
 	}
 
 	//reset shooting to  if mario finish shotting
-	if (GetTickCount() - shooting_start > MARIO_SHOOTING_TIME)
+	if (GetTickCount64() - shooting_start > MARIO_SHOOTING_TIME)
 	{
 		isShootingFireBall = false;
 		shooting_start = 0;
@@ -59,14 +59,14 @@ void CMario::UpdateStateUsingTimeOut()
 	}
 
 	//if flying time is over then...
-	if (GetTickCount() - StartFly > MARIO_FLYING_TIME) {
+	if (GetTickCount64() - StartFly > MARIO_FLYING_TIME) {
 		isFlying = false;
 		StartFly = 0;
 		//isReadyToFly = false;
 	}
 
 	//Kicking time is over then...
-	if (GetTickCount() - StartKick > MARIO_KICKING_TIME) {
+	if (GetTickCount64() - StartKick > MARIO_KICKING_TIME) {
 		StartKick = 0;
 		isKicking = false;
 	}
@@ -111,7 +111,6 @@ void CMario::UpdateForEachState(DWORD dt) {
 		if (vy < 0)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
 	}
-
 	else if (state == MARIO_STATE_JUMP)
 	{
 		if (vy < 0)
@@ -192,7 +191,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 					
 			}
 		}
-		else if (dynamic_cast<CQuestionBrick*>(obj))
+		/*else if (dynamic_cast<CQuestionBrick*>(obj))
 		{
 			CQuestionBrick* pf = dynamic_cast<CQuestionBrick*>(obj);
 			if (CheckBB(pLeft, pTop, pRight, pBottom))
@@ -200,7 +199,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 				if(state==MARIO_STATE_IDLE)
 					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
-		}
+		}*/
 	}
 }
 
