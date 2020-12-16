@@ -174,9 +174,26 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (nx != 0 || ny != 0) {
 					SetState(GOOMBA_STATE_DIE);
 				}
-
 				fb->setIsAppear(false);
-
+			}
+			else if (dynamic_cast<CGoomba*>(e->obj)) {
+				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+				if (this->type == GOOMBA) {
+					if (goomba->GetType() == GOOMBA) {
+						this->vx = -this->vx;
+						goomba->vx = -goomba->vx;
+					}
+					else if (goomba->GetType() == PARA_GOOMBA) {
+						x += dx;
+						y += dy;
+					}
+				}
+				else if (this->type == PARA_GOOMBA) {
+					if (goomba->GetType() == GOOMBA) {
+						x += dx;
+						y += dy;
+					}
+				}
 			}
 		}
 	}

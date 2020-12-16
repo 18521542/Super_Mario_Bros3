@@ -338,18 +338,25 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 
 				if (e->ny < 0)
 				{
-					vy = -2 * MARIO_JUMP_DEFLECT_SPEED;
-					if (koopas->GetState() == KOOPAS_STATE_WALKING) 
+					vy =  -MARIO_JUMP_DEFLECT_SPEED;
+					if (koopas->GetType() == KOOPA) 
 					{
-						koopas->SetState(KOOPAS_STATE_DIE);
+						if (koopas->GetState() == KOOPAS_STATE_WALKING)
+						{
+							koopas->SetState(KOOPAS_STATE_DIE);
+						}
+						else if (koopas->GetState() == KOOPAS_STATE_DIE)
+						{
+							koopas->SetState(KOOPAS_STATE_DIE_MOVING);
+						}
+						else if (koopas->GetState() == KOOPAS_STATE_DIE_MOVING)
+						{
+							koopas->SetState(KOOPAS_STATE_DIE);
+						}
 					}
-					else if (koopas->GetState() == KOOPAS_STATE_DIE)
-					{
-						koopas->SetState(KOOPAS_STATE_DIE_MOVING);
-					}
-					else if (koopas->GetState() == KOOPAS_STATE_DIE_MOVING) 
-					{
-						koopas->SetState(KOOPAS_STATE_DIE);
+					else {
+						koopas->SetType(KOOPA);
+						koopas->SetState(KOOPAS_STATE_WALKING);
 					}
 					
 				}
