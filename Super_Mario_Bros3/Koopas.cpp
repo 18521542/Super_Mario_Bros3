@@ -170,6 +170,13 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					
 				}
+				else if (state == KOOPAS_STATE_DIE_MOVING) {
+					if (e->nx!=0) {
+						this->nx = -this->nx;
+						this->vx = this->nx * this->vx;
+						bb->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
+					}
+				}
 			}
 			else if (dynamic_cast<CGoomba*>(e->obj)) {
 				CGoomba* gb = dynamic_cast<CGoomba*>(e->obj);
@@ -199,17 +206,13 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-
 				if (e->ny != 0 )
 				{
-					if (this->GetType() == KOOPA_PARATROOPA) {
-						
+					if (this->GetType() == KOOPA_PARATROOPA) {	
 							x += dx;
 							y += dy;
-						
 					}
 				}
-				
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Object.h"
-#define MARIO_WALKING_SPEED_START		0.001f 
+#define MARIO_WALKING_SPEED_START		0.0001f 
 
 #define MARIO_WALKING_SPEED_MAX			0.1f
 
@@ -11,7 +11,7 @@
 
 #define MARIO_JUMPING_ACCELERATION		0.0007f
 
-#define MARIO_FLY_SPEED					0.1f	
+#define MARIO_FLY_SPEED					0.2f	
 
 #define MARIO_JUMP_SPEED_MAX			0.2f
 
@@ -23,7 +23,7 @@
 
 #define MARIO_DIE_DEFLECT_SPEED			0.5f
 
-#define MARIO_RUN_SPEED_MAX				0.3f
+#define MARIO_RUN_SPEED_MAX				0.25f
 
 #define MARIO_FALLING_SPEED				0.00004f
 
@@ -192,6 +192,7 @@ class CMario : public CGameObject
 
 	//hight-jump
 	bool isReadyToJump = true;
+	bool isJumping = false;
 
 	//using tail
 	ULONGLONG using_tail_start;
@@ -249,6 +250,7 @@ public:
 	//Render
 	virtual void Render();
 
+	void RenderByDirection(int& ani, int ani_right, int ani_left);
 	void SameRenderLogicsForAllLevel(int &ani, 
 		int ani_idle_right, int ani_idle_left, int ani_jump_down_right, int ani_jump_down_left,
 		int ani_stop_right, int ani_stop_left, int ani_walking_right, int ani_walking_left);
@@ -265,7 +267,7 @@ public:
 	void StartShootingFireBall() { shooting_start = GetTickCount64(); isShootingFireBall = true; isForFireBallAppear = true; }
 	void StartFlying() { StartFly = GetTickCount64(); isFlying = true; }
 	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
-	void StartEffect() { EffectTime = GetTickCount64(); isForEffectAppear = true; }
+	void StartEffect() { EffectTime = GetTickCount64(); isForEffectAppear = true;  }
 	ULONGLONG GetStartFly() { return this->StartFly; }
 
 	//from beginning
@@ -309,6 +311,8 @@ public:
 	bool IsForTailAppear() { return this->isForTailAppear; }
 
 	bool IsAllowToStop() { return this->isAllowtoStop; }
+
+	bool IsJumping() { return this->isJumping; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
