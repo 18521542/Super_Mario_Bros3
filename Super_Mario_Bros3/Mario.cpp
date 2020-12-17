@@ -62,8 +62,11 @@ void CMario::UpdateStateUsingTimeOut()
 	if (GetTickCount64() - StartFly > MARIO_FLYING_TIME) {
 		isFlying = false;
 		StartFly = 0;
-		//isReadyToJump = false;
-		//isReadyToFly = false;
+	}
+
+	if (GetTickCount64() - StartReadyToFly > 500) {
+		isReadyToFly = false;
+		StartReadyToFly = 0;
 	}
 
 	//Kicking time is over then...
@@ -94,7 +97,7 @@ void CMario::UpdateForEachState(DWORD dt) {
 		isReadyToJumpFly = true;
 		if (level == MARIO_LEVEL_TAIL)
 		{
-			isReadyToFly = true;
+			GetReadyToFly();
 		}
 	}
 
@@ -281,20 +284,22 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CPlatform*>(e->obj)) {
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
+				
 				if (plat->getType() == PLATFORM_TYPE_TWO)
 				{
 					if (e->ny == 0) {
 						x += dx;
 						y += dy;
 						isReadyToSit = true;
-						isReadyToJump = true;
 					}
 					else if (e->ny < 0) {
 						x += min_tx * dx + nx * 0.4f;
 						y += min_ty * dy + ny * 0.4f;
 						vy = 0;
 						isReadyToSit = true;
-						isReadyToJump = true;
+						if (!isReadyToJump)
+							isReadyToJump = true;
+					
 					}
 					else if (e->ny > 0)
 					{
@@ -302,10 +307,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						y += dy;
 						ny = 0;
 						isReadyToSit = true;
-						isReadyToJump = true;
 					}
-					//x += dx;
-					//y += d
 				}
 				else if (plat->getType() == PLATFORM_TYPE_THREE) {
 					//ignore this platform
@@ -325,7 +327,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					if (e->ny != 0) 
 					{
 						vy = 0;
-						
 					}
 					if (e->nx != 0)vx = 0;
 				}
@@ -367,6 +368,8 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (e->nx != 0)
 					{
+						x += min_tx * dx + nx * 0.8f;
+						y += min_ty * dy + ny * 0.1f;
 						//if koopas is moving then mario die
 						if (abs(kVx) > 0)
 						{
@@ -391,6 +394,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 							StartKicking();
 						}
 					}
+					
 				}
 				else {
 					x += dx;
@@ -526,8 +530,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!isForEffectAppear) 
 	{
-		DebugOut(L"\nIs fly  %d", isFlying);
-		DebugOut(L"\nIs  ready fly  %d", isReadyToFly);
 		CGameObject::Update(dt);
 
 		vx += a * dt;
@@ -554,41 +556,20 @@ void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int 
 									int ani_idle_right, int ani_idle_left,
 									int ani_stop_right, int ani_stop_left, int ani_walking_right, int ani_walking_left) 
 {
-		//when mario is falling down or 
 		//on the ground and not doing anything
 		if (vx == 0) 
 		{
-			if (IsReadyToJump() && vy == 0) //if he's on the ground
+			if (state == MARIO_STATE_IDLE) //if he's on the ground
 			{
 				if (nx > 0) ani = ani_idle_right;
 				else ani = ani_idle_left;
 			}
-			else //when he falling down
-			{
-				if (nx > 0) ani = ani_jump_down_right;
-				else ani = ani_jump_down_left;
-			}
 		}
-
-		//when mario moving on the ground
+		//when mario moving 
 		else {
-			if (vy == 0) 
+			//if is jumping
+			if (!isReadyToJump) 
 			{
-				if (vx > 0 && nx < 0) {
-					ani = ani_stop_right;
-				}
-				else if (vx < 0 && nx >0) {
-					ani = ani_stop_left;
-				}
-				else if (vx > 0 && nx > 0) {
-					ani = ani_walking_right;
-				}
-				else if (vx < 0 && nx < 0) {
-					ani = ani_walking_left;
-				}
-			}
-
-			if (!isReadyToJump) {
 				RenderByDirection(ani, ani_jump_down_right, ani_jump_down_left);
 			}
 			else {
@@ -606,7 +587,6 @@ void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int 
 				}
 			}
 		}
-	
 }
 
 void CMario::RenderLogicForSittingState(int& ani, int ani_sit_right, int ani_sit_left)

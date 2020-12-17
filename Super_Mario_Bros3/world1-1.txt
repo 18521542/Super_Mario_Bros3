@@ -563,10 +563,10 @@
 #jump-fly tail left
 84	20003	100	19003	100
 
-#fall tail right
-85	23012	50	21013	50
-#fall tail left
-86	23004	50	21003	50
+#fall tail right  
+85	23012	50
+#fall tail left  
+86	23004	50
 
 #kick tail right
 87	20015	100

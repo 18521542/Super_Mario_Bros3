@@ -215,6 +215,7 @@ class CMario : public CGameObject
 
 	//fly
 	ULONGLONG StartFly;
+	ULONGLONG StartReadyToFly;
 	bool isFlying = false;
 	bool isReadyToFly = false;
 
@@ -268,6 +269,7 @@ public:
 	void StartFlying() { StartFly = GetTickCount64(); isFlying = true; }
 	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
 	void StartEffect() { EffectTime = GetTickCount64(); isForEffectAppear = true;  }
+	void GetReadyToFly() { StartReadyToFly = GetTickCount64(); isReadyToFly = true; }
 	ULONGLONG GetStartFly() { return this->StartFly; }
 
 	//from beginning
