@@ -564,6 +564,8 @@ void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int 
 				if (nx > 0) ani = ani_idle_right;
 				else ani = ani_idle_left;
 			}
+			else
+				ani = ani_idle_right;
 		}
 		//when mario moving 
 		else {
@@ -573,16 +575,16 @@ void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int 
 				RenderByDirection(ani, ani_jump_down_right, ani_jump_down_left);
 			}
 			else {
-				if (vx > 0 && nx < 0) {
+				if (vx >= 0 && nx < 0) {
 					ani = ani_stop_right;
 				}
-				else if (vx < 0 && nx >0) {
+				else if (vx <= 0 && nx >0) {
 					ani = ani_stop_left;
 				}
-				else if (vx > 0 && nx > 0) {
+				else if (vx >= 0 && nx > 0) {
 					ani = ani_walking_right;
 				}
-				else if (vx < 0 && nx < 0) {
+				else if (vx <= 0 && nx < 0) {
 					ani = ani_walking_left;
 				}
 			}
