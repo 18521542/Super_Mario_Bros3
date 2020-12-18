@@ -49,11 +49,6 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else {
 		vy = 0;
 	}
-
-	//if (vy == 0) {
-	//	//DebugOut(L"\nis Firing");
-	//	//DebugOut(L"\nY: %f", y);
-	//}
 		
 	for (size_t i = 0; i < coObjects->size(); i++) {
 		LPGAMEOBJECT obj = coObjects->at(i);

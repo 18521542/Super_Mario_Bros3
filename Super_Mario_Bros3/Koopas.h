@@ -6,7 +6,8 @@
 #define KOOPAS_WALKING_SPEED			0.03f
 #define KOOPAS_DIE_SPEED				0.2f
 #define DECREASE_ACCELERATION_SPEED		0.00002f
-#define DEFECT_SPEEDY					0.3f
+#define DEFECT_SPEEDY					0.2f
+#define KP_GRAVITY						0.0005f
 
 #define KOOPAS_BBOX_WIDTH			16
 #define KOOPAS_BBOX_HEIGHT			27

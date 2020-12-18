@@ -343,6 +343,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny < 0)
 				{
 					vy =  -MARIO_JUMP_DEFLECT_SPEED;
+					y += dy;
 					if (koopas->GetType() == KOOPA) 
 					{
 						if (koopas->GetState() == KOOPAS_STATE_WALKING)
@@ -377,6 +378,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 							{
 								if (koopas->GetState() != GOOMBA_STATE_DIE)
 								{
+									StartEffect();
 									if (level > MARIO_LEVEL_SMALL)
 									{
 										level = MARIO_LEVEL_SMALL;

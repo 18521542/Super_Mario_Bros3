@@ -13,7 +13,7 @@
 
 #define MARIO_FLY_SPEED					0.2f	
 
-#define MARIO_JUMP_SPEED_MAX			0.2f
+#define MARIO_JUMP_SPEED_MAX			0.22f
 
 #define MARIO_JUMP_DEFLECT_SPEED		0.2f
 

@@ -13,7 +13,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
-	vy += MARIO_GRAVITY * dt;
+	vy += KP_GRAVITY * dt;
 
 	if (state == KOOPAS_STATE_DIE_UP) 
 	{
@@ -79,7 +79,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (type == KOOPA)
 							vy = 0;
 						else
-							vy = -0.3f;
+							vy = -DEFECT_SPEEDY;
 						y += min_ty * dy + ny * 0.4f;
 					}
 					else {
@@ -102,7 +102,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (type == KOOPA)
 							vy = 0;
 						else
-							vy = -0.3f;
+							vy = -DEFECT_SPEEDY;
 					}
 					
 					
@@ -217,6 +217,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CMario*>(e->obj)) {
 				x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;
+				CMario* mario = dynamic_cast<CMario*>(e->obj);
+				//mario->StartEffect();
 			}
 		}
 	}

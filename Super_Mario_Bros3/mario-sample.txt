@@ -3,3 +3,4 @@ start	1
 #scene list
 [SCENES]
 1 	world1-1.txt
+2	WorldMap1.txt
