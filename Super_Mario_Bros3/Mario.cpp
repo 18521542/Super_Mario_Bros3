@@ -378,7 +378,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 							{
 								if (koopas->GetState() != GOOMBA_STATE_DIE)
 								{
-									StartEffect();
+									//StartEffect();
 									if (level > MARIO_LEVEL_SMALL)
 									{
 										level = MARIO_LEVEL_SMALL;

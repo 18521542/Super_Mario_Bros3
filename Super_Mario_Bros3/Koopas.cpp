@@ -92,12 +92,12 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					x += min_tx * dx + nx * 0.4f;
 					y += min_ty * dy + ny * 0.4f;
-					if (e->nx != 0) 
-					{	
+					if (nx != 0)
+					{
+						this->vx = -this->vx;
 						this->nx = -this->nx;
-						this->vx = this->nx * vx;
 					}
-					if (ny != 0) 
+					if (e->ny != 0) 
 					{
 						if (type == KOOPA)
 							vy = 0;
