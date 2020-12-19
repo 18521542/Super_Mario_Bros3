@@ -12,7 +12,8 @@ void MarioWorldMap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 	y += dy;
-	for (size_t i = 0; i < coObjects->size(); i++) {
+	for (size_t i = 0; i < coObjects->size(); i++) 
+	{
 		LPGAMEOBJECT obj = coObjects->at(i);
 		float pLeft, pTop, pRight, pBottom;
 		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
@@ -23,15 +24,20 @@ void MarioWorldMap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			{
 				this->vx = 0;
 				this->vy = 0;
-				x += dx;
-				y += dy;
+
 				x = cp->x;
 				y = cp->y;
-				int l, t, r, b;
-				cp->GetCheckPoint(l, t, r, b);
+
+				int l, t, r, b, scene_id;
+				cp->GetCheckPoint(l, t, r, b, scene_id);
+
+				//Get info of checkpoint for mario
 				this->SetDirection(l, t, r, b);
+				this->Scene_ID_Of_Standing_CheckPoint = scene_id;
+
 				cp->SetIsAbleToStop(false);
 				cp->SetIsStop(true);
+
 				isMoving = false;
 			}
 		}

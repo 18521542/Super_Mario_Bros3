@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#define MARIO_SPEED		0.1f;
+#define MARIO_SPEED		0.13f;
 #define MARIO_WM_WIDTH	1
 #define MARIO_WM_HEIGHT	1
 class MarioWorldMap : public CGameObject {
@@ -10,6 +10,8 @@ class MarioWorldMap : public CGameObject {
 	bool bottom;
 
 	bool isMoving = false;
+
+	int Scene_ID_Of_Standing_CheckPoint;
 public :
 	MarioWorldMap();
 	void SetDirection(int l, int t, int r, int b);
@@ -26,5 +28,8 @@ public :
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 
 	void SetIsMoving(bool value) { this->isMoving = value; }
+
+	int SceneID() { return this->Scene_ID_Of_Standing_CheckPoint; }
+	
 	bool IsMoving() { return this->isMoving; }
 };

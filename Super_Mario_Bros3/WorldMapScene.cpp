@@ -5,6 +5,8 @@
 #include "MarioOfWorldMapScene.h"
 #include "CheckPoint.h"
 
+#define INVALID_SCENE	-1
+
 WorldMapScene::WorldMapScene(int id, LPCWSTR filePath) :CScene(id, filePath)
 {
 	key_handler = new WorldMapScenceKeyHandler(this);
@@ -140,7 +142,8 @@ void WorldMapScene::_ParseSection_OBJECTS(string line)
 		int bottom = atoi(tokens[7].c_str());
 		int width = atoi(tokens[8].c_str());
 		int height = atoi(tokens[9].c_str());
-		obj = new CheckPoint(left, top, right, bottom, width, height);
+		int scene_id = atoi(tokens[10].c_str());
+		obj = new CheckPoint(left, top, right, bottom, width, height, scene_id);
 		break;
 	}
 	default:
@@ -273,11 +276,10 @@ void WorldMapScenceKeyHandler::OnKeyDown(int KeyCode) {
 			mario->SetIsMoving(true);
 		}		
 		break;
-	case DIK_X:
-		mario->vx = 0;
-		break;
-	case DIK_Y:
-		mario->vy = 0;
+	case DIK_W:
+		if (mario->SceneID() != INVALID_SCENE) {
+			CGame::GetInstance()->SwitchScene(mario->SceneID() && !mario->IsMoving());
+		}
 		break;
 	}
 }

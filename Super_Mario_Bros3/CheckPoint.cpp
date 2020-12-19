@@ -4,13 +4,14 @@
 #include "Utils.h"
 #define TRUE	1
 #define FALSE	0
-CheckPoint::CheckPoint(int l, int t, int r, int b, int _width, int _height) {
+CheckPoint::CheckPoint(int l, int t, int r, int b, int _width, int _height, int scene_id) {
 	SetCheckPoint(left, l);
 	SetCheckPoint(top, t);
 	SetCheckPoint(right, r);
 	SetCheckPoint(bottom, b);
 	this->width = _width;
 	this->height = _height;
+	this->scene_id = scene_id;
 }
 
 void CheckPoint::SetCheckPoint(bool& postion, int value) {
@@ -43,7 +44,4 @@ void CheckPoint::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		StartReset();
 	}
-
-	
-
 }
