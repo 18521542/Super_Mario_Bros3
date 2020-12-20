@@ -4,6 +4,7 @@
 #include "Textures.h"
 #include "MarioOfWorldMapScene.h"
 #include "CheckPoint.h"
+#include "TurtleOFWorldMap.h"
 
 #define INVALID_SCENE	-1
 
@@ -146,6 +147,16 @@ void WorldMapScene::_ParseSection_OBJECTS(string line)
 		obj = new CheckPoint(left, top, right, bottom, width, height, scene_id);
 		break;
 	}
+	case 300:
+	{
+		obj = new Turle();
+		break;
+	}
+	case 400:
+	{
+		obj = new Help();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -277,8 +288,8 @@ void WorldMapScenceKeyHandler::OnKeyDown(int KeyCode) {
 		}		
 		break;
 	case DIK_W:
-		if (mario->SceneID() != INVALID_SCENE) {
-			CGame::GetInstance()->SwitchScene(mario->SceneID() && !mario->IsMoving());
+		if (mario->SceneID() != INVALID_SCENE && !mario->IsMoving()) {
+			CGame::GetInstance()->SwitchScene(mario->SceneID() );
 		}
 		break;
 	}

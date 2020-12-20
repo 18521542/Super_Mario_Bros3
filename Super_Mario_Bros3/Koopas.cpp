@@ -7,8 +7,6 @@ CKoopas::CKoopas(int type)
 	SetState(KOOPAS_STATE_WALKING);
 }
 
-
-
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
@@ -38,14 +36,19 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		LPGAMEOBJECT obj = coObjects->at(i);
 		float pLeft, pTop, pRight, pBottom;
 		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-			
-		if (dynamic_cast<CMario*>(obj)) {
-			CMario* mario = dynamic_cast<CMario*>(obj);
-			if (mario->IsHolding() && this->type != KOOPA_PARATROOPA) 
-			{
-				vy = 0;
+		
+		if (CheckBB(pLeft, pTop, pRight, pBottom)) 
+		{
+			if (dynamic_cast<CMario*>(obj)) {
+				CMario* mario = dynamic_cast<CMario*>(obj);
+
+				if (mario->IsHolding() && this->type != KOOPA_PARATROOPA)
+				{
+					vy = 0;
+				}
 			}
 		}
+		
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -155,8 +158,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CBreakableBrick*>(e->obj)) 
 			{
 				CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(e->obj);
-				x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
+				if (e->nx != 0 || e->ny != 0) {
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
+				}
+				
 				if (state == KOOPAS_STATE_WALKING) 
 				{
 					if (e->nx != 0)
@@ -170,8 +176,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					
 				}
-				else if (state == KOOPAS_STATE_DIE_MOVING) {
-					if (e->nx!=0) {
+				else if (state == KOOPAS_STATE_DIE_MOVING) 
+				{
+					if (e->nx!=0) 
+					{
 						this->nx = -this->nx;
 						this->vx = this->nx * this->vx;
 						bb->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
@@ -227,7 +235,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 	
-
 void CKoopas::Render()
 {
 	int ani = KOOPAS_STATE_DIE;

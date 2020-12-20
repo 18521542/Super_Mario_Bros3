@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "Textures.h"
 #include "MarioOfWorldMapScene.h"
+#include "Help.h"
 
 #define SCENE_SECTION_UNKNOWN			-1
 #define SCENE_SECTION_TEXTURES			2

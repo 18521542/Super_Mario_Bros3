@@ -47,6 +47,9 @@
     <Filter Include="Framework\GameObject\CheckPoint">
       <UniqueIdentifier>{43c7e0fc-f30d-4577-96a8-6a5f2f872eb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\GameObject\HUD">
+      <UniqueIdentifier>{f3f650a0-adda-4888-8f1e-fd82de9d9c92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tilemap.h">
@@ -142,6 +145,15 @@
     <ClInclude Include="CheckPoint.h">
       <Filter>Framework\GameObject\CheckPoint</Filter>
     </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Framework\GameObject\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="TurtleOFWorldMap.h">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Help.h">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -230,6 +242,15 @@
     </ClCompile>
     <ClCompile Include="CheckPoint.cpp">
       <Filter>Framework\GameObject\CheckPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Framework\GameObject\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="TurleOfWorldMap.cpp">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Help.cpp">
+      <Filter>Framework\GameObject\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

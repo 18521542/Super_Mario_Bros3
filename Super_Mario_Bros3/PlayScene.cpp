@@ -400,7 +400,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			{
 				if (!mario->IsFlying() || !mario->IsReadyToJump()) 
 				{
-					mario->SetSpeed(currentVx, MARIO_FALLING_SPEED);
+					//mario->SetSpeed(currentVx, MARIO_FALLING_SPEED);
+					mario->vy = MARIO_FALLING_SPEED;
 					mario->setIsFalling(true);
 				}
 			}

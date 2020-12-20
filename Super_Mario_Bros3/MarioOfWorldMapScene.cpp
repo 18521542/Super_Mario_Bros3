@@ -25,8 +25,11 @@ void MarioWorldMap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				this->vx = 0;
 				this->vy = 0;
 
-				x = cp->x;
-				y = cp->y;
+				if(x != cp->x)
+					x = cp->x;
+
+				if(y != cp->y)
+					y = cp->y;
 
 				int l, t, r, b, scene_id;
 				cp->GetCheckPoint(l, t, r, b, scene_id);
