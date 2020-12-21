@@ -9,6 +9,8 @@ CVenus::CVenus(int type)
 	vy = 0;
 	nx = RIGHT;
 	ny = UP;
+
+	//fireball = new CFireBall();
 }
 
 
@@ -21,8 +23,39 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	x += dx;
 	y += dy;
 
-	
+	if (!isInitFB) 
+	{
+		this->fireball = new CFireBall(1);
+		isInitFB = true;
+		this->fireball->x = x;
+		this->fireball->y = y;
+		this->fireball->vx = 0;
+		this->fireball->vy = 0;
+	}
 
+	//this->fireball->Update(dt, coObjects);
+
+	
+	if (ReadyToUp == -1 && !isMoving ) 
+	{
+		if (!HasFired) 
+		{			
+			this->fireball->StartAppear();
+			this->fireball->vx = this->nx * FB_OF_VENUS_SPEED;
+			this->fireball->vy = this->ny * FB_OF_VENUS_SPEED;
+			this->HasFired = true;
+		}
+	}
+	else {
+		this->fireball->x = x + TO_CENTER;
+		this->fireball->y = y + TO_CENTER;
+		this->fireball->SetDir(this->nx, this->ny);
+		this->fireball->setIsAppear(false);
+		HasFired = false;
+	}
+	this->fireball->Update(dt, coObjects);
+
+	
 	if (isAllowToMove) 
 	{
 		if (GetTickCount() - TimeMovingY > 1600)
@@ -49,13 +82,13 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else {
 		vy = 0;
 	}
+
 		
 	for (size_t i = 0; i < coObjects->size(); i++) {
 		LPGAMEOBJECT obj = coObjects->at(i);
 		if (dynamic_cast<CMario*>(obj)) {
 			if (obj->x <= this->x) nx = LEFT;
 			else nx = RIGHT;
-
 			if (obj->y <= this->y) ny = UP;
 			else ny = DOWN;
 			
@@ -94,7 +127,11 @@ void CVenus::Render()
 				ani = VENUS_RED_ANI_UP_LEFT;
 		}
 	}
+
 	animation_set->at(ani)->Render(x, y);
+
+	this->fireball->Render();
+
 	RenderBoundingBox();
 }
 

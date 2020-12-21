@@ -7,12 +7,13 @@
 CFireBall::CFireBall()
 {
 	isAppear = true;
-	vx = 0;
-	vy = 0;
+	//vx = 0;
+	//vy = 0;
 }
 
-CFireBall::CFireBall(int type) {
-	this->type = type;
+CFireBall::CFireBall(int typ) {
+	this->type = typ;
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(7));
 }
 CFireBall::CFireBall(float xO, float yO)
 {
@@ -46,52 +47,55 @@ void CFireBall::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
-	//do nothing;
+	if (type != 1) {
+		
+		//do nothing;
 
-	if (GetTickCount64() - startFly > FB_APPEAR_TIME) {
-		isAppear = false;
-		startFly = 0;
-	}
-
-	vy += MARIO_GRAVITY * dt;
-
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	CalcPotentialCollisions(coObjects, coEvents);
-
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0;
-		float rdy = 0;
-
-		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		if (nx != 0) {
+		if (GetTickCount64() - startFly > FB_APPEAR_TIME) {
 			isAppear = false;
+			startFly = 0;
 		}
-		
-		
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CFireBall*>(e->obj))
-			{
-				CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
-				x += dx;
-				y += dy;
+		vy += MARIO_GRAVITY * dt;
+
+
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
+
+		CalcPotentialCollisions(coObjects, coEvents);
+
+		if (coEvents.size() == 0)
+		{
+			x += dx;
+			y += dy;
+		}
+		else
+		{
+			float min_tx, min_ty, nx = 0, ny;
+			float rdx = 0;
+			float rdy = 0;
+
+			// TODO: This is a very ugly designed function!!!!
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+			if (nx != 0) {
+				isAppear = false;
 			}
-			else if (dynamic_cast<CPlatform*>(e->obj)) {
-				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
-				
+
+
+			for (UINT i = 0; i < coEventsResult.size(); i++)
+			{
+				LPCOLLISIONEVENT e = coEventsResult[i];
+
+				if (dynamic_cast<CFireBall*>(e->obj))
+				{
+					CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
+					x += dx;
+					y += dy;
+				}
+				else if (dynamic_cast<CPlatform*>(e->obj)) {
+					CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
+
 					//DebugOut(L"\n FB is on the ground");
 					if (nx != 0) {
 						isAppear = false;
@@ -99,7 +103,12 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (ny != 0) {
 						this->vy = -UP_SPEED;
 					}
+				}
 			}
 		}
+	}
+	else {
+		x += dx;
+		y += dy;
 	}
 }

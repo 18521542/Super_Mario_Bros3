@@ -38,12 +38,15 @@ class CVenus : public CGameObject
 	int ny;
 	int type;
 
+	CFireBall* fireball;
+	bool isInitFB = false;
+	bool HasFired = false;
+
 	int ReadyToUp = -1;
 	bool isAllowToMove = true;
 	bool isMoving = false;
 	ULONGLONG TimeMovingY;
 	ULONGLONG TimeBlockMoving;
-
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
