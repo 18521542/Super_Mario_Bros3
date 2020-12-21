@@ -27,7 +27,8 @@ void CBreakableBrick::Render()
 	{
 		animation_set->at(ani)->Render(x, y);
 	}
-
+	else
+		pieceANI->Render();
 	//RenderBoundingBox();
 }
 
@@ -59,5 +60,30 @@ void CBreakableBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (!isInitPieceANI) 
+	{
+		pieceANI = new PiecesANI(this->x, this->y);
+		isInitPieceANI = true;
+	}
+
+	
+	if (this->state == COIN) 
+	{
+		isNotAllowAniBreakAppear = true;
+		if (GetTickCount64() - CoinAppearTime > 4500 && !isActivated) 
+		{
+			//this->state = SHINING;		
+			this->SetState(SHINING);
+			CoinAppearTime = 0;
+			isActivated = true;
+			isNotAllowAniBreakAppear = false;
+		}
+	}
+	
+	if (state == BREAKABLE_BRICK_STATE_DISAPPEAR && !isNotAllowAniBreakAppear)
+	{
+		pieceANI->StartAppear();
+		pieceANI->Update(dt, coObjects);
+	}
 	
 }

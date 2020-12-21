@@ -11,6 +11,9 @@ CFireBall::CFireBall()
 	vy = 0;
 }
 
+CFireBall::CFireBall(int type) {
+	this->type = type;
+}
 CFireBall::CFireBall(float xO, float yO)
 {
 	SetPosition(xO, yO);
@@ -44,8 +47,6 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 	//do nothing;
-
-	
 
 	if (GetTickCount64() - startFly > FB_APPEAR_TIME) {
 		isAppear = false;

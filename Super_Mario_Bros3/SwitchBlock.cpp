@@ -66,11 +66,13 @@ void CSwitchBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			if (this->state != STATE_NEW) 
 			{
-				if (bb->GetState() == SHINING) 
+				if (bb->GetState() == SHINING && !bb->IsReturned()) 
 				{
-					bb->SetState(COIN);
+					bb->SetCoinAppear();
+					bb->SetIsReturned(true);
 				}
-				else if (bb->GetState() == WITHOUT_SHINING) {
+				else if (bb->GetState() == WITHOUT_SHINING) 
+				{
 					this->y = bb->y - HEIGHT_ACTIVATED;
 				}
 			}

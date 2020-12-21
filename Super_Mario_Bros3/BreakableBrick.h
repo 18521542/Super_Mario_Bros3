@@ -1,6 +1,6 @@
 #pragma once
 #include"Object.h"
-
+#include "PieceOfBreakableBrick.h"
 #define BREAKABLE_BRICK_STATE_DISAPPEAR 1
 
 #define NORMAL							1
@@ -17,6 +17,16 @@
 class CBreakableBrick : public CGameObject 
 {
 	int type;
+
+	PiecesANI* pieceANI;
+	bool isInitPieceANI = false;
+
+	ULONGLONG CoinAppearTime;
+	bool isNotAllowAniBreakAppear = false;
+
+	bool isActivated = false;
+	bool isReturnedCoin = false;
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -26,4 +36,14 @@ class CBreakableBrick : public CGameObject
 public:
 	CBreakableBrick(int typ);
 	int GetType() { return this->type; }
+	void SetCoinAppear() 
+	{
+		CoinAppearTime = GetTickCount64();
+		state = COIN;
+	}
+
+	void SetIsReturned(bool activa) {
+		this->isReturnedCoin = activa;
+	}
+	bool IsReturned() { return this->isReturnedCoin; }
 };

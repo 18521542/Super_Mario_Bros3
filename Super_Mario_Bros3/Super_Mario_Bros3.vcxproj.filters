@@ -154,6 +154,9 @@
     <ClInclude Include="Help.h">
       <Filter>Framework\GameObject\Item</Filter>
     </ClInclude>
+    <ClInclude Include="PieceOfBreakableBrick.h">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -250,6 +253,9 @@
       <Filter>Framework\GameObject\Item</Filter>
     </ClCompile>
     <ClCompile Include="Help.cpp">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceOfBreakableBrick.cpp">
       <Filter>Framework\GameObject\Item</Filter>
     </ClCompile>
   </ItemGroup>
