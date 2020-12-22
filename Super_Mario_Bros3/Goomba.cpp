@@ -9,7 +9,7 @@ CGoomba::CGoomba(int type)
 		SetState(PARA_GOOMBA_STATE_WALKING);
 		StartWalking();
 	}
-	vx = -0.03f;
+	vx = -GOOMBA_WALKING_SPEED;
 }
 
 void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -53,151 +53,158 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	CGameObject::Update(dt, coObjects);
 
+	DebugOut(L"\n Get kill %d", GetKillByKoopas);
 	vy += MARIO_GRAVITY * dt;
-	if (type == PARA_GOOMBA)
-	{
-		if (state == PARA_GOOMBA_STATE_WALKING)
+	if (!GetKillByKoopas) {
+		if (type == PARA_GOOMBA)
 		{
-			if (GetTickCount64() - TimeWalking > WALKING_TIME_MAX)
+			if (state == PARA_GOOMBA_STATE_WALKING)
 			{
-				StartReady();
-			}
-		}
-		else if (state == PARA_GOOMA_STATE_READY_TO_FLY)
-		{
-			if (GetTickCount64() - TimeReadyToFly > READY_FLY_TIME_MAX)
-			{
-				StartFly();
-			}
-		}
-		else if (state == PARA_GOOMBA_STATE_FLY) 
-		{
-			if (GetTickCount64() - TimeFly > FLYING_TIME_MAX)
-			{
-				StartWalking();
-			}
-		}
-		for (size_t i = 0; i < coObjects->size(); i++)
-		{
-			LPGAMEOBJECT obj = coObjects->at(i);
-			float pLeft, pTop, pRight, pBottom;
-			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-			if (dynamic_cast<CPlatform*>(obj)) {
-				if (CheckBB(pLeft, pTop, pRight, pBottom))
+				if (GetTickCount64() - TimeWalking > WALKING_TIME_MAX)
 				{
-					if (state == PARA_GOOMBA_STATE_WALKING)
+					StartReady();
+				}
+			}
+			else if (state == PARA_GOOMA_STATE_READY_TO_FLY)
+			{
+				if (GetTickCount64() - TimeReadyToFly > READY_FLY_TIME_MAX)
+				{
+					StartFly();
+				}
+			}
+			else if (state == PARA_GOOMBA_STATE_FLY)
+			{
+				if (GetTickCount64() - TimeFly > FLYING_TIME_MAX)
+				{
+					StartWalking();
+				}
+			}
+			for (size_t i = 0; i < coObjects->size(); i++)
+			{
+				LPGAMEOBJECT obj = coObjects->at(i);
+				float pLeft, pTop, pRight, pBottom;
+				obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+				if (dynamic_cast<CPlatform*>(obj)) {
+					if (CheckBB(pLeft, pTop, pRight, pBottom))
 					{
-						y -= y + PARA_GOOMBA_BB_HEIGHT - pTop + PushBackPixel;
-					}
-					else {
-						y -= y + PARA_GOOMBA_BB_FLY_HEIGHT - pTop + PushBackPixel;
+						if (state == PARA_GOOMBA_STATE_WALKING)
+						{
+							y -= y + PARA_GOOMBA_BB_HEIGHT - pTop + PushBackPixel;
+						}
+						else {
+							y -= y + PARA_GOOMBA_BB_FLY_HEIGHT - pTop + PushBackPixel;
+						}
 					}
 				}
 			}
 		}
-	}
-	else if (type == GOOMBA) 
-	{
-		if (isSwitched) 
+		else if (type == GOOMBA)
 		{
-			if (GetTickCount64() - TimeToSwitch > 100)
+			if (isSwitched)
 			{
-				this->isSwitched = false;
+				if (GetTickCount64() - TimeToSwitch > 100)
+				{
+					this->isSwitched = false;
+				}
+			}
+			if (state == GOOMBA_STATE_DIE)
+			{
+				vx = 0;
+				vy = 0;
+			}
+
+			if (GetTickCount64() - TimeStartDisappear > 300 && GetTickCount64() - TimeStartDisappear < 500)
+			{
+				isDisapear = true;
+				TimeStartDisappear = 0;
 			}
 		}
-		if (state == GOOMBA_STATE_DIE)
+
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
+
+		CalcPotentialCollisions(coObjects, coEvents);
+
+		if (coEvents.size() == 0)
 		{
-			vx = 0;
-			vy = 0;
+			x += dx;
+			y += dy;
 		}
-
-		if (GetTickCount64() - TimeStartDisappear > 300 && GetTickCount64() - TimeStartDisappear < 500)
+		else
 		{
-			isDisapear = true;
-			TimeStartDisappear = 0;
-		}
-	}
+			float min_tx, min_ty, nx = 0, ny;
+			float rdx = 0;
+			float rdy = 0;
 
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
+			// TODO: This is a very ugly designed function!!!!
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-	CalcPotentialCollisions(coObjects, coEvents);
-
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0;
-		float rdy = 0;
-
-		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		for (UINT i = 0; i < coEventsResult.size(); i++) {
-			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<CPlatform*>(e->obj))
-			{
-				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
-
-				if (plat->getType() == PLATFORM_TYPE_ONE)
+			for (UINT i = 0; i < coEventsResult.size(); i++) {
+				LPCOLLISIONEVENT e = coEventsResult[i];
+				if (dynamic_cast<CPlatform*>(e->obj))
 				{
-					if (state != PARA_GOOMBA_STATE_FLY) {
-						x += min_tx * dx + nx * 0.4f;
-						y += min_ty * dy + ny * 0.4f;
-					}
+					CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
 
-					if (nx != 0)
+					if (plat->getType() == PLATFORM_TYPE_ONE)
 					{
-						vx = -vx;
-						this->nx = -this->nx;
-					}
-					if (ny != 0) {
 						if (state != PARA_GOOMBA_STATE_FLY) {
-							vy = 0;
+							x += min_tx * dx + nx * 0.4f;
+							y += min_ty * dy + ny * 0.4f;
 						}
-						else {
-							vy = -0.35f;
+
+						if (nx != 0)
+						{
+							vx = -vx;
+							this->nx = -this->nx;
+						}
+						if (ny != 0) {
+							if (state != PARA_GOOMBA_STATE_FLY) {
+								vy = 0;
+							}
+							else {
+								vy = -0.35f;
+								x += dx;
+								y += dy;
+							}
+
+						}
+
+					}
+				}
+				else if (dynamic_cast<CFireBall*>(e->obj)) {
+					CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
+					if (nx != 0 || ny != 0) {
+						SetState(GOOMBA_STATE_DIE);
+					}
+					fb->setIsAppear(false);
+				}
+				else if (dynamic_cast<CGoomba*>(e->obj)) {
+					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+					if (this->type == GOOMBA) {
+						if (goomba->GetType() == GOOMBA) {
+							this->vx = -this->vx;
+							goomba->vx = -goomba->vx;
+						}
+						else if (goomba->GetType() == PARA_GOOMBA) {
 							x += dx;
 							y += dy;
 						}
-
 					}
-
-				}
-			}
-			else if (dynamic_cast<CFireBall*>(e->obj)) {
-				CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
-				if (nx != 0 || ny != 0) {
-					SetState(GOOMBA_STATE_DIE);
-				}
-				fb->setIsAppear(false);
-			}
-			else if (dynamic_cast<CGoomba*>(e->obj)) {
-				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if (this->type == GOOMBA) {
-					if (goomba->GetType() == GOOMBA) {
-						this->vx = -this->vx;
-						goomba->vx = -goomba->vx;
-					}
-					else if (goomba->GetType() == PARA_GOOMBA) {
-						x += dx;
-						y += dy;
-					}
-				}
-				else if (this->type == PARA_GOOMBA) {
-					if (goomba->GetType() == GOOMBA) {
-						x += dx;
-						y += dy;
+					else if (this->type == PARA_GOOMBA) {
+						if (goomba->GetType() == GOOMBA) {
+							x += dx;
+							y += dy;
+						}
 					}
 				}
 			}
 		}
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	else {
+		x += dx;
+		y += dy;
+	}
 }
 
 void CGoomba::Render()
@@ -217,6 +224,13 @@ void CGoomba::Render()
 			ani = PARA_GOOMBA_ANI_READY_TO_FLY;
 		else if (state == PARA_GOOMBA_STATE_FLY)
 			ani = PARA_GOOMBA_ANI_FLY;
+	}
+
+	if (GetKillByKoopas) {
+		if (type == GOOMBA)
+			ani = GOOMBA_DEAD_BY_KOOPA_ANI;
+		else
+			ani = PARA_GOOMBA_DEAD_BY_KOOPA_ANI;
 	}
 	if(!isDisapear)
 		animation_set->at(ani)->Render(x, y);

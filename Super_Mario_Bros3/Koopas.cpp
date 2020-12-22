@@ -71,7 +71,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-
 		for (UINT i = 0; i < coEventsResult.size(); i++) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CPlatform*>(e->obj))
@@ -193,10 +192,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CGoomba*>(e->obj)) {
 				CGoomba* gb = dynamic_cast<CGoomba*>(e->obj);
-				gb->SetState(GOOMBA_STATE_DIE);
-				gb->StartDisapear();
+				gb->SetSpeed(0, GGOMBA_DEFLECT_SPEED);
+				gb->SetKillByKoopa(true);
 				x += dx;
-				//vy = 0;
 				y += dy;
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj)){

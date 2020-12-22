@@ -2,7 +2,8 @@
 #pragma once
 #include "GameObject.h"
 
-#define GOOMBA_WALKING_SPEED		0.05f
+#define GOOMBA_WALKING_SPEED		0.03f
+#define GGOMBA_DEFLECT_SPEED		-0.3f
 #define WALKING_TIME_MAX			1000
 #define	READY_FLY_TIME_MAX			1000
 #define	FLYING_TIME_MAX				500
@@ -21,6 +22,8 @@
 #define PARA_GOOMBA_BB_HEIGHT			19
 #define PARA_GOOMBA_BB_FLY_HEIGHT		24
 
+#define PARA_GOOMBA_DEAD_BY_KOOPA_ANI	6
+#define GOOMBA_DEAD_BY_KOOPA_ANI		5
 #define PARA_GOOMBA_ANI_FLY				4
 #define PARA_GOOMBA_ANI_WALKING			3
 #define PARA_GOOMBA_ANI_READY_TO_FLY	2
@@ -35,6 +38,7 @@
 class CGoomba : public CGameObject
 {
 	int type;
+	bool GetKillByKoopas = false;
 	bool isDisapear = false;
 	bool isWalking = true;
 	bool isSwitched = false;
@@ -47,6 +51,7 @@ class CGoomba : public CGameObject
 	ULONGLONG TimeWalking;
 	ULONGLONG TimeToSwitch;
 public:
+	void SetKillByKoopa(bool value) { GetKillByKoopas = value; }
 	CGoomba(int type);
 	void SetType(int type) { this->type = type; }
 	int GetType() { return this->type; }
