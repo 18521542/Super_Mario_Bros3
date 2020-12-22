@@ -127,6 +127,31 @@ void CVenus::Render()
 				ani = VENUS_RED_ANI_UP_LEFT;
 		}
 	}
+	else if (type == VENUS_GREEN) {
+		//right
+		if (nx > 0)
+		{
+			//down
+			if (ny > 0) {
+				ani = VENUS_GREEN_ANI_DOWN_RIGHT;
+			}
+			//up
+			else
+				ani = VENUS_GREEN_ANI_UP_RIGHT;
+
+		}
+		//left
+		else
+		{
+			//down
+			if (ny > 0) {
+				ani = VENUS_GREEN_ANI_DOWN_LEFT;
+			}
+			//up
+			else
+				ani = VENUS_GREEN_ANI_UP_LEFT;
+		}
+	}
 
 	animation_set->at(ani)->Render(x, y);
 
@@ -134,6 +159,7 @@ void CVenus::Render()
 
 	RenderBoundingBox();
 }
+
 
 void CVenus::SetState(int state)
 {

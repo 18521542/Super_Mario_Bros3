@@ -242,7 +242,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
 					if (goomba->GetType() == PARA_GOOMBA) 
 					{
-						goomba->SetState(GOOMBA_STATE_WALKING);
+						goomba->SetState(PARA_GOOMBA_STATE_WALKING);
 						goomba->SetType(GOOMBA);
 					}
 					else if (goomba->GetType() == GOOMBA)
@@ -322,6 +322,8 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					if (e->ny != 0) 
 					{
 						vy = 0;
+						/*if (state == MARIO_STATE_FLY)
+							state == MARIO_STATE_IDLE;*/
 					}
 					if (e->nx != 0)vx = 0;
 				}
@@ -700,7 +702,7 @@ void CMario::Render()
 		{
 			if (isJumpFlying)
 			{
-				RenderByDirection(ani, MARIO_ANI_FIRE_JUMP_DOWN_RIGHT, MARIO_ANI_FIRE_JUMP_DOWN_LEFT);
+				RenderByDirection(ani, MARIO_ANI_SMALL_FLY_JUMP_RIGHT, MARIO_ANI_SMALL_FLY_JUMP_LEFT);
 			}
 			else
 			RenderLogicForJumpingState(ani,

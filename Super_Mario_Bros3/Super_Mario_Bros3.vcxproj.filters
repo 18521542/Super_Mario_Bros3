@@ -82,14 +82,8 @@
     <ClInclude Include="Platform.h">
       <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h">
-      <Filter>Framework\GameObject\OtherIdea</Filter>
-    </ClInclude>
     <ClInclude Include="SwitchBlock.h">
       <Filter>Framework\GameObject\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="CoinEffect.h">
-      <Filter>Framework\GameObject\Effect</Filter>
     </ClInclude>
     <ClInclude Include="Animations.h">
       <Filter>Framework\Engine\AnimationManager</Filter>
@@ -157,6 +151,9 @@
     <ClInclude Include="PieceOfBreakableBrick.h">
       <Filter>Framework\GameObject\Item</Filter>
     </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Framework\GameObject\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -188,9 +185,6 @@
     </ClCompile>
     <ClCompile Include="Platform.cpp">
       <Filter>Framework\GameObject\OtherIdea</Filter>
-    </ClCompile>
-    <ClCompile Include="CoinEffect.cpp">
-      <Filter>Framework\GameObject\Effect</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Framework\GameObject</Filter>
@@ -257,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="PieceOfBreakableBrick.cpp">
       <Filter>Framework\GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Framework\GameObject\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

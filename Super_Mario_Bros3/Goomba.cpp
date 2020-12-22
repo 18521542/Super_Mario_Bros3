@@ -217,7 +217,8 @@ void CGoomba::Render()
 		else
 			ani = GOOMBA_ANI_DIE;
 	}
-	else if (type == PARA_GOOMBA) {
+	else if (type == PARA_GOOMBA) 
+	{
 		if (state == PARA_GOOMBA_STATE_WALKING)
 			ani = PARA_GOOMBA_ANI_WALKING;
 		else if (state == PARA_GOOMA_STATE_READY_TO_FLY)

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Utils.h"
 #include "Object.h"
+#include "Effect.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16
@@ -19,6 +20,7 @@
 
 class CQuestionBrick : public CGameObject
 {
+	Effect* effect;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	DWORD TimeStartMove = 0;
 	bool isMoving = false;

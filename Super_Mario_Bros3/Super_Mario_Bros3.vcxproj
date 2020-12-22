@@ -151,7 +151,6 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="CheckPoint.h" />
     <ClInclude Include="coin.h" />
-    <ClInclude Include="CoinEffect.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Help.h" />
     <ClInclude Include="HUD.h" />
@@ -187,7 +186,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="CheckPoint.cpp" />
     <ClCompile Include="Coin.cpp" />
-    <ClCompile Include="CoinEffect.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="HUD.cpp" />

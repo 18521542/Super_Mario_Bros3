@@ -6,6 +6,9 @@ CQuestionBrick::CQuestionBrick(float y,float x)
 	vx = 0;
 	vy = 0;
 	startY = y;
+	effect = new Effect();
+	effect->y = y;
+	effect->x = x;
 }
 void CQuestionBrick::Render()
 {
@@ -13,7 +16,7 @@ void CQuestionBrick::Render()
 		animation_set->at(QUESTION_ANI_MOVE)->Render(x, y);
 	else 
 		animation_set->at(QUESTION_ANI_NOT_MOVE)->Render(x, y);
-	//CoinEffect->Render();
+	effect->Render();
 }
 
 void CQuestionBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -36,13 +39,15 @@ void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0;
 	}
 
-	if (isUsed && vy==0) 
+	if (isUsed && vy==0 ) 
 	{
 		if (y != startY) 
 		{
 			y = startY;
 			SetState(10);
 		}
+		if(!effect->HasAppear())
+			effect->StartAppear();
 	}
 
 	if (GetTickCount() - TimeStartMove > MOVING_TIME) {
@@ -51,5 +56,5 @@ void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isFinishMoving = true;
 	}
 
-	//CoinEffect->Update();
+	effect->Update(dt,coObjects);
 }
