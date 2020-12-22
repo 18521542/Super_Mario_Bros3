@@ -288,9 +288,6 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
-	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
-
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -310,15 +307,19 @@ void CPlayScene::Update(DWORD dt)
 	player->GetPosition(cx, cy);
 
 	CGame* game = CGame::GetInstance();
+
 	cx -= (game->GetScreenWidth())/2;
 	cy -= (game->GetScreenHeight()+70)/2;
-	//if (cy > 220.0f) cy = 220.0f;
-	//else 
+
 	if (cx <=0 ) 
 		cx = 0;
-	if (player->GetState() == MARIO_STATE_DIE)
+
+	if(player->GetState() != MARIO_STATE_DIE)
+		CGame::GetInstance()->SetCamPos(cx, cy);
+
+	else if (player->GetState() == MARIO_STATE_DIE) {
 		return;
-	CGame::GetInstance()->SetCamPos(cx, cy);
+	}
 }
 
 void CPlayScene::Render()
@@ -342,6 +343,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+
+	if (mario->GetState() == MARIO_STATE_DIE)
+		return;
 	switch (KeyCode)
 	{
 	case DIK_1:
@@ -424,12 +428,17 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			break;
 		}
 		break;
+	case DIK_0:
+		CGame::GetInstance()->SwitchScene(2);
+		break;
 	}
 }
 
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	if (mario->GetState() == MARIO_STATE_DIE)
+		return;
 	switch (KeyCode)
 	{
 	case (DIK_S):
@@ -501,15 +510,14 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE)
 		return;
-	else
-	{
-		if (game->IsKeyDown(DIK_RIGHT)) 
+	else {
+		if (game->IsKeyDown(DIK_RIGHT))
 		{
 			if (game->IsKeyDown(DIK_S))
 			{
-				
+
 			}
-			else if (mario->IsReadyToRun()) 
+			else if (mario->IsReadyToRun())
 			{
 				mario->setIsRunning(true);
 				mario->SetState(MARIO_STATE_WALKING_RIGHT);
@@ -519,11 +527,11 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 				mario->SetState(MARIO_STATE_WALKING_RIGHT);
 				mario->setIsReadyToSit(false);
 			}
-		}		
+		}
 		else if (game->IsKeyDown(DIK_LEFT)) {
 			if (game->IsKeyDown(DIK_S))
 			{
-				
+
 			}
 			else if (mario->IsReadyToRun()) {
 				mario->setIsRunning(true);
@@ -534,10 +542,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 				mario->SetState(MARIO_STATE_WALKING_LEFT);
 				mario->setIsReadyToSit(false);
 			}
-		}	
+		}
 		else if (game->IsKeyDown(DIK_DOWN)) {
-			if(mario->GetLevel()!=MARIO_LEVEL_SMALL)
-				if(mario->IsReadyToSit())
+			if (mario->GetLevel() != MARIO_LEVEL_SMALL)
+				if (mario->IsReadyToSit())
 					mario->SetState(MARIO_STATE_SIT);
 		}
 	}

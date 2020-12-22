@@ -43,11 +43,20 @@ class CGame
 
 	unordered_map<int, LPSCENE> scenes;
 	int current_scene;
+	ULONGLONG TimeToSwitchScene;
+	bool isSwitch = false;
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
 
 public:
+	void StartSwitchScene() {
+		TimeToSwitchScene = GetTickCount64();
+		isSwitch = true;
+	}
+	bool IsSwitch() { return isSwitch; }
+	void SetIsSwitch(bool switched) { isSwitch = switched; }
+	ULONGLONG GetTimeStartSwitch() { return TimeToSwitchScene; }
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
 	void Init(HWND hWnd);

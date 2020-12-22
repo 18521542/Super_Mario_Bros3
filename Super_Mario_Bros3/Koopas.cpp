@@ -71,11 +71,14 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
+
 		for (UINT i = 0; i < coEventsResult.size(); i++) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CPlatform*>(e->obj))
 			{
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
+				float l, t, r, b;
+				plat->GetBoundingBox(l, t, r, b);
 				if (plat->getType() == PLATFORM_TYPE_TWO) {
 					if (e->ny < 0)
 					{
@@ -95,20 +98,22 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					x += min_tx * dx + nx * 0.4f;
 					y += min_ty * dy + ny * 0.4f;
-					if (nx != 0)
+					if (e->nx != 0)
 					{
 						this->vx = -this->vx;
 						this->nx = -this->nx;
+						if (e->ny != 0) {
+							vy = 0;
+						}
 					}
-					if (e->ny != 0) 
+					if (e->ny != 0)
 					{
 						if (type == KOOPA)
 							vy = 0;
 						else
 							vy = -DEFECT_SPEEDY;
+						/*y += min_ty * dy + ny * 0.4f;*/
 					}
-					
-					
 				}
 				else if (plat->getType() == PLATFORM_TYPE_THREE) {
 					if (state == GOOMBA_STATE_WALKING) 

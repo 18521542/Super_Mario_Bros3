@@ -173,6 +173,15 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 				fb->StartAppear();
 				isForFireBallAppear = false;
 			}
+
+			if (fb->GetType() == FB_OF_VENUS) 
+			{
+				if (CheckBB(pLeft, pTop, pRight, pBottom)) 
+				{
+					SetState(MARIO_STATE_DIE);
+					DebugOut(L"\n AAA");
+				}
+			}
 		}
 		else if (dynamic_cast<CPlatform*>(obj))
 		{
@@ -192,6 +201,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 					
 			}
 		}
+
 	}
 }
 
@@ -519,6 +529,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	if (!isForEffectAppear) 
 	{
 		CGameObject::Update(dt);
@@ -526,13 +537,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx += a * dt;
 		vy += ay * dt;
 
-		UpdateForEachState(dt);
+		if (state != MARIO_STATE_DIE) {
+			UpdateForEachState(dt);
 
-		UpdateStateUsingTimeOut();
+			UpdateStateUsingTimeOut();
 
-		HandleNormalColision(coObjects);
+			HandleNormalColision(coObjects);
 
-		HandleOverlapColision(coObjects);
+			HandleOverlapColision(coObjects);
+		}
+		else {
+			vx = 0;
+			x += dx;
+			y += dy;
+			
+			if (!CGame::GetInstance()->IsSwitch()) 
+			{
+				CGame::GetInstance()->StartSwitchScene();
+			}
+			if (GetTickCount64() - CGame::GetInstance()->GetTimeStartSwitch() > 1500) 
+			{
+				CGame::GetInstance()->SetIsSwitch(false);
+				CGame::GetInstance()->SetCamPos(0, 0);
+				CGame::GetInstance()->SwitchScene(2);
+			}
+		}
 	}
 	else {
 		if (GetTickCount() - EffectTime > 700) {
@@ -629,9 +658,6 @@ void CMario::RenderLogicForRunningState(int& ani, int ani_run_right, int ani_run
 void CMario::Render()
 {
 	int ani = -1;
-	if (state == MARIO_STATE_DIE)
-		ani = MARIO_ANI_DIE;
-
 	//Render for mario big
 	if (level == MARIO_LEVEL_BIG) 
 	{
@@ -828,6 +854,7 @@ void CMario::Render()
 		}
 	}
 
+
 	if (isForEffectAppear) 
 	{
 		ani = MARIO_ANI_EFFECT;
@@ -835,6 +862,9 @@ void CMario::Render()
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
+	if (state == MARIO_STATE_DIE) {
+		ani = MARIO_ANI_DIE;
+	}
 	
 	animation_set->at(ani)->Render(x, y, alpha);
 
@@ -883,6 +913,8 @@ void CMario::SetState(int state)
 		ay = MARIO_GRAVITY;
 		break;
 	case MARIO_STATE_DIE:
+		if (vx != 0)
+			vx = 0;
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_STATE_FLY:
@@ -924,6 +956,10 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			bottom = y + MARIO_BIG_BBOX_HEIGHT;
 		}
 	}	
+
+	if (state == MARIO_STATE_DIE) {
+		left = top = right = bottom = 0;
+	}
 }
 
 /*

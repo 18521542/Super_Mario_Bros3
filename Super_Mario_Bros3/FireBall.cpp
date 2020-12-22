@@ -4,6 +4,7 @@
 #include "Mario.h"
 #include "Platform.h"
 #include "Koopas.h"
+#include "PlayScene.h"
 CFireBall::CFireBall()
 {
 	isAppear = true;
@@ -24,24 +25,32 @@ void CFireBall::Render()
 {
 	if (isAppear)
 		animation_set->at(FB_ANI)->Render(x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CFireBall::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if (!isAppear) {
-		l = 0;
-		t = 0;
-		r = 0;
-		b = 0;
-	}
-	else {
+	if (type == FB_OF_VENUS) {
 		l = x;
 		t = y;
 		r = x + FB_BBOX_WIDTH;
 		b = y + FB_BBOX_HEIGHT;
+		//DebugOut(L"\nAAAA");
 	}
-	
+	else {
+		if (!isAppear) {
+			l = 0;
+			t = 0;
+			r = 0;
+			b = 0;
+		}
+		else {
+			l = x;
+			t = y;
+			r = x + FB_BBOX_WIDTH;
+			b = y + FB_BBOX_HEIGHT;
+		}
+	}
 }
 
 void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -110,5 +119,12 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else {
 		x += dx;
 		y += dy;
+		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		float le, to, ri, bo;
+		mario->GetBoundingBox(le, to, ri, bo);
+		if (CheckBB(le, to, ri, bo)) 
+		{
+			mario->SetState(MARIO_STATE_DIE);
+		}
 	}
 }
