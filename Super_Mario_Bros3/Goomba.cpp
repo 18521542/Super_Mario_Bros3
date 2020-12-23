@@ -53,7 +53,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	CGameObject::Update(dt, coObjects);
 
-	DebugOut(L"\n Get kill %d", GetKillByKoopas);
 	vy += MARIO_GRAVITY * dt;
 	if (!GetKillByKoopas) {
 		if (type == PARA_GOOMBA)
