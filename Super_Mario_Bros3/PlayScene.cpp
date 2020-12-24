@@ -283,11 +283,14 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
+	hud = new HUD();
+
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
 void CPlayScene::Update(DWORD dt)
 {
+	
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -299,6 +302,7 @@ void CPlayScene::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 	}
 
+	hud->Update(dt,&coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
@@ -309,15 +313,30 @@ void CPlayScene::Update(DWORD dt)
 	CGame* game = CGame::GetInstance();
 
 	cx -= (game->GetScreenWidth())/2;
-	cy -= (game->GetScreenHeight()+70)/2;
+	cy -= (game->GetScreenHeight())/2;
 
-	if (cx <=0 ) 
-		cx = 0;
+	if (cy < 0) cy = 0;
+	if (cx <= 0) cx = 0;
 
-	if(player->GetState() != MARIO_STATE_DIE)
-		CGame::GetInstance()->SetCamPos(cx, cy);
+	if (player->GetState() != MARIO_STATE_DIE) {
+		
+		if (player->GetState() != MARIO_STATE_DIE)
+		{
+			if (player->IsReadyToJump() || player->IsFlying())
+			{
+				if (cy < 150.0f) CGame::GetInstance()->SetCamPos(int(cx), int(cy));
+				else CGame::GetInstance()->SetCamPos(int(cx), 230);
+			}
+			else
+			{
+				CGame::GetInstance()->SetCamPos(int(cx), 230);
+			}
+		}
+	}
+		//CGame::GetInstance()->SetCamPos(cx, cy);
 
-	else if (player->GetState() == MARIO_STATE_DIE) {
+	else if (player->GetState() == MARIO_STATE_DIE) 
+	{
 		return;
 	}
 }
@@ -326,6 +345,7 @@ void CPlayScene::Render()
 {
 	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+	hud->Render();
 }
 
 void CPlayScene::Unload()

@@ -18,7 +18,6 @@ IntroScene::IntroScene(int id, LPCWSTR filePath) :CScene(id, filePath)
 	key_handler = new IntroSceneKeyHandler(this);
 }
 
-
 void IntroScene::_ParseSection_TEXTURES(string line)
 {
 	vector<string> tokens = split(line);
@@ -111,8 +110,8 @@ void IntroScene::_ParseSection_OBJECTS(string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());  //left
-	float y = atof(tokens[2].c_str());	//top
+	float x = (float) atof(tokens[1].c_str());  //left
+	float y = (float) atof(tokens[2].c_str());	//top
 
 	int ani_set_id = atoi(tokens[3].c_str());
 

@@ -47,7 +47,7 @@
     <Filter Include="Framework\GameObject\CheckPoint">
       <UniqueIdentifier>{43c7e0fc-f30d-4577-96a8-6a5f2f872eb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\GameObject\HUD">
+    <Filter Include="Framework\HUD">
       <UniqueIdentifier>{f3f650a0-adda-4888-8f1e-fd82de9d9c92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -140,7 +140,7 @@
       <Filter>Framework\GameObject\CheckPoint</Filter>
     </ClInclude>
     <ClInclude Include="HUD.h">
-      <Filter>Framework\GameObject\HUD</Filter>
+      <Filter>Framework\HUD</Filter>
     </ClInclude>
     <ClInclude Include="TurtleOFWorldMap.h">
       <Filter>Framework\GameObject\Item</Filter>
@@ -159,6 +159,18 @@
     </ClInclude>
     <ClInclude Include="ArrowToChoose.h">
       <Filter>Framework\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Framework\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
+      <Filter>Framework\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Framework\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Number.h">
+      <Filter>Framework\HUD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,7 +259,7 @@
       <Filter>Framework\GameObject\CheckPoint</Filter>
     </ClCompile>
     <ClCompile Include="HUD.cpp">
-      <Filter>Framework\GameObject\HUD</Filter>
+      <Filter>Framework\HUD</Filter>
     </ClCompile>
     <ClCompile Include="TurleOfWorldMap.cpp">
       <Filter>Framework\GameObject\Item</Filter>
@@ -266,6 +278,18 @@
     </ClCompile>
     <ClCompile Include="ArrowToChoose.cpp">
       <Filter>Framework\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Framework\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Score.cpp">
+      <Filter>Framework\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Framework\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Number.cpp">
+      <Filter>Framework\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

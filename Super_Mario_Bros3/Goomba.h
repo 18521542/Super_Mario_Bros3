@@ -35,6 +35,8 @@
 #define GOOMBA							1
 #define PARA_GOOMBA						2
 
+#include "Number.h"
+
 class CGoomba : public CGameObject
 {
 	int type;

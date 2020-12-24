@@ -30,12 +30,16 @@
 
 #include "Object.h"
 
+#include "HUD.h"
+
 class CPlayScene : public CScene
 {
 protected:
 	CMario* player;					// A play scene has to have player, right? 
 
 	vector<LPGAMEOBJECT> objects;
+
+	HUD* hud;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);

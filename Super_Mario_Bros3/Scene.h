@@ -2,7 +2,7 @@
 
 #include <d3dx9.h>
 #include "KeyEventHandler.h"
-#include "HUD.h"
+//#include "HUD.h"
 
 class CScene
 {

@@ -57,10 +57,30 @@ class CGame
 	ULONGLONG TimeToSwitchScene;
 	bool isSwitch = false;
 
+
+	//defaut HUD
+	int World;
+	int MarioSpeed = 0;
+	float Time = 0;
+	int Score;
+	int Life;
+
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
 	void _ParseSection_HUD(string line);
 public:
+	int GetWorld() { return World; }
+	int GetMarioSpeed(){ return MarioSpeed; }
+	float GetTime() { return Time; }
+	int GetScore() { return Score; }
+	int GetLife() { return Life; }
+
+	void SetWorld(int value) { World = value; }
+	void SetMarioSpeed(int value) { MarioSpeed = value; }
+	void SetTime(float value) { Time = value; }
+	void SetScore(int value) { Score = value; }
+	void SetLife(int value) { Life = value; }
+
 	void StartSwitchScene() {
 		TimeToSwitchScene = GetTickCount64();
 		isSwitch = true;
@@ -82,7 +102,7 @@ public:
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
-
+	void GetPositionCam(float& x, float& y) { x = cam_x; y = cam_y; }
 	static void SweptAABB(
 		float ml,			// move left 
 		float mt,			// move top
