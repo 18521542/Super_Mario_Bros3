@@ -2,6 +2,7 @@
 
 #include <d3dx9.h>
 #include "KeyEventHandler.h"
+#include "HUD.h"
 
 class CScene
 {
@@ -12,7 +13,7 @@ protected:
 
 public:
 	CScene(int id, LPCWSTR filePath);
-
+	int GetID() { return this->id; }
 	CKeyEventHandler* GetKeyEventHandler() { return key_handler; }
 	virtual void Load() = 0;
 	virtual void Unload() = 0;

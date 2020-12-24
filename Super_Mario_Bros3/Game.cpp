@@ -6,6 +6,7 @@
 
 #include "PlayScene.h"
 #include "WorldMapScene.h"
+#include "IntroScene.h"
 
 CGame* CGame::__instance = NULL;
 
@@ -313,12 +314,7 @@ CGame* CGame::GetInstance()
 	return __instance;
 }
 
-#define MAX_GAME_LINE 1024
 
-
-#define GAME_FILE_SECTION_UNKNOWN -1
-#define GAME_FILE_SECTION_SETTINGS 1
-#define GAME_FILE_SECTION_SCENES 2
 
 void CGame::_ParseSection_SETTINGS(string line)
 {
@@ -339,17 +335,25 @@ void CGame::_ParseSection_SCENES(string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
 
-	if (id == 1) {
+	if (id == PLAY_SCENE) {
 		LPSCENE scene = new CPlayScene(id, path);
 		scenes[id] = scene;
 	}
-	else if (id == 2) {
+	else if (id == WORLDMAP_SCENE) {
 		LPSCENE scene = new WorldMapScene(id, path);
 		scenes[id] = scene;
 	}
-		
+	else if (id == INTRO_SCENE) {
+		LPSCENE scene = new IntroScene(id,path);
+		scenes[id] = scene;
+	}
 }
 
+void CGame::_ParseSection_HUD(string line) 
+{
+	vector<string> tokens = split(line);
+	
+}
 /*
 	Load game campaign file and load/initiate first scene
 */
@@ -372,14 +376,15 @@ void CGame::Load(LPCWSTR gameFile)
 
 		if (line == "[SETTINGS]") { section = GAME_FILE_SECTION_SETTINGS; continue; }
 		if (line == "[SCENES]") { section = GAME_FILE_SECTION_SCENES; continue; }
-
+		if (line == "[HUD]") { section = GAME_FILE_SECTION_HUD; continue; }
 		//
 		// data section
 		//
 		switch (section)
 		{
-		case GAME_FILE_SECTION_SETTINGS: _ParseSection_SETTINGS(line); break;
-		case GAME_FILE_SECTION_SCENES: _ParseSection_SCENES(line); break;
+			case GAME_FILE_SECTION_SETTINGS: _ParseSection_SETTINGS(line); break;
+			case GAME_FILE_SECTION_SCENES: _ParseSection_SCENES(line); break;
+			case GAME_FILE_SECTION_HUD: _ParseSection_HUD(line); break;
 		}
 	}
 	f.close();

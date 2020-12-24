@@ -154,6 +154,12 @@
     <ClInclude Include="Effect.h">
       <Filter>Framework\GameObject\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="IntroScene.h">
+      <Filter>Framework\Engine\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowToChoose.h">
+      <Filter>Framework\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -254,6 +260,12 @@
     </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>Framework\GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroScene.cpp">
+      <Filter>Framework\Engine\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowToChoose.cpp">
+      <Filter>Framework\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

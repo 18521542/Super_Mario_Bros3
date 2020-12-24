@@ -1,0 +1,36 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+10	textures\title.png	255	255	255
+
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+1	516	226	772	450	10
+2	30	307	37	315	10
+
+30	194	363	236	404	10
+31	240	363	282	404	10
+32	287	363	329	404	10
+33	333	363	375	404	10
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+1	1	100
+
+#arrow
+2	2	100
+
+#number
+3	30	100	31	100	32	100	33	100
+
+# id	ani1	ani2	ani3
+[ANIMATION_SETS]
+1	1
+2	2
+3	3
+
+#type	x	y	ani-set		extra setting
+[OBJECTS]
+4	30	5	1	1
+100	100	165	2
+4	140	101	3	1

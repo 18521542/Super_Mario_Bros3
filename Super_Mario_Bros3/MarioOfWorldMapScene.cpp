@@ -7,6 +7,7 @@ MarioWorldMap::MarioWorldMap() {
 	top = false;
 	left = true;
 }
+
 void MarioWorldMap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 
 	CGameObject::Update(dt, coObjects);
@@ -53,6 +54,7 @@ void MarioWorldMap::SetDirection(int l, int t, int r, int b) {
 	SetTrueFalseByValue(this->right,	r);
 	SetTrueFalseByValue(this->bottom,	b);
 }
+
 void MarioWorldMap::Render() 
 {
 	animation_set->at(0)->Render(x, y);

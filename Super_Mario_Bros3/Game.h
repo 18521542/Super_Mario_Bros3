@@ -6,6 +6,17 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#define MAX_GAME_LINE 1024
+
+
+#define GAME_FILE_SECTION_UNKNOWN	-1
+#define GAME_FILE_SECTION_SETTINGS	1
+#define GAME_FILE_SECTION_SCENES	2
+#define GAME_FILE_SECTION_HUD		3
+
+#define PLAY_SCENE					1
+#define WORLDMAP_SCENE				2
+#define INTRO_SCENE					3
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -48,7 +59,7 @@ class CGame
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
-
+	void _ParseSection_HUD(string line);
 public:
 	void StartSwitchScene() {
 		TimeToSwitchScene = GetTickCount64();

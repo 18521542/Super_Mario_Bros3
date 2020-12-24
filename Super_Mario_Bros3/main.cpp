@@ -26,15 +26,17 @@
 
 #include "PlayScene.h"
 
+
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"SAMPLE 05 - SCENCE MANAGER"
 
-//#define BACKGROUND_COLOR D3DCOLOR_XRGB(76, 220, 72)
-//#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 255)
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
+#define PLAYSCENE_COLOR D3DCOLOR_XRGB(76, 220, 72)
+#define WORLDMAPSCENE_COLOR D3DCOLOR_XRGB(255, 219, 161)
+#define INTROSCENE_COLOR D3DCOLOR_XRGB(255, 255, 255)
+
 
 #define SCREEN_WIDTH 330
-#define SCREEN_HEIGHT 270
+#define SCREEN_HEIGHT 300
 
 #define MAX_FRAME_RATE 120
 
@@ -60,6 +62,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void Update(DWORD dt)
 {
 	CGame::GetInstance()->GetCurrentScene()->Update(dt);
+	//CGame::GetInstance()->GetHUD()->Update(dt);
 }
 
 /*
@@ -71,14 +74,26 @@ void Render()
 	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
 
+	int id = game->GetInstance()->GetCurrentScene()->GetID();
+	D3DCOLOR colorBackGround = NULL;
+
+	if (id == PLAY_SCENE)
+		colorBackGround = PLAYSCENE_COLOR;
+	else if(id == INTRO_SCENE)
+		colorBackGround = INTROSCENE_COLOR;
+	else if(id == WORLDMAP_SCENE)
+		colorBackGround = WORLDMAPSCENE_COLOR;
+
 	if (d3ddv->BeginScene())
 	{
-		// Clear back buffer with a color
-		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
+		d3ddv->ColorFill(bb, NULL, colorBackGround);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 		CGame::GetInstance()->GetCurrentScene()->Render();
+		
+		//if(id!=INTRO_SCENE)
+		//CGame::GetInstance()->GetHUD()->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();

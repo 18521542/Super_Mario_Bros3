@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
+    <ClInclude Include="ArrowToChoose.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="Brick.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Help.h" />
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Leaf_SuperMushroom.h" />
     <ClInclude Include="MarioOfWorldMapScene.h" />
     <ClInclude Include="Object.h" />
@@ -181,6 +183,7 @@
     <ClInclude Include="WorldMapScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ArrowToChoose.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="BreakableBrick.cpp" />
     <ClCompile Include="Brick.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Leaf_SuperMushroom.cpp" />
     <ClCompile Include="MarioOfWorldMapScene.cpp" />
