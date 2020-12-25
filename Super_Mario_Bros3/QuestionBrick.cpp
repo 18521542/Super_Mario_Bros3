@@ -1,5 +1,6 @@
 #include "QuestionBrick.h"
 #include "Utils.h"
+#include "Game.h"
 CQuestionBrick::CQuestionBrick(float y,float x)
 {
 	state = BRICK_STATE_WITH_EFFECT;
@@ -46,8 +47,12 @@ void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			y = startY;
 			SetState(10);
 		}
-		if(!effect->HasAppear())
+		if (!effect->HasAppear()) 
+		{
 			effect->StartAppear();
+			CGame::GetInstance()->ScoreUp(10);
+		}
+			
 	}
 
 	if (GetTickCount() - TimeStartMove > MOVING_TIME) {

@@ -7,6 +7,7 @@
 
 #define MAIN_SKELETON	1
 #define CARD_SKELETON	2
+
 class Skeleton : public CGameObject 
 {
 	int type;

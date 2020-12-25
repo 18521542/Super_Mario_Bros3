@@ -3,36 +3,42 @@
 #include "Game.h"
 
 //Skin of HUD
-#include "Timer.h"
-#include "Score.h"
 #include "Number.h"
 #include "Skeleton.h"
+#include "Background.h"
+#include "Power.h"
+#include "Stack.h"
 
 #define ANI_SET_OF_HUD_IN_EVERY_SCENE	101010
 
 class HUD : public CGameObject
 {
-	int World;
+	int WorldValue;
 	int MarioSpeed;
-	float TimeValue;
+	float TimeValue ;
 	int ScoreValue;
-	int Life;
+	int LifeValue;
 
 	int FirstCardID;
 	int SecondCardID;
 	int ThirdCardID;
 
-	vector<Number*> Time;
-	vector<Number*> Score;
+	vector<Number*> Time; // times contains 3 numbers
+	vector<Number*> Score; // scores contains 7 numbers
+
+	Number* Life;	// life only need 1 number
+	Number* World;  // so does world
 
 	Skeleton* TimeScoreLife;
 	Skeleton* Card;
+
+	Power* power; // only 1P
+	vector<Stack*> stack; // stack contain 6 level  
+	
 public:
 	HUD();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-	vector<int> SeperateTime();
-	vector<int> SeperateScore();
-
+	vector<int> SeperateToNumber(int value,int maxsize);
 };

@@ -160,16 +160,16 @@
     <ClInclude Include="ArrowToChoose.h">
       <Filter>Framework\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Framework\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="Score.h">
-      <Filter>Framework\HUD</Filter>
-    </ClInclude>
     <ClInclude Include="Skeleton.h">
       <Filter>Framework\HUD</Filter>
     </ClInclude>
     <ClInclude Include="Number.h">
+      <Filter>Framework\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Power.h">
+      <Filter>Framework\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.h">
       <Filter>Framework\HUD</Filter>
     </ClInclude>
   </ItemGroup>
@@ -279,16 +279,16 @@
     <ClCompile Include="ArrowToChoose.cpp">
       <Filter>Framework\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Framework\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="Score.cpp">
-      <Filter>Framework\HUD</Filter>
-    </ClCompile>
     <ClCompile Include="Skeleton.cpp">
       <Filter>Framework\HUD</Filter>
     </ClCompile>
     <ClCompile Include="Number.cpp">
+      <Filter>Framework\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Power.cpp">
+      <Filter>Framework\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Stack.cpp">
       <Filter>Framework\HUD</Filter>
     </ClCompile>
   </ItemGroup>

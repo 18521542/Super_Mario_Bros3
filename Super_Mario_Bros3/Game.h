@@ -61,8 +61,8 @@ class CGame
 	//defaut HUD
 	int World;
 	int MarioSpeed = 0;
-	float Time = 0;
-	int Score;
+	float Time = 300.0f;
+	int Score =0;
 	int Life;
 
 	void _ParseSection_SETTINGS(string line);
@@ -78,7 +78,10 @@ public:
 	void SetWorld(int value) { World = value; }
 	void SetMarioSpeed(int value) { MarioSpeed = value; }
 	void SetTime(float value) { Time = value; }
-	void SetScore(int value) { Score = value; }
+
+	void ScoreUp(int value) { Score += value; }
+	void ScoreDown(int value) { Score -= value; }
+
 	void SetLife(int value) { Life = value; }
 
 	void StartSwitchScene() {
