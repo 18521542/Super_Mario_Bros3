@@ -23,6 +23,8 @@ class HUD : public CGameObject
 	int SecondCardID;
 	int ThirdCardID;
 
+	CBackground* BlackBackGround;
+
 	vector<Number*> Time; // times contains 3 numbers
 	vector<Number*> Score; // scores contains 7 numbers
 
@@ -38,6 +40,11 @@ class HUD : public CGameObject
 public:
 	HUD();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	void TimeUpdate(float camX, float camY);
+	void StackUpdate(float camX, float camY);
+	void ScoreUpdate(float camX, float camY);
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	vector<int> SeperateToNumber(int value,int maxsize);

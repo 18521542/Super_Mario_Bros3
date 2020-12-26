@@ -1,8 +1,14 @@
 #include "Background.h"
-
+#include "Utils.h"
+#define ANI_SET_FOR_BACKGROUND_OF_HUD	999999
 CBackground::CBackground(int type) 
 {
 	this->type = type;
+}
+
+CBackground::CBackground() {
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANI_SET_FOR_BACKGROUND_OF_HUD));
+	type = BIG_MAP;
 }
 void CBackground::Render()
 {

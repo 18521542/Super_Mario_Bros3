@@ -15,6 +15,7 @@ class CBackground : public CGameObject
 {
 	int type;
 public:
+	CBackground();
 	CBackground(int type);
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);

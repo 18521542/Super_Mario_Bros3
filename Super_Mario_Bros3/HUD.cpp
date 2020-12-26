@@ -2,6 +2,30 @@
 #include "Mario.h"
 #include "PlayScene.h"
 
+#define EACH_NUMBER_DISTANCE				8
+
+#define NUMBERS_USED_AS_SKIN_OF_TIME		3
+#define NUMBERS_USED_AS_SKIN_OF_SCORE		7
+
+#define POSY_OF_SKELETON_MAIN				210
+#define	POSX_OF_SKELETON_MAIN				30	
+
+#define POSY_OF_SKELETON_CARD				210
+#define	POSX_OF_SKELETON_CARD				200
+
+#define POSY_OF_FIRST_NUMBER_TIME			225
+#define	POSX_OF_FIRST_NUMBER_TIME			155
+
+#define POSY_OF_FIRST_NUMBER_SCORE			225
+#define	POSX_OF_FIRST_NUMBER_SCORE			75
+
+#define POSY_OF_FIRST_STACK					217
+#define	POSX_OF_FIRST_STACK					75
+
+#define POSY_OF_POWER						217
+#define	POSX_OF_POWER						129
+
+#define POSY_OF_BACKGROUND					205
 HUD::HUD() 
 {
 	//Load value from Game.h
@@ -51,10 +75,40 @@ HUD::HUD()
 	//Set position
 	TimeScoreLife->SetPosition(10, 435);
 	Card->SetPosition(200, 435);
+	BlackBackGround = new CBackground();
 }
 
 void HUD::GetBoundingBox(float& left, float& top, float& right, float& bottom) {
 	left = top = right = bottom = 0;
+}
+
+
+void HUD::TimeUpdate(float camX, float camY) 
+{
+	vector<int> TimePool = this->SeperateToNumber(TimeValue, NUMBERS_USED_AS_SKIN_OF_TIME);
+
+	for (int i = 0; i < Time.size(); i++)
+	{
+		Time.at(i)->SetPosition(camX + POSX_OF_FIRST_NUMBER_TIME + (i * EACH_NUMBER_DISTANCE), camY + POSY_OF_FIRST_NUMBER_TIME);
+		int lastIndex = TimePool.size() - 1 - i;
+		Time.at(i)->SetValue(TimePool.at(lastIndex));
+	}
+}
+void HUD::ScoreUpdate(float camX, float camY) 
+{
+	vector<int> ScorePool = this->SeperateToNumber(CGame::GetInstance()->GetScore(), NUMBERS_USED_AS_SKIN_OF_SCORE);
+	for (int i = 0; i < Score.size(); i++)
+	{
+		Score.at(i)->SetPosition(camX + POSX_OF_FIRST_NUMBER_SCORE + (i * (EACH_NUMBER_DISTANCE+1)), camY + POSY_OF_FIRST_NUMBER_SCORE);
+		int lastIndex = ScorePool.size() - 1 - i;
+		Score.at(i)->SetValue(ScorePool.at(lastIndex));
+	}
+}
+void HUD::StackUpdate(float camX, float camY) 
+{
+	for (int i = 0; i < stack.size(); i++) {
+		stack.at(i)->SetPosition(camX + POSX_OF_FIRST_NUMBER_SCORE + (i * (EACH_NUMBER_DISTANCE + 1)), camY + POSY_OF_FIRST_STACK);
+	}
 }
 
 void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
@@ -63,63 +117,33 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	int id = CGame::GetInstance()->GetCurrentScene()->GetID();
 
-	vector<int> TimePool = this->SeperateToNumber(TimeValue, 3);
-
-	vector<int> ScorePool = this->SeperateToNumber(CGame::GetInstance()->GetScore(),7);
-
-	if (id == PLAY_SCENE) 
+	if (id != PLAY_SCENE)
 	{
-		float camx, camy;
-		CGame::GetInstance()->GetInstance()->GetPositionCam(camx, camy);
-		TimeScoreLife->SetPosition(camx+30, camy+205);
-		Card->SetPosition(camx+200, camy+205);
-		for (int i = 0; i < Time.size(); i++)
-		{
-			Time.at(i)->SetPosition(camx + 155 + (i * 8), camy + 220);
-			int lastIndex = TimePool.size() - 1 - i;
-			Time.at(i)->SetValue(TimePool.at(lastIndex));
-		}
-		for (int i = 0; i < Score.size(); i++) 
-		{
-			Score.at(i)->SetPosition(camx + 75 + (i * 9), camy + 220);
-			int lastIndex = ScorePool.size() - 1 - i;
-			Score.at(i)->SetValue(ScorePool.at(lastIndex));
-		}
-		for (int i = 0; i < stack.size(); i++) {
-			stack.at(i)->SetPosition(camx + 75 + (i * 9), camy + 212);
-		}
-		power->SetPosition(camx + 129, camy + 212);
+		TimeValue = 0;
 	}
-	else {
-		float camx, camy;
-		CGame::GetInstance()->GetInstance()->GetPositionCam(camx, camy);
-		TimeScoreLife->SetPosition(camx + 30, camy + 205);
-		Card->SetPosition(camx + 200, camy + 205);
-		for (int i = 0; i < Time.size(); i++)
-		{
-			Time.at(i)->SetPosition(camx + 155 + (i * 8), camy + 220);
-			int lastIndex = TimePool.size() - 1 - i;
-			Time.at(i)->SetValue(TimePool.at(lastIndex));
-		}
-		for (int i = 0; i < Score.size(); i++)
-		{
-			Score.at(i)->SetPosition(camx + 75 + (i * 9), camy + 220);
-			int lastIndex = ScorePool.size() - 1 - i;
-			Score.at(i)->SetValue(ScorePool.at(lastIndex));
-		}
-		for (int i = 0; i < stack.size(); i++) {
-			stack.at(i)->SetPosition(camx + 75 + (i * 9), camy + 212);
-		}
-		power->SetPosition(camx + 129, camy + 212);
-	}
+
+	float camx, camy;
+	CGame::GetInstance()->GetInstance()->GetPositionCam(camx, camy);
+
+	//Update position
+	BlackBackGround->SetPosition(camx, camy + POSY_OF_BACKGROUND);
+	TimeScoreLife->SetPosition(camx + POSX_OF_SKELETON_MAIN, camy + POSY_OF_SKELETON_MAIN);
+	Card->SetPosition(camx + POSX_OF_SKELETON_CARD, camy + POSY_OF_SKELETON_MAIN);
+	power->SetPosition(camx + POSX_OF_POWER, camy + POSY_OF_POWER);
+
+	//update state
+	TimeUpdate(camx, camy);
+	ScoreUpdate(camx, camy);
+	StackUpdate(camx, camy);
+	
 }
 
 void HUD::Render() 
 {
+	BlackBackGround->Render();
 	TimeScoreLife->Render();
 	Card->Render();
 	power->Render();
-
 	for (int i = 0; i < Time.size(); i++) {
 		Time.at(i)->Render();
 	}
@@ -134,6 +158,7 @@ void HUD::Render()
 vector<int> HUD::SeperateToNumber(int value,int maxsize) {
 	vector<int> rs;
 
+	
 	int val = value;
 
 	int delta = maxsize;

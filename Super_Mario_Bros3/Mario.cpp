@@ -576,7 +576,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		CGameObject::Update(dt);
 
-		
 		vx += a * dt;
 		vy += ay * dt;
 		

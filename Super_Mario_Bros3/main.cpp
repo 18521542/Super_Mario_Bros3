@@ -36,7 +36,7 @@
 
 
 #define SCREEN_WIDTH 330
-#define SCREEN_HEIGHT 270
+#define SCREEN_HEIGHT 290
 
 #define MAX_FRAME_RATE 120
 

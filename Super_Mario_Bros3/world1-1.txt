@@ -16,14 +16,14 @@
 150	textures\flower_right.png	255	255	255
 160	textures\mairuanguahoisinh.png	0	255	255
 170	textures\UI.png	255	127	39
-81	textures\Background.png	170	170	170
 #############################################################################################
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #BACK_ground
 1	13	14	2848	720	80
 222	353	368	385	417	70
-333	2496	495	2529	544	81
+333	2496	495	2529	544	80
+
 #HUD
 #number: 0 1 2 3 4 5 6 7 8 9
 100000	77	31	85	38	170
@@ -41,6 +41,9 @@
 200000	12	128	164	156	170
 #card skeleton
 300000	172	128	244	156	170
+
+#black background
+999999	415	521	823	689	80
 #top brick
 801	0	417	17	434	80
 #body brick
@@ -496,6 +499,9 @@
 500000	500000	100
 #black
 500001	500001	100
+
+#black background
+999999	999999	100
 # ==== coin ==========
 1001	2	100	3	100	4	100
 # ==== breakable brick =====
@@ -846,6 +852,9 @@
 
 #stack: white, black
 500000	500000	500001
+
+#black background
+999999	999999
 #======================================================
 # coin
 5	1001

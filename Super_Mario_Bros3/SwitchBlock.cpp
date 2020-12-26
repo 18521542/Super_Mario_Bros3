@@ -54,13 +54,16 @@ void CSwitchBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	//do nothing;
 
-	for (size_t i = 0; i < coObjects->size(); i++) {
+	for (size_t i = 0; i < coObjects->size(); i++) 
+	{
 		LPGAMEOBJECT obj = coObjects->at(i);
 		if (dynamic_cast<CBreakableBrick*>(obj)) 
 		{
 			CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(obj);
-			if (bb->GetType() == SPECIAL) {
-				if (bb->GetState() == WITHOUT_SHINING) {
+			if (bb->GetType() == SPECIAL) 
+			{
+				if (bb->GetState() == WITHOUT_SHINING) 
+				{
 					this->isAppear = true;
 				}
 			}
