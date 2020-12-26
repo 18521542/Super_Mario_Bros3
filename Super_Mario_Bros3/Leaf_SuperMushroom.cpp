@@ -1,6 +1,6 @@
 #include "Leaf_SuperMushroom.h"
 #include "Utils.h"
-
+#include "PlayScene.h"
 
 CLeaf_Mushroom::CLeaf_Mushroom(int _type)
 {
@@ -26,6 +26,9 @@ void CLeaf_Mushroom::Render()
 			else if (state == LEAF_STATE_RIGHT)
 				animation_set->at(LEAF_ANI_RIGHT)->Render(x, y);
 		}
+		else if (type == GREEN_MUSHROOM) {
+			animation_set->at(GREEN_MUSHROOM_ANI)->Render(x, y);
+		}
 	}	
 }
 
@@ -38,7 +41,7 @@ void CLeaf_Mushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
 			r = x + LEAF_WIDTH;
 			b = y + LEAF_HEIGHT;
 		}
-		else if (type == MUSHROOM) {
+		else if (type == MUSHROOM || type == GREEN_MUSHROOM) {
 			l = x;
 			t = y;
 			r = x + MUSHROOM_WIDTH;
@@ -55,47 +58,73 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	//decide which will appear : leaf or mushroom, and when will appear
-	for (size_t i = 0; i < coObjects->size(); i++)
+	if (type != GREEN_MUSHROOM) 
 	{
-		LPGAMEOBJECT obj = coObjects->at(i);
-		float pLeft, pTop, pRight, pBottom;
-		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-		if (dynamic_cast<CMario*>(obj))
+		for (size_t i = 0; i < coObjects->size(); i++)
 		{
-			CMario* mario = dynamic_cast<CMario*>(obj);
-			if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			LPGAMEOBJECT obj = coObjects->at(i);
+			float pLeft, pTop, pRight, pBottom;
+			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+			if (dynamic_cast<CMario*>(obj))
 			{
-				this->type = MUSHROOM;
-				if (mario->x < this->x && !isUsed) {
-					this->nx = 1;
+				CMario* mario = dynamic_cast<CMario*>(obj);
+				if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+				{
+					this->type = MUSHROOM;
+					if (mario->x < this->x && !isUsed) {
+						this->nx = 1;
+					}
+					else if (mario->x >= this->x && !isUsed) {
+						this->nx = -1;
+					}
 				}
-				else if (mario->x >= this->x &&  !isUsed) {
-					this->nx = -1;
+				else
+					this->type = LEAF;
+			}
+			else if (dynamic_cast<CQuestionBrick*>(obj))
+			{
+				float qX, qY;
+				CQuestionBrick* qb = dynamic_cast<CQuestionBrick*>(obj);
+				qb->GetPosition(qX, qY);
+				if (qb->IsUsed() && (this->x == qX || this->y == qY) && !this->isUsed)
+				{
+					isUsed = true;
+					if (this->type == MUSHROOM)
+					{
+						StartWaitingToMove();
+					}
+					else {
+						LeafStartMoving();
+						isAllowToAppear = true;
+					}
 				}
 			}
-			else
-				this->type = LEAF;
 		}
-		else if (dynamic_cast<CQuestionBrick*>(obj))
+	}
+	else {
+		if (mario->x < this->x && !isUsed) {
+			this->nx = 1;
+		}
+		else if (mario->x >= this->x && !isUsed) {
+			this->nx = -1;
+		}
+		for (size_t i = 0; i < coObjects->size(); i++) 
 		{
-			float qX, qY;
-			CQuestionBrick* qb = dynamic_cast<CQuestionBrick*>(obj);
-			qb->GetPosition(qX, qY);
-			if (qb->IsUsed() && (this->x == qX||this->y==qY) && !this->isUsed)
+			LPGAMEOBJECT obj = coObjects->at(i);
+			if (dynamic_cast<CQuestionBrick*>(obj))
 			{
-				isUsed = true;
-				if (this->type == MUSHROOM)
+				float qX, qY;
+				CQuestionBrick* qb = dynamic_cast<CQuestionBrick*>(obj);
+				qb->GetPosition(qX, qY);
+				if (qb->IsUsed() && (this->x == qX || this->y == qY) && !this->isUsed)
 				{
+					isUsed = true;
 					StartWaitingToMove();
 				}
-				else {
-					LeafStartMoving();
-					isAllowToAppear = true;
-				}
 			}
 		}
-		
 	}
 	
 	if ((GetTickCount() - TimeForMushroomAppear) < 1000 
@@ -105,11 +134,6 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		MushroomStartMoving();
 	}
 	
-	
-	/*if (type == MUSHROOM && isMushroomMoving) 
-	{
-
-	}*/
 
 	if (isLeafMoving && type==LEAF) 
 	{
@@ -134,7 +158,7 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (nx < 0)
 			SetState(LEAF_STATE_LEFT);
 	}
-	else if (type == MUSHROOM && isMushroomMoving) 
+	else if ((type == MUSHROOM|| type == GREEN_MUSHROOM) && isMushroomMoving)
 	{
 		if (GetTickCount() - StartEffectTime < 270) {
 			vy += -0.00005f * dt;
@@ -182,12 +206,11 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 				else if (dynamic_cast<CQuestionBrick*>(e->obj)) {
-					CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
+					CQuestionBrick* plat = dynamic_cast<CQuestionBrick*>(e->obj);
 					x += dx;
 					y += min_ty * dy + ny * 0.4f;
-					if (e->ny < 0) {
+					if (e->ny != 0) {
 						vy = 0;
-
 					}
 				}
 			}
@@ -195,6 +218,7 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
+	
 }
 
 

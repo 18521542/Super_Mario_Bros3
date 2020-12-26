@@ -3,6 +3,7 @@
 
 #define MUSHROOM	1
 #define LEAF		2
+#define GREEN_MUSHROOM	3
 
 #define LEAF_STATE_LEFT		3
 #define LEAF_STATE_RIGHT	4
@@ -18,6 +19,8 @@
 
 #define TIME_PHASE_ONE	100
 #define MUSHROOM_ANI	2
+#define GREEN_MUSHROOM_ANI	3
+
 class CLeaf_Mushroom : public CGameObject
 {
 	int type;
@@ -32,12 +35,12 @@ class CLeaf_Mushroom : public CGameObject
 	DWORD TimeForMushroomAppear = 0;
 public:
 	CLeaf_Mushroom(int state);
-	void LeafStartMoving() { StartEffectTime = GetTickCount(); isLeafMoving = true; };
+	void LeafStartMoving() { StartEffectTime = GetTickCount64(); isLeafMoving = true; };
 	void MushroomStartMoving() {
-		StartEffectTime = GetTickCount(); isMushroomMoving = true; 
+		StartEffectTime = GetTickCount64(); isMushroomMoving = true; 
 	};
 	void StartWaitingToMove() {
-		TimeForMushroomAppear = GetTickCount();
+		TimeForMushroomAppear = GetTickCount64();
 	}
 	void SetIsAllowToAppear(bool appear) { this->isAllowToAppear = appear; }
 	//virtual void SetState(int state);
