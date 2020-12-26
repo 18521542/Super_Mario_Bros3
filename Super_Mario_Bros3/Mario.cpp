@@ -74,10 +74,27 @@ void CMario::UpdateStateUsingTimeOut()
 		StartKick = 0;
 		isKicking = false;
 	}
+
+	if (GetTickCount64() - EnterTime > 3000 && GetTickCount64() - EnterTime<5000) 
+	{
+		isEntering = false;
+		EnterTime = 0;
+		if (!isInSecretRoom) 
+		{
+			isInSecretRoom = true;
+			x = 2300;
+			y = 611;
+		}
+		else {
+			isInSecretRoom = false;
+			x = 2310;
+			y = 400;
+		}
+	}
 }
 
 void CMario::UpdateForEachState(DWORD dt) {
-
+	
 	// limit the speed of mario when he walk - don't care about direction
 	if (abs(vx) >= MARIO_WALKING_SPEED_MAX && !isRunning)
 	{
@@ -186,9 +203,16 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 		else if (dynamic_cast<CPlatform*>(obj))
 		{
 			CPlatform* pf = dynamic_cast<CPlatform*>(obj);
-			if (CheckBB(pLeft, pTop, pRight, pBottom) && pf->getType() == PLATFORM_TYPE_ONE)
+			if (CheckBB(pLeft, pTop, pRight, pBottom))
 			{	
+				if (pf->getType() == PLATFORM_FOR_ENTER_SECRET_ROOM) {
+					isReadyForSecretRoom = true;
+				}
+				else if (pf->getType() == PLATFORM_TYPE_ONE)
 					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
+			}
+			else {
+					isReadyForSecretRoom = false;
 			}
 		}
 		else if (dynamic_cast<CBreakableBrick*>(obj)) {
@@ -201,7 +225,6 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 					
 			}
 		}
-
 	}
 }
 
@@ -326,6 +349,24 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 							state == MARIO_STATE_IDLE;*/
 					}
 					if (e->nx != 0)vx = 0;
+				}
+				else if (plat->getType() == PLATFORM_FOR_ENTER_SECRET_ROOM) {
+					x += dx;
+					y += dy;
+					isReadyForSecretRoom = true;
+				}
+				else if (plat->getType() == 5) {
+					if (e->ny != 0) 
+					{
+						if (isReadyToExit) 
+						{
+							StartEnter();
+							isReadyForSecretRoom = true;
+							DebugOut(L"\n Is ready for secret room %d", isReadyForSecretRoom);
+						}
+						
+					}
+					
 				}
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj))
@@ -531,22 +572,41 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
 	if (!isForEffectAppear) 
 	{
 		CGameObject::Update(dt);
 
+		
 		vx += a * dt;
 		vy += ay * dt;
-
+		
+		DebugOut(L"\n Is in secret room %d", isInSecretRoom);
 		if (state != MARIO_STATE_DIE) {
 			UpdateForEachState(dt);
-
+			
 			UpdateStateUsingTimeOut();
+
+			if (isEntering)
+			{
+				if (isInSecretRoom) {
+					vx = 0;
+					vy = -0.01f;
+					y += dy;
+					return;
+				}
+				else {
+					vx = 0;
+					vy = 0.01f;
+					y += dy;
+					return;
+				}
+			}
 
 			HandleNormalColision(coObjects);
 
 			HandleOverlapColision(coObjects);
+
+			
 		}
 		else {
 			vx = 0;
@@ -847,6 +907,9 @@ void CMario::Render()
 			}
 			else
 				ani = MARIO_ANI_TAIL_FALLING_LEFT;
+		}
+		else if (isEntering || isExiting) {
+			ani = MARIO_ANI_TAIL_ENTER_SECRET_ROOM;
 		}
 		else
 		{

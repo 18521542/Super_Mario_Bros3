@@ -5,6 +5,7 @@
 #include "MarioOfWorldMapScene.h"
 #include "CheckPoint.h"
 #include "TurtleOFWorldMap.h"
+#include "HUD.h"
 
 #define INVALID_SCENE	-1
 
@@ -168,6 +169,7 @@ void WorldMapScene::_ParseSection_OBJECTS(string line)
 
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
+	hud = new HUD();
 }
 
 
@@ -235,12 +237,15 @@ void WorldMapScene::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
+	hud->Update(dt, &coObjects);
 	if (player == NULL) return;
+	
 }
 void WorldMapScene::Render()
 {
 	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+	hud->Render();
 }
 void WorldMapScene::Unload()
 {
@@ -249,6 +254,7 @@ void WorldMapScene::Unload()
 
 	objects.clear();
 	player = NULL;
+	delete hud;
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 

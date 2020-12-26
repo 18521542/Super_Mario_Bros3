@@ -59,18 +59,13 @@ void HUD::GetBoundingBox(float& left, float& top, float& right, float& bottom) {
 
 void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
 {
-	TimeValue -= 0.1f;
+	TimeValue -= 0.01f;
 
-	DebugOut(L"\n Score %d", ScoreValue);
 	int id = CGame::GetInstance()->GetCurrentScene()->GetID();
 
-	vector<int> TimePool = this->SeperateToNumber(TimeValue,3);
-
-	//DebugOut(L"\nTime pool size %d", TimePool.size());
+	vector<int> TimePool = this->SeperateToNumber(TimeValue, 3);
 
 	vector<int> ScorePool = this->SeperateToNumber(CGame::GetInstance()->GetScore(),7);
-
-	//DebugOut(L"\nScore pool size %d", ScorePool.size());
 
 	if (id == PLAY_SCENE) 
 	{
@@ -95,6 +90,28 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		power->SetPosition(camx + 129, camy + 212);
 	}
+	else {
+		float camx, camy;
+		CGame::GetInstance()->GetInstance()->GetPositionCam(camx, camy);
+		TimeScoreLife->SetPosition(camx + 30, camy + 205);
+		Card->SetPosition(camx + 200, camy + 205);
+		for (int i = 0; i < Time.size(); i++)
+		{
+			Time.at(i)->SetPosition(camx + 155 + (i * 8), camy + 220);
+			int lastIndex = TimePool.size() - 1 - i;
+			Time.at(i)->SetValue(TimePool.at(lastIndex));
+		}
+		for (int i = 0; i < Score.size(); i++)
+		{
+			Score.at(i)->SetPosition(camx + 75 + (i * 9), camy + 220);
+			int lastIndex = ScorePool.size() - 1 - i;
+			Score.at(i)->SetValue(ScorePool.at(lastIndex));
+		}
+		for (int i = 0; i < stack.size(); i++) {
+			stack.at(i)->SetPosition(camx + 75 + (i * 9), camy + 212);
+		}
+		power->SetPosition(camx + 129, camy + 212);
+	}
 }
 
 void HUD::Render() 
@@ -102,6 +119,7 @@ void HUD::Render()
 	TimeScoreLife->Render();
 	Card->Render();
 	power->Render();
+
 	for (int i = 0; i < Time.size(); i++) {
 		Time.at(i)->Render();
 	}

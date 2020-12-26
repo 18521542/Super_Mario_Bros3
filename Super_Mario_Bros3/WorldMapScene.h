@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "MarioOfWorldMapScene.h"
 #include "Help.h"
+#include "HUD.h"
 
 #define SCENE_SECTION_UNKNOWN			-1
 #define SCENE_SECTION_TEXTURES			2
@@ -36,6 +37,7 @@ class WorldMapScene : public CScene
 {
 	vector<LPGAMEOBJECT> objects;
 	MarioWorldMap* player;
+	HUD* hud;
 protected:
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);

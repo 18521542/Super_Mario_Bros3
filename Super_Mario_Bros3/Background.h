@@ -5,6 +5,11 @@
 
 #define BIG_MAP					1
 #define GREEN_PIPE				2
+#define GRAY_PIPE				3
+
+#define ANI_POS_BIG				0
+#define ANI_POS_GREEN_PIPE		1
+#define ANI_POS_GRAY_PIPE		2
 
 class CBackground : public CGameObject
 {

@@ -148,7 +148,7 @@
 #define MARIO_ANI_TAIL_FALLING_LEFT		86
 #define MARIO_ANI_TAIL_KICK_RIGHT		87
 #define MARIO_ANI_TAIL_KICK_LEFT		88	
-
+#define MARIO_ANI_TAIL_ENTER_SECRET_ROOM	106
 
 #define MARIO_ANI_FROG_IDLE_RIGHT		17
 #define MARIO_ANI_FROG_IDLE_LEFT		18
@@ -171,6 +171,8 @@
 #define MARIO_ANI_DIE						8
 
 #define MARIO_ANI_EFFECT					91
+
+
 
 //define level
 #define	MARIO_LEVEL_SMALL	1111
@@ -255,6 +257,15 @@ class CMario : public CGameObject
 	bool isForEffectAppear = false;
 	ULONGLONG EffectTime;
 
+	bool isReadyForSecretRoom = false;
+
+	bool isEntering = false;
+	bool isInSecretRoom = false;
+
+	bool isReadyToExit = false;
+	bool isExiting = false;
+	ULONGLONG	EnterTime;
+
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -285,6 +296,7 @@ public:
 	void StartKicking() { StartKick = GetTickCount64(); isKicking = true; }
 	void StartEffect() { EffectTime = GetTickCount64(); isForEffectAppear = true;  }
 	void GetReadyToFly() { StartReadyToFly = GetTickCount64(); isReadyToFly = true; }
+	void StartEnter() { EnterTime = GetTickCount64(); isEntering = true; }
 	ULONGLONG GetStartFly() { return this->StartFly; }
 
 	//from beginning
@@ -330,6 +342,14 @@ public:
 	bool IsAllowToStop() { return this->isAllowtoStop; }
 
 	bool IsJumping() { return this->isJumping; }
+
+	bool IsForSecretRoom() { return this->isReadyForSecretRoom; }
+
+	bool IsEntering() { return this->isEntering; }
+
+	bool IsInSecretRoom() { return this->isInSecretRoom; }
+
+	bool IsExiting() { return this->isExiting; }
 	
 	//set
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
@@ -359,6 +379,8 @@ public:
 	void setIsForTailAppear(bool isforTailAppear) { this->isForTailAppear = isforTailAppear; }
 
 	void setIsAllowToStop(bool stop) { this->isAllowtoStop = stop; }
+
+	void SetIsReadyToExit(bool exit) { this->isReadyToExit = exit; }
 
 	void UpdateStateUsingTimeOut();
 

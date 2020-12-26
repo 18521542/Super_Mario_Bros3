@@ -290,7 +290,7 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
-	
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -320,10 +320,17 @@ void CPlayScene::Update(DWORD dt)
 
 	if (player->GetState() != MARIO_STATE_DIE) 
 	{
-		if(cy >= 230.0f)
-			CGame::GetInstance()->SetCamPos(cx, 230.0f);
-		else 
-			CGame::GetInstance()->SetCamPos(cx, cy);
+		if (!mario->IsInSecretRoom()) {
+			if (cy >= 230.0f)
+				CGame::GetInstance()->SetCamPos(cx, 230.0f);
+				//CGame::GetInstance()->SetCamPos(cx, cy);
+			else
+				CGame::GetInstance()->SetCamPos(cx, cy);
+		}
+		else
+			CGame::GetInstance()->SetCamPos(cx, 500.0f);
+			//CGame::GetInstance()->SetCamPos(cx, cy);
+		
 	}
 	else if (player->GetState() == MARIO_STATE_DIE) 
 	{
@@ -355,6 +362,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
 	if (mario->GetState() == MARIO_STATE_DIE)
+		return;
+	if (mario->IsEntering())
 		return;
 	switch (KeyCode)
 	{
@@ -441,6 +450,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_0:
 		CGame::GetInstance()->SwitchScene(2);
 		break;
+	case DIK_DOWN:
+		if(mario->IsForSecretRoom())
+			mario->StartEnter();
+		break;
+	case DIK_UP:
+		mario->SetIsReadyToExit(true);
+		break;
 	}
 }
 
@@ -451,6 +467,9 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		return;
 	switch (KeyCode)
 	{
+	case DIK_UP:
+		mario->SetIsReadyToExit(false);
+		break;
 	case (DIK_S):
 		if(mario->GetState()!=MARIO_STATE_IDLE)
 			mario->SetState(MARIO_STATE_IDLE);
@@ -518,6 +537,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 	// disable control key when Mario die 
+	if (mario->IsEntering())
+		return;
 	if (mario->GetState() == MARIO_STATE_DIE)
 		return;
 	else {
@@ -555,7 +576,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		}
 		else if (game->IsKeyDown(DIK_DOWN)) {
 			if (mario->GetLevel() != MARIO_LEVEL_SMALL)
-				if (mario->IsReadyToSit())
+				if (mario->IsReadyToSit()&&!mario->IsForSecretRoom())
 					mario->SetState(MARIO_STATE_SIT);
 		}
 	}
