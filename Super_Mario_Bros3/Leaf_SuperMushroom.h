@@ -28,11 +28,11 @@ class CLeaf_Mushroom : public CGameObject
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-	DWORD StartEffectTime = 0;
+	ULONGLONG StartEffectTime = 0;
 	bool isLeafMoving = false;
 	bool isMushroomMoving = false;
 	bool isUsed = false;
-	DWORD TimeForMushroomAppear = 0;
+	ULONGLONG TimeForMushroomAppear = 0;
 public:
 	CLeaf_Mushroom(int state);
 	void LeafStartMoving() { StartEffectTime = GetTickCount64(); isLeafMoving = true; };

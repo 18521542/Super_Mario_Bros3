@@ -266,6 +266,7 @@ class CMario : public CGameObject
 	bool isExiting = false;
 	ULONGLONG	EnterTime;
 
+	bool isAtTheEnd = false;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -277,6 +278,7 @@ public:
 	//Render
 	virtual void Render();
 
+	bool IsAtTheEnd() { return this->isAtTheEnd; }
 	void RenderByDirection(int& ani, int ani_right, int ani_left);
 	void SameRenderLogicsForAllLevel(int &ani, 
 		int ani_idle_right, int ani_idle_left, int ani_jump_down_right, int ani_jump_down_left,

@@ -562,6 +562,17 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					if (e->nx != 0)vx = 0;
 				}
 			}
+			else if (dynamic_cast<Card*>(e->obj)) {
+				Card* card = dynamic_cast<Card*>(e->obj);
+				if (e->ny > 0)
+				{
+					vy += MARIO_FALLING_ACCELERATION * dt;
+					isReadyToJump = false;
+					isAtTheEnd = true;
+					card->StartMoving();
+					card->StopRandom();
+				}
+			}
 		}
 	}
 
@@ -579,7 +590,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx += a * dt;
 		vy += ay * dt;
 		
-		DebugOut(L"\n Is in secret room %d", isInSecretRoom);
+		//DebugOut(L"\n Is in secret room %d", isInSecretRoom);
 		if (state != MARIO_STATE_DIE) {
 			UpdateForEachState(dt);
 			
@@ -630,6 +641,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			isForEffectAppear = false;
 		}
 	}
+
+	/*if (isAtTheEnd) 
+	{
+		SetState(MARIO_STATE_WALKING_RIGHT);
+		return;
+	}*/
 }
 
 void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int ani_jump_down_left,

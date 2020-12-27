@@ -172,6 +172,12 @@
     <ClInclude Include="Stack.h">
       <Filter>Framework\HUD</Filter>
     </ClInclude>
+    <ClInclude Include="Card.h">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD_Card.h">
+      <Filter>Framework\HUD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -289,6 +295,12 @@
       <Filter>Framework\HUD</Filter>
     </ClCompile>
     <ClCompile Include="Stack.cpp">
+      <Filter>Framework\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Card.cpp">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD_Card.cpp">
       <Filter>Framework\HUD</Filter>
     </ClCompile>
   </ItemGroup>

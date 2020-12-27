@@ -21,6 +21,7 @@
 #define OBJECT_TYPE_LEAF_MUSHROOM		11
 #define OBJECT_TYPE_VENUS_RED			12
 #define OBJECT_TYPE_SWITCH_BLOCK		13
+#define OBJECT_TYPE_CARD				14
 
 #define MAX_SCENE_LINE 1024
 #include "Game.h"

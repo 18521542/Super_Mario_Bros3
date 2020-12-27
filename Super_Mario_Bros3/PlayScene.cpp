@@ -221,6 +221,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CSwitchBlock(state);
 		break;
 	}
+	case OBJECT_TYPE_CARD:
+	{
+		obj = new Card();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -320,6 +325,12 @@ void CPlayScene::Update(DWORD dt)
 
 	if (player->GetState() != MARIO_STATE_DIE) 
 	{
+		if (mario->IsAtTheEnd()) {
+			mario->SetState(MARIO_STATE_WALKING_RIGHT);
+			if (mario->x > 2900)
+				mario->SetState(MARIO_STATE_DIE);
+			return;
+		}
 		if (!mario->IsInSecretRoom()) {
 			if (cy >= 230.0f)
 				CGame::GetInstance()->SetCamPos(cx, 230.0f);
@@ -329,8 +340,6 @@ void CPlayScene::Update(DWORD dt)
 		}
 		else
 			CGame::GetInstance()->SetCamPos(cx, 500.0f);
-			//CGame::GetInstance()->SetCamPos(cx, cy);
-		
 	}
 	else if (player->GetState() == MARIO_STATE_DIE) 
 	{
@@ -360,7 +369,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
-
+	if (mario->IsAtTheEnd())
+		return;
 	if (mario->GetState() == MARIO_STATE_DIE)
 		return;
 	if (mario->IsEntering())
@@ -463,6 +473,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	if (mario->IsAtTheEnd())
+		return;
 	if (mario->GetState() == MARIO_STATE_DIE)
 		return;
 	switch (KeyCode)
@@ -536,6 +548,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	if (mario->IsAtTheEnd())
+		return;
 	// disable control key when Mario die 
 	if (mario->IsEntering())
 		return;

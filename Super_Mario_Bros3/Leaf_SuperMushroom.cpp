@@ -213,6 +213,9 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						vy = 0;
 					}
 				}
+				else {
+					x += dx; y += dy;
+				}
 			}
 		}
 
