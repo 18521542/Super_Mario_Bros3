@@ -8,6 +8,7 @@
 #include "Background.h"
 #include "Power.h"
 #include "Stack.h"
+#include "HUD_Card.h"
 
 #define ANI_SET_OF_HUD_IN_EVERY_SCENE	101010
 
@@ -33,6 +34,8 @@ class HUD : public CGameObject
 
 	Skeleton* TimeScoreLife;
 	Skeleton* Card;
+
+	HUD_Card* FCard;
 
 	Power* power; // only 1P
 	vector<Stack*> stack; // stack contain 6 level  

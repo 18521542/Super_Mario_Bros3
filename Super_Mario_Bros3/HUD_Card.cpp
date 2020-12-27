@@ -21,8 +21,15 @@ void HUD_Card::Render(){
 	else if (id == STAR) {
 		ani = ANI_STAR;
 	}
+	else {
+		ani = -1;
+	}
+	if (ani == -1) {
+		return;
+	}
 	if(isAppear)
 		animation_set->at(ani)->Render(x,y);
+	
 }
 
 void HUD_Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 

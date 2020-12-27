@@ -571,6 +571,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					isAtTheEnd = true;
 					card->StartMoving();
 					card->StopRandom();
+					CGame::GetInstance()->SetFCard(card->GetID());
 				}
 			}
 		}

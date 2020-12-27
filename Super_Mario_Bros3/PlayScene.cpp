@@ -105,7 +105,11 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 		LPANIMATION ani = animations->Get(ani_id);
 		s->push_back(ani);
 	}
-
+	if (s == NULL)
+	{
+		DebugOut(L"[ERROR] ani-set ID %d not found!\n", ani_set_id);
+		return;
+	}
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
 }
 

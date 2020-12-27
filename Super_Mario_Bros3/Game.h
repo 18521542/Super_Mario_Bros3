@@ -64,6 +64,10 @@ class CGame
 	float Time = 300.0f;
 	int Score =0;
 	int Life;
+	//Card
+	int FirstCard =4;
+	int SCard;
+	int TCard;
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
@@ -74,10 +78,12 @@ public:
 	float GetTime() { return Time; }
 	int GetScore() { return Score; }
 	int GetLife() { return Life; }
+	int GetFCardID() { return FirstCard; }
 
 	void SetWorld(int value) { World = value; }
 	void SetMarioSpeed(int value) { MarioSpeed = value; }
 	void SetTime(float value) { Time = value; }
+	void SetFCard(int id) { this->FirstCard = id; }
 
 	void ScoreUp(int value) { Score += value; }
 	void ScoreDown(int value) { Score -= value; }

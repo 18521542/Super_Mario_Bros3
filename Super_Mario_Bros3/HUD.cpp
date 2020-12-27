@@ -76,6 +76,9 @@ HUD::HUD()
 	TimeScoreLife->SetPosition(10, 435);
 	Card->SetPosition(200, 435);
 	BlackBackGround = new CBackground();
+
+	FCard = new HUD_Card(PLANT);
+	FCard->SetIsAppear(true);
 }
 
 void HUD::GetBoundingBox(float& left, float& top, float& right, float& bottom) {
@@ -130,12 +133,14 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	TimeScoreLife->SetPosition(camx + POSX_OF_SKELETON_MAIN, camy + POSY_OF_SKELETON_MAIN);
 	Card->SetPosition(camx + POSX_OF_SKELETON_CARD, camy + POSY_OF_SKELETON_MAIN);
 	power->SetPosition(camx + POSX_OF_POWER, camy + POSY_OF_POWER);
+	FCard->SetPosition(camx + POSX_OF_SKELETON_CARD+1, camy + POSY_OF_SKELETON_MAIN+1);
 
 	//update state
 	TimeUpdate(camx, camy);
 	ScoreUpdate(camx, camy);
 	StackUpdate(camx, camy);
-	
+	FCard->Update(dt, coObjects);
+	FCard->SetID(CGame::GetInstance()->GetFCardID());
 }
 
 void HUD::Render() 
@@ -144,6 +149,7 @@ void HUD::Render()
 	TimeScoreLife->Render();
 	Card->Render();
 	power->Render();
+	FCard->Render();
 	for (int i = 0; i < Time.size(); i++) {
 		Time.at(i)->Render();
 	}
