@@ -5,6 +5,7 @@ CCoin::CCoin()
 	SetState(COIN_STATE_APPEAR);
 	vy = 0;
 	vx = 0;
+	//effect = new Effect();
 }
 
 CCoin::CCoin(int state)
@@ -12,20 +13,26 @@ CCoin::CCoin(int state)
 	SetState(state);
 	vy = 0;
 	vx = 0;
+	//effect = new Effect();
 }
 void CCoin::Render()
 {
 	if(state!=COIN_STATE_DISAPPEAR)
 		animation_set->at(COIN_ANI)->Render(x, y);
+	//effect->Render();
 	//RenderBoundingBox();
 }
 
 void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
-	t = y;
-	r = x + BBCOIN_WIDTH;
-	b = y + BBCOIN_HEIGT;
+	if (state != COIN_STATE_DISAPPEAR) {
+		l = x;
+		t = y;
+		r = x + BBCOIN_WIDTH;
+		b = y + BBCOIN_HEIGT;
+	}
+	else
+		l = t = r = b = 0;
 }
 
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -64,5 +71,7 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
+
+	//effect->Update(dt, coObjects);
 }
 

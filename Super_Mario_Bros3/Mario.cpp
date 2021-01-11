@@ -221,8 +221,18 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 			{
 				if (bb->GetState() != COIN) {
 					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
-				}
-					
+				}	
+			}
+		}
+		else if (dynamic_cast<MovingBrick*>(obj)) {
+			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			{
+				//if (bb->GetState() != COIN) {
+				if(level!=MARIO_LEVEL_SMALL)
+					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
+				else 
+					y -= y + MARIO_SMALL_BBOX_HEIGHT - pTop + PushBackPixel;
+				//}
 			}
 		}
 	}
@@ -446,8 +456,10 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
 				x += dx;
 				y += dy;
-				if (e->nx != 0 || e->ny != 0) {
+				if (e->nx != 0 || e->ny != 0) 
+				{
 					coin->SetState(COIN_STATE_DISAPPEAR);
+					CGame::GetInstance()->ScoreUp(100);
 				}
 
 			}
@@ -515,6 +527,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				if (level != MARIO_LEVEL_TAIL) {
 					level += LEVEL_DELTA;
 				}
+				//item->SetEffectScore(true);
 				item->SetIsAllowToAppear(false);
 			}
 			else if (dynamic_cast<CSwitchBlock*>(e->obj)) {
@@ -530,7 +543,8 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CBreakableBrick*>(e->obj)) {
 				CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(e->obj);	
-				if (bb->GetState() == COIN) {
+				if (bb->GetState() == COIN) 
+				{
 					x += dx;
 					y += dy;
 					if (e->nx != 0 || e->ny != 0) {
@@ -574,6 +588,23 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					CGame::GetInstance()->SetFCard(card->GetID());
 				}
 			}
+			else if (dynamic_cast<MovingBrick*>(e->obj)) {
+				/*x += min_tx * dx + nx * 0.1f;
+				y += min_ty * dy + ny * 0.1f;*/
+				MovingBrick* mb = dynamic_cast<MovingBrick*>(e->obj);
+				isReadyToJump = true;
+				if (state == MARIO_STATE_JUMP)
+				{
+					state = MARIO_STATE_IDLE;
+				}
+				if (e->ny != 0)
+				{
+					vy = 0;
+					mb->SetState(STATE_BRICK_FALLING);
+					
+				}
+				if (e->nx != 0)vx = 0;
+				}
 		}
 	}
 
@@ -591,6 +622,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx += a * dt;
 		vy += ay * dt;
 		
+		if (y > 800) {
+			SetState(MARIO_STATE_DIE);
+		}
 		//DebugOut(L"\n Is in secret room %d", isInSecretRoom);
 		if (state != MARIO_STATE_DIE) {
 			UpdateForEachState(dt);
@@ -635,6 +669,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CGame::GetInstance()->SwitchScene(2);
 			}
 		}
+
+		
 	}
 	else {
 		if (GetTickCount() - EffectTime > 700) {
@@ -643,11 +679,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	/*if (isAtTheEnd) 
-	{
-		SetState(MARIO_STATE_WALKING_RIGHT);
-		return;
-	}*/
 }
 
 void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int ani_jump_down_left,

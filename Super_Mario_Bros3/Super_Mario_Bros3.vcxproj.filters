@@ -50,6 +50,9 @@
     <Filter Include="Framework\HUD">
       <UniqueIdentifier>{f3f650a0-adda-4888-8f1e-fd82de9d9c92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\GameObject\Brick-Platform">
+      <UniqueIdentifier>{07f030f2-7ba3-467e-9976-0a70f779c095}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tilemap.h">
@@ -73,14 +76,8 @@
     <ClInclude Include="Background.h">
       <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClInclude>
-    <ClInclude Include="Brick.h">
-      <Filter>Framework\GameObject\OtherIdea</Filter>
-    </ClInclude>
     <ClInclude Include="coin.h">
       <Filter>Framework\GameObject\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform.h">
-      <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClInclude>
     <ClInclude Include="SwitchBlock.h">
       <Filter>Framework\GameObject\Item</Filter>
@@ -106,9 +103,6 @@
     <ClInclude Include="KeyEventHandler.h">
       <Filter>Framework\Engine\KeyManager</Filter>
     </ClInclude>
-    <ClInclude Include="Portal.h">
-      <Filter>Framework\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Framework\GameObject</Filter>
     </ClInclude>
@@ -116,12 +110,6 @@
       <Filter>Framework\Engine\DebugManager</Filter>
     </ClInclude>
     <ClInclude Include="Leaf_SuperMushroom.h">
-      <Filter>Framework\GameObject\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="QuestionBrick.h">
-      <Filter>Framework\GameObject\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="BreakableBrick.h">
       <Filter>Framework\GameObject\Item</Filter>
     </ClInclude>
     <ClInclude Include="Venus.h">
@@ -157,9 +145,6 @@
     <ClInclude Include="IntroScene.h">
       <Filter>Framework\Engine\SceneManager</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowToChoose.h">
-      <Filter>Framework\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Skeleton.h">
       <Filter>Framework\HUD</Filter>
     </ClInclude>
@@ -177,6 +162,27 @@
     </ClInclude>
     <ClInclude Include="HUD_Card.h">
       <Filter>Framework\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableBrick.h">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestionBrick.h">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowToChoose.h">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingBrick.h">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -201,14 +207,8 @@
     <ClCompile Include="background.cpp">
       <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClCompile>
-    <ClCompile Include="Brick.cpp">
-      <Filter>Framework\GameObject\OtherIdea</Filter>
-    </ClCompile>
     <ClCompile Include="Coin.cpp">
       <Filter>Framework\GameObject\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform.cpp">
-      <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Framework\GameObject</Filter>
@@ -234,19 +234,10 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Framework\Engine\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="Portal.cpp">
-      <Filter>Framework\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Framework\Engine\DebugManager</Filter>
     </ClCompile>
     <ClCompile Include="Leaf_SuperMushroom.cpp">
-      <Filter>Framework\GameObject\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="QuestionBrick.cpp">
-      <Filter>Framework\GameObject\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="BreakableBrick.cpp">
       <Filter>Framework\GameObject\Item</Filter>
     </ClCompile>
     <ClCompile Include="SwitchBlock.cpp">
@@ -282,9 +273,6 @@
     <ClCompile Include="IntroScene.cpp">
       <Filter>Framework\Engine\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowToChoose.cpp">
-      <Filter>Framework\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Skeleton.cpp">
       <Filter>Framework\HUD</Filter>
     </ClCompile>
@@ -302,6 +290,27 @@
     </ClCompile>
     <ClCompile Include="HUD_Card.cpp">
       <Filter>Framework\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableBrick.cpp">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestionBrick.cpp">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowToChoose.cpp">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClCompile>
+    <ClCompile Include="Portal.cpp">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingBrick.cpp">
+      <Filter>Framework\GameObject\Brick-Platform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

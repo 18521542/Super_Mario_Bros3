@@ -30,6 +30,7 @@ void CLeaf_Mushroom::Render()
 			animation_set->at(GREEN_MUSHROOM_ANI)->Render(x, y);
 		}
 	}	
+
 }
 
 void CLeaf_Mushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -221,7 +222,9 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
-	
+
+
+
 }
 
 

@@ -50,12 +50,12 @@ void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (!effect->HasAppear()) 
 		{
 			effect->StartAppear();
-			CGame::GetInstance()->ScoreUp(10);
+			CGame::GetInstance()->ScoreUp(100);
 		}
 			
 	}
 
-	if (GetTickCount() - TimeStartMove > MOVING_TIME) {
+	if (GetTickCount64() - TimeStartMove > MOVING_TIME) {
 		TimeStartMove = 0;
 		isMoving = false;
 		isFinishMoving = true;

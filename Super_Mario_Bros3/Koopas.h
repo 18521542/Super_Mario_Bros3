@@ -10,7 +10,7 @@
 #define KP_GRAVITY						0.0005f
 
 #define KOOPAS_BBOX_WIDTH			16
-#define KOOPAS_BBOX_HEIGHT			27
+#define KOOPAS_BBOX_HEIGHT			25
 
 #define KOOPAS_BBOX_HEIGHT_DIE		16
 

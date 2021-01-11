@@ -14,3 +14,4 @@
 #include "SwitchBlock.h"
 #include "Venus.h"
 #include "Card.h"
+#include "MovingBrick.h"

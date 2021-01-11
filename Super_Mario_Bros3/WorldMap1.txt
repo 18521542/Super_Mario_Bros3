@@ -266,7 +266,7 @@
 #checkpoint mushroom 
 200	255	45	1	1	1	0	0	1	1	1
 #checkpoint world 1-4
-200	210	45	1	1	0	1	0	1	1	1
+200	210	45	1	1	0	1	0	1	1	4
 #checkpoint castle
 200	114	92	1	1	0	1	0	1	1	1
 #checkpoint coin next to castle

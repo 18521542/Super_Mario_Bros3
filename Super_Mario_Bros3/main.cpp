@@ -33,6 +33,7 @@
 #define PLAYSCENE_COLOR D3DCOLOR_XRGB(76, 220, 72)
 #define WORLDMAPSCENE_COLOR D3DCOLOR_XRGB(255, 255, 255)
 #define INTROSCENE_COLOR D3DCOLOR_XRGB(255, 255, 255)
+#define MAP14_COLOR D3DCOLOR_XRGB(156, 252, 240)
 
 
 #define SCREEN_WIDTH 330
@@ -83,6 +84,9 @@ void Render()
 		colorBackGround = INTROSCENE_COLOR;
 	else if(id == WORLDMAP_SCENE)
 		colorBackGround = WORLDMAPSCENE_COLOR;
+	else if (id == 4) {
+		colorBackGround = MAP14_COLOR;
+	}
 
 	if (d3ddv->BeginScene())
 	{

@@ -41,4 +41,5 @@ public:
 	virtual void Render();
 	void StartAppear() { StartAppearTime = GetTickCount64(); isAppear = true; hasAppear = true; }
 	bool HasAppear() { return this->hasAppear; }
+	bool IsAppear() { return this->isAppear; }
 };

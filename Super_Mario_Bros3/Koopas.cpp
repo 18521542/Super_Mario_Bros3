@@ -96,7 +96,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (plat->getType() == PLATFORM_TYPE_ONE) 
 				{
 					x += min_tx * dx + nx * 0.4f;
-					y += min_ty * dy + ny * 0.4f;
+					y += min_ty * dy - ny * 0.4f;
 					if (e->nx != 0)
 					{
 						this->vx = -this->vx;
@@ -162,10 +162,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CBreakableBrick*>(e->obj)) 
 			{
 				CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(e->obj);
-				if (e->nx != 0 || e->ny != 0) {
-					x += min_tx * dx + nx * 0.4f;
-					y += min_ty * dy + ny * 0.4f;
-				}
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
 				
 				if (state == KOOPAS_STATE_WALKING) 
 				{
@@ -173,8 +171,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						this->nx = -this->nx;
 						vx = this->nx * vx;
+						if (e->ny != 0)
+							vy = 0;
 					}
-					if (ny != 0)
+					if (e->ny != 0)
 					{
 						vy = 0;
 					}

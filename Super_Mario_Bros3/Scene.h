@@ -10,7 +10,6 @@ protected:
 	CKeyEventHandler* key_handler;
 	int id;
 	LPCWSTR sceneFilePath;
-
 public:
 	CScene(int id, LPCWSTR filePath);
 	int GetID() { return this->id; }

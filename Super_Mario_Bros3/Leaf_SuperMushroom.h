@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "Effect.h"
 
 #define MUSHROOM	1
 #define LEAF		2
@@ -33,8 +34,13 @@ class CLeaf_Mushroom : public CGameObject
 	bool isMushroomMoving = false;
 	bool isUsed = false;
 	ULONGLONG TimeForMushroomAppear = 0;
+	//Effect* effect;
+	bool isEffectScore = false;
 public:
 	CLeaf_Mushroom(int state);
+	void SetEffectScore(bool value) {
+		this->isEffectScore = value;
+	}
 	void LeafStartMoving() { StartEffectTime = GetTickCount64(); isLeafMoving = true; };
 	void MushroomStartMoving() {
 		StartEffectTime = GetTickCount64(); isMushroomMoving = true; 

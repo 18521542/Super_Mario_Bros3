@@ -335,7 +335,7 @@ void CGame::_ParseSection_SCENES(string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
 
-	if (id == PLAY_SCENE) {
+	if (id == PLAY_SCENE || id == 4) {
 		LPSCENE scene = new CPlayScene(id, path);
 		scenes[id] = scene;
 	}

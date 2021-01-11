@@ -22,7 +22,7 @@ class CQuestionBrick : public CGameObject
 {
 	Effect* effect;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	DWORD TimeStartMove = 0;
+	ULONGLONG TimeStartMove = 0;
 	bool isMoving = false;
 	bool isUsed = false;
 	bool isFinishMoving = false;
@@ -32,12 +32,12 @@ public:
 	CQuestionBrick(float y,float x);
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void StartMoving() { TimeStartMove = GetTickCount(); isMoving = true; vy = DEFECT_SPEED; isUsed = true; }
+	void StartMoving() { TimeStartMove = GetTickCount64(); isMoving = true; vy = DEFECT_SPEED; isUsed = true; }
 	bool IsMoving() { return this->isMoving; }
 	bool IsUsed() { return this->isUsed; }
 	bool IsFinishMoving() { return this-isFinishMoving ; }
 	float getStartY() { return this->startY; }
-	DWORD GetTimeStartMove() { return this->TimeStartMove; }
+	ULONGLONG GetTimeStartMove() { return this->TimeStartMove; }
 	bool IsFixed() { return this->isFixed; }
 	void SetIsFixed(bool fix) { this->isFixed = fix; }
 };
