@@ -96,7 +96,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (plat->getType() == PLATFORM_TYPE_ONE) 
 				{
 					x += min_tx * dx + nx * 0.4f;
-					y += min_ty * dy - ny * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
 					if (e->nx != 0)
 					{
 						this->vx = -this->vx;

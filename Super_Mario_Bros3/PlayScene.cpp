@@ -235,6 +235,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new MovingBrick();
 		break;
 	}
+	case OBJECT_TYPE_BOOMERANG_BROTHER:
+	{
+		obj = new BoomerangBrother();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

@@ -184,6 +184,12 @@
     <ClInclude Include="MovingBrick.h">
       <Filter>Framework\GameObject\Brick-Platform</Filter>
     </ClInclude>
+    <ClInclude Include="BoomerangBrother.h">
+      <Filter>Framework\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Boomerang.h">
+      <Filter>Framework\GameObject\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -311,6 +317,12 @@
     </ClCompile>
     <ClCompile Include="MovingBrick.cpp">
       <Filter>Framework\GameObject\Brick-Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="BoomerangBrother.cpp">
+      <Filter>Framework\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Boomerang.cpp">
+      <Filter>Framework\GameObject\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

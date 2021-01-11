@@ -15,3 +15,4 @@
 #include "Venus.h"
 #include "Card.h"
 #include "MovingBrick.h"
+#include "BoomerangBrother.h"
