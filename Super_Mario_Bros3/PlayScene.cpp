@@ -7,7 +7,7 @@
 #include "Sprites.h"
 #include "Portal.h"
 
-
+#define SCENE_SECTION_MAP	900
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
@@ -15,13 +15,21 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	key_handler = new CPlayScenceKeyHandler(this);
 }
 
-/*
-	Load scene resources from scene file (textures, sprites, animations and objects)
-	See scene1.txt, scene2.txt for detail format specification
-*/
 
 
 
+void CPlayScene::_ParseSection_Tilemap(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 2) return;
+	wstring Path_Of_Tileset_Pictures = ToWSTR(tokens[0]);
+	wstring Path_Of_Data_File = ToWSTR(tokens[1]);
+
+	CTileMap::GetInstance()->LoadTileset(Path_Of_Tileset_Pictures.c_str());
+	CTileMap::GetInstance()->LoadDataFromTileset(Path_Of_Data_File.c_str());
+	CTileMap::GetInstance()->LoadTile();
+}
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
 {
@@ -283,6 +291,9 @@ void CPlayScene::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
+		if (line == "[TILEMAP]") {
+			section = SCENE_SECTION_MAP; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -295,6 +306,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		case SCENE_SECTION_MAP: _ParseSection_Tilemap(line); break;
 		}
 	}
 
@@ -331,8 +343,8 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame* game = CGame::GetInstance();
 
-	cx -= (game->GetScreenWidth()) / 2;
-	cy -= (game->GetScreenHeight() / 3);
+	cx -= (int)(game->GetScreenWidth()) / 2;
+	cy -= (int)(game->GetScreenHeight() / 3);
 
 	if (cx <= 0)
 		cx = 0;
@@ -347,13 +359,13 @@ void CPlayScene::Update(DWORD dt)
 		}
 		if (!mario->IsInSecretRoom()) {
 			if (cy >= 230.0f)
-				CGame::GetInstance()->SetCamPos(cx, 230.0f);
+				CGame::GetInstance()->SetCamPos((int)cx, 230.0f);
 				//CGame::GetInstance()->SetCamPos(cx, cy);
 			else
-				CGame::GetInstance()->SetCamPos(cx, cy);
+				CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
 		}
 		else
-			CGame::GetInstance()->SetCamPos(cx, 500.0f);
+			CGame::GetInstance()->SetCamPos((int)cx, 500.0f);
 	}
 	else if (player->GetState() == MARIO_STATE_DIE) 
 	{
@@ -363,9 +375,12 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
+	CTileMap::GetInstance()->Render();
+	
 	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 	hud->Render();
+	
 }
 
 void CPlayScene::Unload()

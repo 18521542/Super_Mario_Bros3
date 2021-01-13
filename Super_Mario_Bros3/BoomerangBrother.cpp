@@ -30,10 +30,12 @@ void BoomerangBrother::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (FirstWeapon->GetState() == STATE_NOT_MOVING) 
 	{
 		FirstWeapon->SetPosition(x-5.0f, y-5.0f);
+		FirstWeapon->isAllowCollideOneTime = true;
 	}
 
 	if (SecondWeapon->GetState() == STATE_NOT_MOVING) {
 		SecondWeapon->SetPosition(x - 5.0f, y - 5.0f);
+		SecondWeapon->isAllowCollideOneTime = true;
 	}
 	StateMachine(dt, coObjects);
 	if (!isInitedWeapon) {

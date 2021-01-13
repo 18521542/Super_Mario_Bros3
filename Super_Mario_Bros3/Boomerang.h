@@ -18,6 +18,9 @@ class Boomerang : public CGameObject {
 	bool isMoving = false;
 	bool isWaiting = false;
 	bool isResetSpeed = false;
+	bool isCollide = false;
+
+	
 	ULONGLONG TimeMovingStart;
 	ULONGLONG TimeWaitingToMove;
 
@@ -31,9 +34,12 @@ class Boomerang : public CGameObject {
 	ULONGLONG MovingDownRight;
 	ULONGLONG MovingUpLeft;
 	ULONGLONG MovingDownLeft;
+
+	ULONGLONG TimeCollide = 0;
 	//ULONGLONG MovingUp;
 public :
 	bool isActive = false;
+	bool isAllowCollideOneTime = true;
 	Boomerang();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

@@ -33,6 +33,8 @@
 
 #include "Object.h"
 
+#include "Tilemap.h"
+
 #include "HUD.h"
 
 class CPlayScene : public CScene
@@ -49,7 +51,7 @@ protected:
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
-
+	void _ParseSection_Tilemap(string line);
 
 public:
 	CPlayScene(int id, LPCWSTR filePath);

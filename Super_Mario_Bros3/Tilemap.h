@@ -1,38 +1,40 @@
 #pragma once
 #include<vector>
 #include "Sprites.h"
+
+#define TILE_WIDTH				16
+#define TILE_HEIGHT				16
+
+#define COLUMNS					161
+#define ROWS					29
+
+#define COLUMN_OF_TILE_SET		11
+#define ROW_OF_TILE_SET			5
+
+#define TOTAL_SPRITES			52
 class CTileMap
-{
-	CTileMap* _instance;
+{	
+	static CTileMap* instance;
+	int PlayerPosition;	
 
-	int pixel;
-	int idCell;
-	int x;				
-	int y;				
+	int** Data; //.txt
 
-	int Col;				
-	int ColToRead;		
-	int Row;				
-	int RowToRead;		
+	int TileWidth;			
+	int TileHeight;			
 
-	int mapWidth;			
-	int mapHeight;			
+	vector<LPSPRITE> Tiles;
+	LPDIRECT3DTEXTURE9	TilesSetFile; //.png
 
-	int cellWidth;			
-	int cellHeight;			
-
-	vector<vector<int>> cellId;
-
-	CSprites* sprites;
-	LPCWSTR filePath;
-	LPCWSTR bgImagePath;
 public:
-	CTileMap() {};
-	CTileMap(int pixel, LPCWSTR bgImagePath, LPCWSTR filePath, int numCol, int numRow, int numColToRead, int numRowToRead, int idCell);
-	void LoadMap();
-	void Render();
-	void Render(int x);
-	void UnLoad() { sprites->Clear(); };
 
-	CTileMap* GetInstance();
+	void LoadMap();
+	void LoadTileset(LPCWSTR Path_Of_Tileset_File);
+	void LoadDataFromTileset(LPCWSTR Path_Of_Data_File);
+	void LoadTile();
+
+	//void Update();
+	void Render();
+
+
+	static CTileMap* GetInstance();
 };

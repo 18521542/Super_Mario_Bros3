@@ -651,7 +651,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			HandleOverlapColision(coObjects);
 
-			
 		}
 		else {
 			vx = 0;

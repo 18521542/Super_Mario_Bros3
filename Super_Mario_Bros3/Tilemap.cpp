@@ -3,100 +3,96 @@
 #include "Mario.h"
 #include <iostream>
 #include <fstream>
+#include "Tilemap.h"
+#define ID_OF_TILESET_TEXTURES	1000100
 
-using namespace std;
 
-CTileMap::CTileMap(int pixel, LPCWSTR bgImagePath, LPCWSTR filePath, int numCol, int numRow, int numColToRead, int numRowToRead, int idCell)
-{
-	sprites = CSprites::GetInstance();
-	this->pixel = pixel;
-	this->bgImagePath = bgImagePath;
-	this->filePath = filePath;
-	this->Col = numCol;
-	this->Row = numRow;
-	this->ColToRead = numColToRead;
-	this->RowToRead = numRowToRead;
-	this->idCell = idCell;
-
-	LoadMap();
-}
-
-void CTileMap::LoadMap()
+void CTileMap::LoadTileset(LPCWSTR Path_Of_Tileset_File) 
 {
 	CTextures* textures = CTextures::GetInstance();
-	textures->Add(70, bgImagePath, D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texTileMap = textures->Get(70);
+	textures->Add(ID_OF_TILESET_TEXTURES, Path_Of_Tileset_File, D3DCOLOR_XRGB(255, 0, 255));
+	this->TilesSetFile = textures->Get(ID_OF_TILESET_TEXTURES);
+}
 
-	for (int i = 0; i < RowToRead; i++)
-	{
-		for (int j = 0; j < ColToRead; j++)
-		{
-			sprites->Add(idCell, pixel * j, pixel * i, pixel + pixel * j, pixel + pixel * i, texTileMap);
-			idCell++;
-		}
-	}
-
+void CTileMap::LoadDataFromTileset(LPCWSTR Path_Of_Data_File) 
+{
 	ifstream f;
-	f.open(filePath);
 
-	// current resource section flag
-	//int value;
-	char str[1024];
-	while (f.getline(str, 1024))
-	{
-		string line(str);
+	f.open(Path_Of_Data_File);
+	Data = new int* [ROWS];
 
-		if (line[0] == '#') continue;	// skip comment lines	
-		vector<string> tokens = split(line, " ");
-		vector<int> lineOfCell;
-		DebugOut(L"--> %s\n", ToWSTR(line).c_str());
-
-		for (size_t i = 0; i < tokens.size(); i++)	// why i+=2 ?  sprite_id | frame_time  
-		{
-			if (atoi(tokens[i].c_str())) lineOfCell.push_back(atoi(tokens[i].c_str()));
+	for (int i = 0; i < ROWS; i++) {
+		Data[i] = new int[COLUMNS];
+		for (int j = 0; j < COLUMNS; j++) {
+			f >> Data[i][j];
 		}
-		cellId.push_back(lineOfCell);
 	}
-
 	f.close();
-}
 
-void CTileMap::Render()
-{
-	for (int i = 0; i < Row; i++)
-	{
-		for (int j = 0; j < Col; j++)
-		{
-			sprites->Get(cellId[i][j])->Draw(j * pixel, i * pixel);
+	for (int i = 0; i < ROWS; i++) {
+		//Data[i] = new int[COLUMNS];
+		DebugOut(L"\n");
+		for (int j = 0; j < COLUMNS; j++) {
+			DebugOut(L" Data[i][j] = %i", CTileMap::GetInstance()->Data[i][j]);
 		}
 	}
 }
 
-void CTileMap::Render(int x)
+void CTileMap::LoadTile() 
 {
-	int start, finish;
-	start = x / pixel - 12;
-	finish = start + 29;
+	int index = 1;
+	for (int i = 0; i < ROW_OF_TILE_SET; i++)
+	{
+		for (int j = 0; j < COLUMN_OF_TILE_SET; j++) {
 
-	if (start < 0)
-	{
-		start = 0;
-	}
-	if (finish > Col)
-	{
-		finish = Col;
-	}
-	for (int i = 0; i < Row; i++)
-	{
-		for (int j = start; j < finish; j++)
-		{
-			sprites->Get(cellId[i][j])->Draw(j * pixel, i * pixel);
+			int left = j * TILE_WIDTH;
+			int top = (i)*TILE_HEIGHT;
+			int right = (j + 1) * TILE_WIDTH;
+			int bottom = (i + 1) * TILE_HEIGHT;
+			LPSPRITE sprite = new CSprite(index, left, top, right, bottom, TilesSetFile);
+			Tiles.push_back(sprite);
+			index++;
 		}
 	}
+
+	/*int value = 1;
+	for (int i = 0; i < ROW_OF_TILE_SET; i++)
+	{
+		DebugOut(L"\n");
+		for (int j = 0; j < COLUMN_OF_TILE_SET; j++)
+		{
+			int left = j * TILE_WIDTH;
+			int top = (i) * TILE_HEIGHT;
+			int right = (j+1)*TILE_WIDTH;
+			int bottom = (i+1)*TILE_HEIGHT;
+
+			DebugOut(L" %i", left);
+			DebugOut(L" %i", top);
+			DebugOut(L" %i", right);
+			DebugOut(L" %i", bottom);
+			DebugOut(L" ||");
+			value++;
+		}
+	}*/
 }
 
-CTileMap* CTileMap::GetInstance()
-{
-	if (_instance == NULL) _instance = new CTileMap();
-	return _instance;
+
+CTileMap* CTileMap::instance = NULL;
+
+CTileMap* CTileMap::GetInstance() {
+	if (instance == NULL)
+		instance = new CTileMap();
+	return instance;
+}
+
+void CTileMap::Render() {
+
+
+	for (int i = 0; i < ROWS; i++) {
+		for (int j = 0; j < COLUMNS; j++) {
+			Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw(j * TILE_HEIGHT, i * TILE_WIDTH, 255);
+		}
+	}
+
+
 }
