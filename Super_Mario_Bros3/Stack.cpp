@@ -1,12 +1,25 @@
 #include "Stack.h"
+#include "Mario.h"
+#include "PlayScene.h"
 
-Stack::Stack(int typ) {
+Stack::Stack(int typ,float start, float end) {
+	this->StartSpeed = start;
+	this->EndSpeed = end;
 	this->type = typ;
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANI_SET_FOR_STACK));
 }
 
 void Stack::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	//Do nothing
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	DebugOut(L"\n vx = %f", abs(mario->vx));
+	if (abs(mario->vx)>StartSpeed && abs(mario->vx)<EndSpeed) {
+		type == TYPE_WHITE;
+		//DebugOut(L"\nCo nhay vo ham nay");
+	}
+	/*else {
+		SetState(TYPE_WHITE);
+	}*/
 }
 
 void Stack::Render() {

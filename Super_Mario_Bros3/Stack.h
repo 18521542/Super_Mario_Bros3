@@ -11,8 +11,10 @@
 class Stack : public CGameObject
 {
 	int type;
+	float StartSpeed;
+	float EndSpeed;
 public:
-	Stack(int typ);
+	Stack(int typ,float start, float end );
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) {}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

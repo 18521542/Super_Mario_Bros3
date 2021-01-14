@@ -196,7 +196,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 				if (CheckBB(pLeft, pTop, pRight, pBottom)) 
 				{
 					SetState(MARIO_STATE_DIE);
-					DebugOut(L"\n AAA");
+					//DebugOut(L"\n AAA");
 				}
 			}
 		}
@@ -372,7 +372,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						{
 							StartEnter();
 							isReadyForSecretRoom = true;
-							DebugOut(L"\n Is ready for secret room %d", isReadyForSecretRoom);
+							//DebugOut(L"\n Is ready for secret room %d", isReadyForSecretRoom);
 						}
 						
 					}
@@ -481,9 +481,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
 				x += dx;
 				y += dy;
-				/*fb->setIsAppear(true);
-				fb->SetPosition(this->x, this->y);
-				fb->SetSpeed(0, 0);*/
 			}
 			else if (dynamic_cast <CQuestionBrick*>(e->obj))
 			{
@@ -672,7 +669,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		
 	}
 	else {
-		if (GetTickCount() - EffectTime > 700) {
+		if (GetTickCount64() - EffectTime > 700) {
 			EffectTime = 0;
 			isForEffectAppear = false;
 		}

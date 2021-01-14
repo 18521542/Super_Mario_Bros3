@@ -45,7 +45,7 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	void TimeUpdate(float camX, float camY);
-	void StackUpdate(float camX, float camY);
+	void StackUpdate(float camX, float camY, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ScoreUpdate(float camX, float camY);
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

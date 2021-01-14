@@ -68,7 +68,7 @@ HUD::HUD()
 
 	//Stack
 	for (int i = 0; i < 6; i++) {
-		Stack* sta = new Stack(TYPE_WHITE);
+		Stack* sta = new Stack(TYPE_BLACK, (float) i*0.04f, (float) (i+1)*0.04f);
 		stack.push_back(sta);
 	}
 
@@ -107,10 +107,12 @@ void HUD::ScoreUpdate(float camX, float camY)
 		Score.at(i)->SetValue(ScorePool.at(lastIndex));
 	}
 }
-void HUD::StackUpdate(float camX, float camY) 
+void HUD::StackUpdate(float camX, float camY, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	for (int i = 0; i < stack.size(); i++) {
+	for (int i = 0; i < stack.size(); i++) 
+	{
 		stack.at(i)->SetPosition(camX + POSX_OF_FIRST_NUMBER_SCORE + (i * (EACH_NUMBER_DISTANCE + 1)), camY + POSY_OF_FIRST_STACK);
+		stack[i]->Update(dt,coObjects);
 	}
 }
 
@@ -120,7 +122,7 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	int id = CGame::GetInstance()->GetCurrentScene()->GetID();
 
-	if (id != PLAY_SCENE)
+	if (id == WORLDMAP_SCENE)
 	{
 		TimeValue = 0;
 	}
@@ -138,7 +140,7 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//update state
 	TimeUpdate(camx, camy);
 	ScoreUpdate(camx, camy);
-	StackUpdate(camx, camy);
+	StackUpdate(camx, camy,dt,coObjects);
 	FCard->Update(dt, coObjects);
 	FCard->SetID(CGame::GetInstance()->GetFCardID());
 }

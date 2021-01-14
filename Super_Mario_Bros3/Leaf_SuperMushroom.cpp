@@ -128,8 +128,8 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	
-	if ((GetTickCount() - TimeForMushroomAppear) < 1000 
-		&& (GetTickCount() - TimeForMushroomAppear) > 500)
+	if ((GetTickCount64() - TimeForMushroomAppear) < 1000 
+		&& (GetTickCount64() - TimeForMushroomAppear) > 500)
 	{
 		isAllowToAppear = true;
 		MushroomStartMoving();
@@ -138,7 +138,7 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (isLeafMoving && type==LEAF) 
 	{
-		if (GetTickCount() - StartEffectTime < 100) {
+		if (GetTickCount64() - StartEffectTime < 100) {
 			vy = -0.3f;
 		}
 		else
@@ -161,7 +161,7 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else if ((type == MUSHROOM|| type == GREEN_MUSHROOM) && isMushroomMoving)
 	{
-		if (GetTickCount() - StartEffectTime < 270) {
+		if (GetTickCount64() - StartEffectTime < 270) {
 			vy += -0.00005f * dt;
 		}
 		else

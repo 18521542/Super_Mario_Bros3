@@ -11,7 +11,7 @@ void Effect::GetBoundingBox(float& left, float& top, float& right, float& bottom
 }
 void Effect::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
 {
-	DebugOut(L"\nis Appear  %d", isAppear);
+	//DebugOut(L"\nis Appear  %d", isAppear);
 	if (isAppear) 
 	{
 		//DebugOut(L"\nTime %d", GetTickCount64() - StartAppearTime);
