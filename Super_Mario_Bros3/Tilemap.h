@@ -19,8 +19,14 @@ class CTileMap
 
 	int** Data; //.txt
 
-	int TileWidth;			
-	int TileHeight;			
+	int _TileWidth;			
+	int _TileHeight;	
+
+	int ColumnsOfMap;
+	int RowOfMap;
+
+	int ColumnOfTileset;
+	int RowOfTileset;
 
 	vector<LPSPRITE> Tiles;
 	LPDIRECT3DTEXTURE9	TilesSetFile; //.png
@@ -29,6 +35,7 @@ public:
 	void LoadTileset(LPCWSTR Path_Of_Tileset_File);
 	void LoadDataFromTileset(LPCWSTR Path_Of_Data_File);
 	void LoadTile();
+	void LoadDetails(int TilesetColumns, int TilesetRows, int MapColumns, int MapRows, int TileWidth, int TileHeight);
 
 	//void Update();
 	void Render();

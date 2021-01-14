@@ -16,14 +16,15 @@ void CTileMap::LoadTileset(LPCWSTR Path_Of_Tileset_File)
 
 void CTileMap::LoadDataFromTileset(LPCWSTR Path_Of_Data_File) 
 {
+
 	ifstream f;
 
 	f.open(Path_Of_Data_File);
-	Data = new int* [ROWS];
+	Data = new int* [RowOfMap];
 
-	for (int i = 0; i < ROWS; i++) {
-		Data[i] = new int[COLUMNS];
-		for (int j = 0; j < COLUMNS; j++) {
+	for (int i = 0; i < RowOfMap; i++) {
+		Data[i] = new int[ColumnsOfMap];
+		for (int j = 0; j < ColumnsOfMap; j++) {
 			f >> Data[i][j];
 		}
 	}
@@ -41,14 +42,14 @@ void CTileMap::LoadDataFromTileset(LPCWSTR Path_Of_Data_File)
 void CTileMap::LoadTile() 
 {
 	int index = 1;
-	for (int i = 0; i < ROW_OF_TILE_SET; i++)
+	for (int i = 0; i < RowOfTileset; i++)
 	{
-		for (int j = 0; j < COLUMN_OF_TILE_SET; j++) {
+		for (int j = 0; j < ColumnOfTileset; j++) {
 
-			int left = j * TILE_WIDTH;
-			int top = (i)*TILE_HEIGHT;
-			int right = (j + 1) * TILE_WIDTH;
-			int bottom = (i + 1) * TILE_HEIGHT;
+			int left = j * _TileWidth;
+			int top = (i)*_TileHeight;
+			int right = (j + 1) * _TileWidth;
+			int bottom = (i + 1) * _TileHeight;
 			LPSPRITE sprite = new CSprite(index, left, top, right, bottom, TilesSetFile);
 			Tiles.push_back(sprite);
 			index++;
@@ -76,6 +77,17 @@ void CTileMap::LoadTile()
 	}*/
 }
 
+void CTileMap::LoadDetails(int TilesetColumns, int TilesetRows, int MapColumns, int MapRows, int TileWidth, int TileHeight) {
+
+	ColumnOfTileset = TilesetColumns;
+	RowOfTileset = TilesetRows;
+
+	ColumnsOfMap = MapColumns;
+	RowOfMap = MapRows;
+
+	_TileHeight = TileHeight;
+	_TileWidth = TileWidth;
+}
 
 CTileMap* CTileMap::instance = NULL;
 
@@ -87,10 +99,11 @@ CTileMap* CTileMap::GetInstance() {
 
 void CTileMap::Render() 
 {
-	for (int i = 0; i < ROWS; i++) {
-		for (int j = 0; j < COLUMNS; j++) {
+
+	for (int i = 0; i < RowOfMap; i++) {
+		for (int j = 0; j < ColumnsOfMap; j++) {
 			if(Data)
-				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw(j * TILE_HEIGHT, i * TILE_WIDTH, 255);
+				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw(j * _TileHeight, i * _TileWidth, 255);
 		}
 	}
 }

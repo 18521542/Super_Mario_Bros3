@@ -21,9 +21,16 @@
 200	textures\Map1-4.png	156	252	240
 210	textures\MovingBrick.png	156	252	240
 #############################################################################################
-# id	left	top	right	bottom	texture_id
+#tilemap details:
+#--Path of tileset
+#--Path of Matrix Tile-data
+#--Tileset Columns and Tileset Rows
+#--MapColumns and MapRows
+#--TileWidth and TileHeight
 [TILEMAP]
-Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	
+Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
+
+# id	left	top	right	bottom	texture_id	
 [SPRITES]
 #boomerang brother
 #walking

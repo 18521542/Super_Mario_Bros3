@@ -22,11 +22,21 @@ void CPlayScene::_ParseSection_Tilemap(string line)
 {
 	vector<string> tokens = split(line);
 
-	if (tokens.size() < 2) return;
+	if (tokens.size() < 8) return;
 
 	wstring Path_Of_Tileset_Pictures = ToWSTR(tokens[0]);
 	wstring Path_Of_Data_File = ToWSTR(tokens[1]);
 
+	int TilesetColumn = atoi(tokens[2].c_str());
+	int TilesetRow = atoi(tokens[3].c_str());
+
+	int MapColumn= atoi(tokens[4].c_str());
+	int Maprow = atoi(tokens[5].c_str());
+
+	int TileWidth = atoi(tokens[6].c_str());
+	int TileHeight = atoi(tokens[7].c_str());
+
+	CTileMap::GetInstance()->LoadDetails(TilesetColumn, TilesetRow, MapColumn, Maprow, TileWidth, TileHeight);
 	CTileMap::GetInstance()->LoadTileset(Path_Of_Tileset_Pictures.c_str());
 	CTileMap::GetInstance()->LoadDataFromTileset(Path_Of_Data_File.c_str());
 	CTileMap::GetInstance()->LoadTile();
