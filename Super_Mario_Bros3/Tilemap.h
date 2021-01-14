@@ -26,8 +26,6 @@ class CTileMap
 	LPDIRECT3DTEXTURE9	TilesSetFile; //.png
 
 public:
-
-	void LoadMap();
 	void LoadTileset(LPCWSTR Path_Of_Tileset_File);
 	void LoadDataFromTileset(LPCWSTR Path_Of_Data_File);
 	void LoadTile();
@@ -37,4 +35,17 @@ public:
 
 
 	static CTileMap* GetInstance();
+	void Unload() {
+		if (Data)
+		{
+			for (int i = 0; i < ROWS; i++)
+			{
+				delete Data[i];
+			}
+			delete Data;
+			Data = nullptr;
+		}
+		Tiles.clear();
+		TilesSetFile = NULL;
+	}
 };

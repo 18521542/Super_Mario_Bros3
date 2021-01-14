@@ -29,13 +29,13 @@ void CTileMap::LoadDataFromTileset(LPCWSTR Path_Of_Data_File)
 	}
 	f.close();
 
-	for (int i = 0; i < ROWS; i++) {
-		//Data[i] = new int[COLUMNS];
-		DebugOut(L"\n");
-		for (int j = 0; j < COLUMNS; j++) {
-			DebugOut(L" Data[i][j] = %i", CTileMap::GetInstance()->Data[i][j]);
-		}
-	}
+	//for (int i = 0; i < ROWS; i++) {
+	//	//Data[i] = new int[COLUMNS];
+	//	DebugOut(L"\n");
+	//	for (int j = 0; j < COLUMNS; j++) {
+	//		DebugOut(L" Data[i][j] = %i", CTileMap::GetInstance()->Data[i][j]);
+	//	}
+	//}
 }
 
 void CTileMap::LoadTile() 
@@ -85,14 +85,12 @@ CTileMap* CTileMap::GetInstance() {
 	return instance;
 }
 
-void CTileMap::Render() {
-
-
+void CTileMap::Render() 
+{
 	for (int i = 0; i < ROWS; i++) {
 		for (int j = 0; j < COLUMNS; j++) {
-			Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw(j * TILE_HEIGHT, i * TILE_WIDTH, 255);
+			if(Data)
+				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw(j * TILE_HEIGHT, i * TILE_WIDTH, 255);
 		}
 	}
-
-
 }

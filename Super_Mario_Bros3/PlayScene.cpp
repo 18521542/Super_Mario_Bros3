@@ -23,6 +23,7 @@ void CPlayScene::_ParseSection_Tilemap(string line)
 	vector<string> tokens = split(line);
 
 	if (tokens.size() < 2) return;
+
 	wstring Path_Of_Tileset_Pictures = ToWSTR(tokens[0]);
 	wstring Path_Of_Data_File = ToWSTR(tokens[1]);
 
@@ -375,7 +376,8 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	CTileMap::GetInstance()->Render();
+	/*if(CTileMap::GetInstance()!=NULL)*/
+		CTileMap::GetInstance()->Render();
 	
 	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
@@ -390,7 +392,7 @@ void CPlayScene::Unload()
 
 	objects.clear();
 	player = NULL;
-
+	CTileMap::GetInstance()->Unload();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
