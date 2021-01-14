@@ -99,7 +99,6 @@ CTileMap* CTileMap::GetInstance() {
 
 void CTileMap::Render() 
 {
-
 	for (int i = 0; i < RowOfMap; i++) {
 		for (int j = 0; j < ColumnsOfMap; j++) {
 			if(Data)

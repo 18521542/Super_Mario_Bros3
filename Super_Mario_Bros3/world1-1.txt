@@ -20,6 +20,14 @@
 190	textures\End_Scene.png	0	0	0
 #############################################################################################
 # id	left	top	right	bottom	texture_id
+#tilemap details:
+#--Path of tileset
+#--Path of Matrix Tile-data
+#--Tileset Columns and Tileset Rows
+#--MapColumns and MapRows
+#--TileWidth and TileHeight
+#[TILEMAP]
+#Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 [SPRITES]
 #HUD_CARD
 #plant
