@@ -1,12 +1,21 @@
 #include "Power.h"
-
+#include "Mario.h"
+#include "PlayScene.h"
 Power::Power(int typ) {
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANI_SET_FOR_POWER));
 	this->type = typ;
 }
 
 void Power::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	//Do nothing
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (mario->IsRunning()) {
+		if (mario->vx == MARIO_RUN_SPEED_MAX)
+			this->type = TYPE_ACTIVATED;
+	}
+	else
+	{
+		this->type = TYPE_NORMAL;
+	}
 }
 
 void Power::Render() {

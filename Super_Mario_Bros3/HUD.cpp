@@ -142,6 +142,7 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	ScoreUpdate(camx, camy);
 	StackUpdate(camx, camy,dt,coObjects);
 	FCard->Update(dt, coObjects);
+	power->Update(dt, coObjects);
 	FCard->SetID(CGame::GetInstance()->GetFCardID());
 }
 
