@@ -41,14 +41,14 @@ HUD::HUD()
 	for(int i = 0; i < 3; i++) {
 		Number* num = new Number(0);
 		Time.push_back(num);
-		Time.at(i)->SetPosition(155+(i*8), 450);
+		Time.at(i)->SetPosition(155+(i* EACH_NUMBER_DISTANCE), 450);
 	}
 
 	//Score
 	for (int i = 0; i < 7; i++) {
 		Number* num = new Number(0);
 		Score.push_back(num);
-		Score.at(i)->SetPosition(75 + (i * 8), 450);
+		Score.at(i)->SetPosition(75 + (i * EACH_NUMBER_DISTANCE), 450);
 	}
 
 	//Skeleton contains : time, score, life,.... 
@@ -68,7 +68,7 @@ HUD::HUD()
 
 	//Stack
 	for (int i = 0; i < 6; i++) {
-		Stack* sta = new Stack(TYPE_BLACK, (float) i*0.04f, (float) (i+1)*0.04f);
+		Stack* sta = new Stack(TYPE_BLACK, i);
 		stack.push_back(sta);
 	}
 
@@ -109,12 +109,55 @@ void HUD::ScoreUpdate(float camX, float camY)
 }
 void HUD::StackUpdate(float camX, float camY, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (StackLevel < 0)
+		StackLevel = 0;
+	if (StackLevel > 6)
+		StackLevel = 6;
+
+	if (StackIsUp) {
+		StackUp();
+	}
+	else {
+		StackDown();
+	}
 	for (int i = 0; i < stack.size(); i++) 
 	{
 		stack.at(i)->SetPosition(camX + POSX_OF_FIRST_NUMBER_SCORE + (i * (EACH_NUMBER_DISTANCE + 1)), camY + POSY_OF_FIRST_STACK);
-		stack[i]->Update(dt,coObjects);
+		if (stack[i]->GetLevel() < this->StackLevel) {
+			stack[i]->SetType(TYPE_WHITE);
+		}
+		else {
+			stack[i]->SetType(TYPE_BLACK);
+		}
 	}
 }
+
+void HUD::StackUp() {
+	
+	if (!StackIsUp) {
+		//time = 0;
+		return;
+	}
+	if (GetTickCount64() - StartUptime>170) {
+		StackLevel++;
+		StartUptime = GetTickCount64();
+	}
+}
+
+void HUD::StackDown() {
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (mario->IsFlying())
+		return;
+	if (StackIsUp ) {
+		return;
+	}
+	if (GetTickCount64() - StartDownTime > 200) {
+		StackLevel--;
+		StartDownTime = GetTickCount64();
+	}
+}
+
+
 
 void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
 {
@@ -125,6 +168,7 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (id == WORLDMAP_SCENE)
 	{
 		TimeValue = 0;
+		power->SetType(TYPE_NORMAL);
 	}
 
 	float camx, camy;

@@ -2,22 +2,14 @@
 #include "Mario.h"
 #include "PlayScene.h"
 
-Stack::Stack(int typ,float start, float end) {
-	this->StartSpeed = start;
-	this->EndSpeed = end;
+Stack::Stack(int typ,int level) {
+	this->LevelInStackBar = level;
 	this->type = typ;
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANI_SET_FOR_STACK));
 }
 
-void Stack::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
+void Stack::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, int level) {
 	//Do nothing
-	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	DebugOut(L"\n vx = %f", abs(mario->vx));
-	if (mario->IsRunning()) {
-		if (abs(mario->vx) > StartSpeed && abs(mario->vx) < EndSpeed) {
-			type = TYPE_WHITE;
-		}
-	}
 	
 }
 

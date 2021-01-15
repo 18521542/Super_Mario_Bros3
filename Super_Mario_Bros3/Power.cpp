@@ -7,10 +7,18 @@ Power::Power(int typ) {
 }
 
 void Power::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	if (mario->IsRunning()) {
-		if (mario->vx == MARIO_RUN_SPEED_MAX)
+	if (CGame::GetInstance()->GetCurrentScene()->GetID() == WORLDMAP_SCENE) {
+		return;
+	}
+		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (mario->IsRunning()||mario->IsFlying()) {
+		
+		if(mario->IsFlying())
 			this->type = TYPE_ACTIVATED;
+		if (mario->IsRunning()) {
+			if (mario->vx == MARIO_RUN_SPEED_MAX)
+				this->type = TYPE_ACTIVATED;
+		}
 	}
 	else
 	{

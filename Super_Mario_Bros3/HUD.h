@@ -24,6 +24,10 @@ class HUD : public CGameObject
 	int SecondCardID;
 	int ThirdCardID;
 
+	bool StackIsUp = false;
+	ULONGLONG StartUptime;
+	ULONGLONG StartDownTime;
+
 	CBackground* BlackBackGround;
 
 	vector<Number*> Time; // times contains 3 numbers
@@ -38,8 +42,10 @@ class HUD : public CGameObject
 	HUD_Card* FCard;
 
 	Power* power; // only 1P
+
 	vector<Stack*> stack; // stack contain 6 level  
-	
+	DWORD time;
+	int StackLevel = 0;
 public:
 	HUD();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -48,7 +54,14 @@ public:
 	void StackUpdate(float camX, float camY, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ScoreUpdate(float camX, float camY);
 
+	//stack manage - need a class to manage stack atoms
+	void StackUp();
+	void StackDown();
+	void StackStartUp() { StartUptime = GetTickCount64(); StackIsUp = true; }
+	void StackStartDown() { StartDownTime = GetTickCount64(); StackIsUp = false; }
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
+	
 	vector<int> SeperateToNumber(int value,int maxsize);
 };

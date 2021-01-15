@@ -411,6 +411,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	HUD* hud = ((CPlayScene*)scence)->GetHud();
 	if (mario->IsAtTheEnd())
 		return;
 	if (mario->GetState() == MARIO_STATE_DIE)
@@ -486,8 +487,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->Reset();
 		break;
 	case DIK_A:
+		
 		mario->SetIsReadyToHold(true);
 		mario->setIsReadyToRun(true);
+		if (!mario->IsFlying())
+			hud->StackStartUp();
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL) 
 		{
 			mario->StartUsingTail();
@@ -498,6 +502,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			mario->StartShootingFireBall();
 			break;
 		}
+			
 		break;
 	case DIK_0:
 		CGame::GetInstance()->SwitchScene(2);
@@ -515,6 +520,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	HUD* hud = ((CPlayScene*)scence)->GetHud();
 	if (mario->IsAtTheEnd())
 		return;
 	if (mario->GetState() == MARIO_STATE_DIE)
@@ -577,6 +583,8 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetIsReadyToHold(false);
 		mario->setIsReadyToRun(false);
 		mario->setIsRunning(false);
+		hud->StackStartDown();
+		DebugOut(L"\nYou up");
 		if (mario->GetLevel() == MARIO_LEVEL_FIRE)
 		{
 			mario->SetState(MARIO_STATE_IDLE);
@@ -590,6 +598,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	HUD* hud = ((CPlayScene*)scence)->GetHud();
+	/*if (game->IsKeyDown(DIK_A)) {
+		hud->StackStartUp();
+	}*/
 	if (mario->IsAtTheEnd())
 		return;
 	// disable control key when Mario die 
