@@ -343,8 +343,8 @@ void CPlayScene::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
-
-	hud->Update(dt,&coObjects);
+	
+	//hud->Update(dt, &coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
@@ -382,6 +382,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		return;
 	}
+	hud->Update(dt, &coObjects);
 }
 
 void CPlayScene::Render()

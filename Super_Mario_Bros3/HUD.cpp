@@ -137,10 +137,11 @@ void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	power->SetPosition(camx + POSX_OF_POWER, camy + POSY_OF_POWER);
 	FCard->SetPosition(camx + POSX_OF_SKELETON_CARD+1, camy + POSY_OF_SKELETON_MAIN+1);
 
+
 	//update state
 	TimeUpdate(camx, camy);
 	ScoreUpdate(camx, camy);
-	StackUpdate(camx, camy,dt,coObjects);
+	StackUpdate(camx, camy, dt, coObjects);
 	FCard->Update(dt, coObjects);
 	power->Update(dt, coObjects);
 	FCard->SetID(CGame::GetInstance()->GetFCardID());

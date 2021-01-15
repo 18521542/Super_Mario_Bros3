@@ -63,7 +63,6 @@ public:
 	vector<LPGAMEOBJECT> GetListObject() { return this->objects; }
 
 	CMario* GetPlayer() { return player; }
-
 	//friend class CPlayScenceKeyHandler;
 };
 
