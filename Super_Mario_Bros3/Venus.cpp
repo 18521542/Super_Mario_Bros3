@@ -51,6 +51,7 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		this->fireball->y = y + TO_CENTER;
 		this->fireball->SetDir(this->nx, this->ny);
 		this->fireball->setIsAppear(false);
+		this->fireball->ResetBullet();
 		HasFired = false;
 	}
 	this->fireball->Update(dt, coObjects);

@@ -193,6 +193,9 @@
     <ClInclude Include="MovingEdge.h">
       <Filter>Framework\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="ScrollStage.h">
+      <Filter>Framework\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -328,6 +331,9 @@
       <Filter>Framework\GameObject\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="MovingEdge.cpp">
+      <Filter>Framework\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollStage.cpp">
       <Filter>Framework\GameObject</Filter>
     </ClCompile>
   </ItemGroup>

@@ -170,6 +170,7 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Power.h" />
     <ClInclude Include="QuestionBrick.h" />
+    <ClInclude Include="ScrollStage.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="SwitchBlock.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="Power.cpp" />
     <ClCompile Include="QuestionBrick.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ScrollStage.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="Stack.cpp" />
     <ClCompile Include="SwitchBlock.cpp" />

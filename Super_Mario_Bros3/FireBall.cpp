@@ -56,7 +56,7 @@ void CFireBall::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
-	if (type != 1) {
+	if (type != FB_OF_VENUS) {
 		
 		//do nothing;
 
@@ -122,9 +122,11 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		float le, to, ri, bo;
 		mario->GetBoundingBox(le, to, ri, bo);
-		if (CheckBB(le, to, ri, bo)) 
+		if (CheckBB(le, to, ri, bo) && !isCollide) 
 		{
-			mario->SetState(MARIO_STATE_DIE);
+			//mario->SetState(MARIO_STATE_DIE);
+			mario->StartDecreaseLevel();
+			isCollide = true;
 		}
 	}
 }

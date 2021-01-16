@@ -9,6 +9,10 @@
 #include "Platform.h"
 #include "PlayScene.h"
 
+#define TIME_WAIT_TO_SWITCH_SCENE	1500
+#define EFFECT_TIME	300
+#define ENTER_TIME	3000
+#define LIMIT_TIME_TO_ACTIVATE_ENTER_FUNCTION	5000
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -75,7 +79,7 @@ void CMario::UpdateStateUsingTimeOut()
 		isKicking = false;
 	}
 
-	if (GetTickCount64() - EnterTime > 3000 && GetTickCount64() - EnterTime<5000) 
+	if (GetTickCount64() - EnterTime > ENTER_TIME && GetTickCount64() - EnterTime< LIMIT_TIME_TO_ACTIVATE_ENTER_FUNCTION)
 	{
 		isEntering = false;
 		EnterTime = 0;
@@ -92,6 +96,8 @@ void CMario::UpdateStateUsingTimeOut()
 		}
 	}
 }
+
+
 
 void CMario::UpdateForEachState(DWORD dt) {
 	
@@ -227,17 +233,6 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 				}	
 			}
 		}
-		else if (dynamic_cast<MovingBrick*>(obj)) {
-			//if (CheckBB(pLeft, pTop, pRight, pBottom))
-			//{
-			//	//if (bb->GetState() != COIN) {
-			//	if(level!=MARIO_LEVEL_SMALL)
-			//		y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
-			//	else 
-			//		y -= y + MARIO_SMALL_BBOX_HEIGHT - pTop + PushBackPixel;
-			//	//}
-			//}
-		}
 	}
 }
 
@@ -299,7 +294,8 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (level > MARIO_LEVEL_SMALL)
 							{
-								level = MARIO_LEVEL_SMALL;
+								//level = MARIO_LEVEL_SMALL;
+								StartDecreaseLevel();
 								StartUntouchable();
 							}
 							else
@@ -433,7 +429,8 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 									//StartEffect();
 									if (level > MARIO_LEVEL_SMALL)
 									{
-										level = MARIO_LEVEL_SMALL;
+										StartDecreaseLevel();
+										//level = MARIO_LEVEL_SMALL;
 										StartUntouchable();
 									}
 									else
@@ -590,7 +587,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<MovingBrick*>(e->obj)) {
 				/*x += min_tx * dx + nx * 0.1f;*/
-				y += min_ty * dy + ny * 0.001f;
+				//y += min_ty * dy + ny * 0.001f;
 				MovingBrick* mb = dynamic_cast<MovingBrick*>(e->obj);
 				isReadyToJump = true;
 				if (state == MARIO_STATE_JUMP)
@@ -601,6 +598,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				{
 					vy = 0;
 					mb->SetState(STATE_BRICK_FALLING);
+					//y = mb->y-MARIO_BIG_BBOX_HEIGHT;
 					
 				}
 				if (e->nx != 0)vx = 0;
@@ -618,6 +616,9 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 
 }
 
+#define SAFETY_HIGHT	800
+#define ENTER_SECRET_ROOM_SPEED	0.01f
+
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!isForEffectAppear) 
@@ -627,7 +628,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx += a * dt;
 		vy += ay * dt;
 		
-		if (y > 800) {
+		if (y > SAFETY_HIGHT) {
 			SetState(MARIO_STATE_DIE);
 		}
 		//DebugOut(L"\n Is in secret room %d", isInSecretRoom);
@@ -640,13 +641,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				if (isInSecretRoom) {
 					vx = 0;
-					vy = -0.01f;
+					vy = -ENTER_SECRET_ROOM_SPEED;
 					y += dy;
 					return;
 				}
 				else {
 					vx = 0;
-					vy = 0.01f;
+					vy = ENTER_SECRET_ROOM_SPEED;
 					y += dy;
 					return;
 				}
@@ -666,24 +667,26 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CGame::GetInstance()->StartSwitchScene();
 			}
-			if (GetTickCount64() - CGame::GetInstance()->GetTimeStartSwitch() > 1500) 
+			if (GetTickCount64() - CGame::GetInstance()->GetTimeStartSwitch() > TIME_WAIT_TO_SWITCH_SCENE)
 			{
 				CGame::GetInstance()->SetIsSwitch(false);
 				CGame::GetInstance()->SetCamPos(0, 0);
-				CGame::GetInstance()->SwitchScene(2);
+				CGame::GetInstance()->SwitchScene(WORLDMAP_SCENE);
 			}
 		}
 
 		
 	}
 	else {
-		if (GetTickCount64() - EffectTime > 700) {
+		if (GetTickCount64() - EffectTime > EFFECT_TIME) {
 			EffectTime = 0;
 			isForEffectAppear = false;
 		}
 	}
 
 }
+
+
 
 void CMario::SameRenderLogicsForAllLevel(int &ani, int ani_jump_down_right, int ani_jump_down_left,
 									int ani_idle_right, int ani_idle_left,

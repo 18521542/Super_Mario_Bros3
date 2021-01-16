@@ -177,10 +177,10 @@
 //define level
 #define	MARIO_LEVEL_SMALL	1111
 #define	MARIO_LEVEL_BIG		2222
-#define	MARIO_LEVEL_FIRE	6666
-#define	MARIO_LEVEL_FROG	4444
-#define	MARIO_LEVEL_HAMMER	5555
 #define	MARIO_LEVEL_TAIL	3333
+#define	MARIO_LEVEL_FIRE	4444
+#define	MARIO_LEVEL_FROG	6666
+#define	MARIO_LEVEL_HAMMER	5555
 
 #define LEVEL_DELTA			1111
 
@@ -194,7 +194,7 @@
 #define MARIO_HEIGHT_SIT_BBOX	19
 
 #define MARIO_SMALL_BBOX_WIDTH  13
-#define MARIO_SMALL_BBOX_HEIGHT 15
+#define MARIO_SMALL_BBOX_HEIGHT 14
 
 
 class CMario : public CGameObject
@@ -309,6 +309,15 @@ public:
 	void SetState(int state);
 
 	void SetLevel(int l) { level = l; }
+
+	void StartDecreaseLevel() {
+		StartEffect();
+		if (level == MARIO_LEVEL_SMALL) {
+			state = MARIO_STATE_DIE;
+		}
+		else
+			level -= LEVEL_DELTA;
+	}
 
 	//get
 	bool IsReadyToHold() { return isReadyToHold; }

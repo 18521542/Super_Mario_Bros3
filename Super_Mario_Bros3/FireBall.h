@@ -24,10 +24,11 @@ class CFireBall : public CGameObject
 	ULONGLONG startFly;
 	bool isAppear = false;
 	bool isHolded = true;
-	
+	bool isCollide = false;
 	
 public:
 	virtual void Render();
+	void ResetBullet() { isCollide = false; }
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	//virtual void SetState(int state);
 	CFireBall(float x,float y);
