@@ -5,13 +5,15 @@
 #include "MarioOfWorldMapScene.h"
 #include "CheckPoint.h"
 #include "TurtleOFWorldMap.h"
+#include "ScrollStage.h"
 
 #define INVALID_SCENE		-1
 #define ARROW				100
+#define SCROLL_STAGE		200
 
-#define POSITION_X			100
-#define POSITION_1_PLAYER	150
-#define POSITION_2_PLAYER	165
+#define POSITION_X			90
+#define POSITION_1_PLAYER	145
+#define POSITION_2_PLAYER	160
 
 IntroScene::IntroScene(int id, LPCWSTR filePath) :CScene(id, filePath)
 {
@@ -140,6 +142,11 @@ void IntroScene::_ParseSection_OBJECTS(string line)
 
 		//100,150
 		//100,165
+		break;
+	}
+	case SCROLL_STAGE:
+	{
+		obj = new ScrollStage();
 		break;
 	}
 	default:
