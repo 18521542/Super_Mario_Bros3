@@ -171,12 +171,17 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						this->nx = -this->nx;
 						vx = this->nx * vx;
-						if (e->ny != 0)
+						if (e->ny != 0) {
 							vy = 0;
+							y += min_ty * dy + ny * 0.4f;
+						}
+							
 					}
 					if (e->ny != 0)
 					{
 						vy = 0;
+						//x += min_tx * dx + nx * 0.4f;
+						
 					}
 					
 				}

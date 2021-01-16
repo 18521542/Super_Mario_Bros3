@@ -293,7 +293,7 @@ void WorldMapScenceKeyHandler::OnKeyDown(int KeyCode) {
 			mario->SetIsMoving(true);
 		}		
 		break;
-	case DIK_W:
+	case DIK_S:
 		if (mario->SceneID() != INVALID_SCENE && !mario->IsMoving()) {
 			CGame::GetInstance()->SwitchScene(mario->SceneID() );
 		}

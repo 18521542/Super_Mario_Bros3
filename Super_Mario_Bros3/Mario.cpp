@@ -596,7 +596,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (e->ny != 0)
 				{
-					vy = 0;
+					vy = mb->vy;
 					mb->SetState(STATE_BRICK_FALLING);
 					//y = mb->y-MARIO_BIG_BBOX_HEIGHT;
 					
