@@ -163,6 +163,7 @@
     <ClInclude Include="Leaf_SuperMushroom.h" />
     <ClInclude Include="MarioOfWorldMapScene.h" />
     <ClInclude Include="MovingBrick.h" />
+    <ClInclude Include="MovingEdge.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PieceOfBreakableBrick.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="Leaf_SuperMushroom.cpp" />
     <ClCompile Include="MarioOfWorldMapScene.cpp" />
     <ClCompile Include="MovingBrick.cpp" />
+    <ClCompile Include="MovingEdge.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PieceOfBreakableBrick.cpp" />
     <ClCompile Include="Platform.cpp" />

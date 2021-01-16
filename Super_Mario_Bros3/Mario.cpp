@@ -225,15 +225,15 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 		else if (dynamic_cast<MovingBrick*>(obj)) {
-			if (CheckBB(pLeft, pTop, pRight, pBottom))
-			{
-				//if (bb->GetState() != COIN) {
-				if(level!=MARIO_LEVEL_SMALL)
-					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
-				else 
-					y -= y + MARIO_SMALL_BBOX_HEIGHT - pTop + PushBackPixel;
-				//}
-			}
+			//if (CheckBB(pLeft, pTop, pRight, pBottom))
+			//{
+			//	//if (bb->GetState() != COIN) {
+			//	if(level!=MARIO_LEVEL_SMALL)
+			//		y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
+			//	else 
+			//		y -= y + MARIO_SMALL_BBOX_HEIGHT - pTop + PushBackPixel;
+			//	//}
+			//}
 		}
 	}
 }
@@ -586,8 +586,8 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 			else if (dynamic_cast<MovingBrick*>(e->obj)) {
-				/*x += min_tx * dx + nx * 0.1f;
-				y += min_ty * dy + ny * 0.1f;*/
+				/*x += min_tx * dx + nx * 0.1f;*/
+				y += min_ty * dy + ny * 0.001f;
 				MovingBrick* mb = dynamic_cast<MovingBrick*>(e->obj);
 				isReadyToJump = true;
 				if (state == MARIO_STATE_JUMP)
@@ -602,6 +602,12 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (e->nx != 0)vx = 0;
 				}
+			else if (dynamic_cast<MovingEdge*>(e->obj)) {
+				x += dx;
+				//y += dy;
+				this->nx = 1;
+				vx = 6* MARIO_WALKING_SPEED_MIN;
+			}
 		}
 	}
 

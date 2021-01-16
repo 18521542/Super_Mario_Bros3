@@ -1044,7 +1044,7 @@ Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
 8	300	400	2
 
 # ---- MARIO---------------	
-0	0	300	1
+0	50	300	1
 
 #fire ball
 7	2500	300	7
@@ -1056,3 +1056,6 @@ Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
 
 #boomerang brother
 130	2097	393	129101
+
+#moving edge
+131	1	200	1	100

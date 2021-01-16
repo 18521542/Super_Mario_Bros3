@@ -190,6 +190,9 @@
     <ClInclude Include="Boomerang.h">
       <Filter>Framework\GameObject\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="MovingEdge.h">
+      <Filter>Framework\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -323,6 +326,9 @@
     </ClCompile>
     <ClCompile Include="Boomerang.cpp">
       <Filter>Framework\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingEdge.cpp">
+      <Filter>Framework\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

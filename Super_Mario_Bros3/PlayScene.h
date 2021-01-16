@@ -24,6 +24,7 @@
 #define OBJECT_TYPE_CARD				14
 #define OBJECT_TYPE_MOVING_BRICK		129
 #define OBJECT_TYPE_BOOMERANG_BROTHER	130
+#define OBJECT_TYPE_MOVING_EDGE			131
 
 #define MAX_SCENE_LINE 1024
 #include "Game.h"
@@ -45,6 +46,8 @@ protected:
 	vector<LPGAMEOBJECT> objects;
 
 	HUD* hud;
+
+	MovingEdge* movingEdge;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);

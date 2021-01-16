@@ -259,6 +259,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new BoomerangBrother();
 		break;
 	}
+	case OBJECT_TYPE_MOVING_EDGE:
+	{
+		float stopDes = atof(tokens[4].c_str());
+		obj = new MovingEdge(stopDes);
+		movingEdge = (MovingEdge*)obj;
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -332,6 +339,7 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
+	
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
@@ -344,6 +352,13 @@ void CPlayScene::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 	}
 	
+	if (movingEdge != NULL && movingEdge->IsActive()) {
+		
+		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), movingEdge->y);
+		hud->Update(dt, &coObjects);
+		
+		return;
+	}
 	//hud->Update(dt, &coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
@@ -584,7 +599,6 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		mario->setIsReadyToRun(false);
 		mario->setIsRunning(false);
 		hud->StackStartDown();
-		DebugOut(L"\nYou up");
 		if (mario->GetLevel() == MARIO_LEVEL_FIRE)
 		{
 			mario->SetState(MARIO_STATE_IDLE);
@@ -599,9 +613,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 	HUD* hud = ((CPlayScene*)scence)->GetHud();
-	/*if (game->IsKeyDown(DIK_A)) {
-		hud->StackStartUp();
-	}*/
+
 	if (mario->IsAtTheEnd())
 		return;
 	// disable control key when Mario die 

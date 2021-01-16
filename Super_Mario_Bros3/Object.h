@@ -16,3 +16,4 @@
 #include "Card.h"
 #include "MovingBrick.h"
 #include "BoomerangBrother.h"
+#include "MovingEdge.h"
