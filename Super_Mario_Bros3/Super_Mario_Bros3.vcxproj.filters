@@ -53,6 +53,9 @@
     <Filter Include="Framework\GameObject\Brick-Platform">
       <UniqueIdentifier>{07f030f2-7ba3-467e-9976-0a70f779c095}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Space Partioning">
+      <UniqueIdentifier>{e3d22cf8-b859-4e9a-b993-ec641a1d5783}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tilemap.h">
@@ -196,6 +199,12 @@
     <ClInclude Include="ScrollStage.h">
       <Filter>Framework\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Framework\Space Partioning</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell.h">
+      <Filter>Framework\Space Partioning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tilemap.cpp">
@@ -335,6 +344,12 @@
     </ClCompile>
     <ClCompile Include="ScrollStage.cpp">
       <Filter>Framework\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Framework\Space Partioning</Filter>
+    </ClCompile>
+    <ClCompile Include="Cell.cpp">
+      <Filter>Framework\Space Partioning</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

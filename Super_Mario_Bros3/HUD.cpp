@@ -138,6 +138,7 @@ void HUD::StackUp() {
 		//time = 0;
 		return;
 	}
+	//hard code
 	if (GetTickCount64() - StartUptime>170) {
 		StackLevel++;
 		StartUptime = GetTickCount64();

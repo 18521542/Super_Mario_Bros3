@@ -44,7 +44,7 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 
 	vector<LPGAMEOBJECT> objects;
-
+	vector<LPGAMEOBJECT> ListObjectToCheckCollision;
 	HUD* hud;
 
 	MovingEdge* movingEdge;
