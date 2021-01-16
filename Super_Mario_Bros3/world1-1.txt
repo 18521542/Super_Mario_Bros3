@@ -7,7 +7,6 @@
 40	textures\enemies-3.png	0	130	130
 70	textures\Background_Main.png	156	252	240
 80	textures\Background.png	76	220	72
-90	textures\world-1-1n.png	76	220	72
 100	textures\mario-left.png	255	255	255
 110	textures\mario-right.png	255	255	255	
 120	textures\misc2.png	166	185	255

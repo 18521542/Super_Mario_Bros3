@@ -137,7 +137,10 @@ void CMario::UpdateForEachState(DWORD dt) {
 	{
 		if (vy < 0)
 			vy -= MARIO_JUMPING_ACCELERATION * dt;
+		
 	}
+
+	
 }
 
 void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects) 
@@ -604,7 +607,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				}
 			else if (dynamic_cast<MovingEdge*>(e->obj)) {
 				x += dx;
-				//y += dy;
 				this->nx = 1;
 				vx = 6* MARIO_WALKING_SPEED_MIN;
 			}
