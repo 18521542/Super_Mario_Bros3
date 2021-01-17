@@ -1,6 +1,7 @@
 #include "Goomba.h"
 #include "Mario.h"
 #include "Platform.h"
+#include "PlayScene.h"
 CGoomba::CGoomba(int type)
 {
 	this->type = type;
@@ -50,7 +51,9 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (abs(mario->x - x) >  400)
+		return;
 	CGameObject::Update(dt, coObjects);
 
 	vy += MARIO_GRAVITY * dt;

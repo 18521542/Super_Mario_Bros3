@@ -35,7 +35,7 @@
 #include "Object.h"
 
 #include "Tilemap.h"
-
+#include "Grid.h"
 #include "HUD.h"
 
 class CPlayScene : public CScene
@@ -46,6 +46,7 @@ protected:
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> ListObjectToCheckCollision;
 	HUD* hud;
+	Grid* grid;
 
 	MovingEdge* movingEdge;
 
@@ -55,6 +56,7 @@ protected:
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_Tilemap(string line);
+	void _ParseSection_GRID(string line);
 
 public:
 	CPlayScene(int id, LPCWSTR filePath);
@@ -67,6 +69,7 @@ public:
 
 	CMario* GetPlayer() { return player; }
 	HUD* GetHud() { return hud; }
+	MovingEdge* GetMovingEdge() { return movingEdge; }
 	//friend class CPlayScenceKeyHandler;
 };
 

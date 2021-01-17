@@ -6,8 +6,10 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
+#include "Grid.h"
 
 #define SCENE_SECTION_MAP	900
+#define SCENE_SECTION_GRID	1000
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
@@ -263,7 +265,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		float stopDes = atof(tokens[4].c_str());
 		obj = new MovingEdge(stopDes);
-		movingEdge = (MovingEdge*)obj;
+		movingEdge = (MovingEdge*)obj; // moving edge start
 		break;
 	}
 	default:
@@ -277,6 +279,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
+
+	
 }
 
 void CPlayScene::Load()
@@ -312,6 +316,9 @@ void CPlayScene::Load()
 		if (line == "[TILEMAP]") {
 			section = SCENE_SECTION_MAP; continue;
 		}
+		if (line == "[GRID]") {
+			section = SCENE_SECTION_GRID; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -325,6 +332,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_MAP: _ParseSection_Tilemap(line); break;
+		case SCENE_SECTION_GRID: _ParseSection_GRID(line); break;
 		}
 	}
 
@@ -337,29 +345,56 @@ void CPlayScene::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
+void CPlayScene::_ParseSection_GRID(string line)
+{
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	vector<string> tokens = split(line);
+
+	//DebugOut(L"--> %s\n", ToWSTR(line).c_str());
+
+	LPCWSTR path = ToLPCWSTR(tokens[0]);
+
+	grid = new Grid(path, &objects);
+
+	for (size_t i = 0; i < objects.size(); i++) {
+		if(objects[i]!= mario)
+		grid->DevideObjectIntoCell(objects[i]);
+	}
+	
+
+	
+}
+
 void CPlayScene::Update(DWORD dt)
 {
-	
+	//grid
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	
+	float PreCx, PreCy;
+	CGame::GetInstance()->GetCamPos(PreCx, PreCy);
+
+	
+	if (grid != NULL) {
+		grid->GetListObjectsOfCell(&ListObjectToCheckCollision, PreCx, PreCy);
+		//player->Update(dt, &ListObjectToCheckCollision);
+	}
+	
+	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		if(!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
+		ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
 	}
 
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt, &coObjects);
-	}
-	
+	player->Update(dt, &ListObjectToCheckCollision);
+	vector<LPGAMEOBJECT> coObjects;
 	if (movingEdge != NULL && movingEdge->IsActive()) {
 		
-		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), movingEdge->y);
+		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), (movingEdge->y+30));
 		hud->Update(dt, &coObjects);
 		
 		return;
 	}
-	//hud->Update(dt, &coObjects);
+
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
@@ -402,13 +437,12 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	/*if(CTileMap::GetInstance()!=NULL)*/
-		CTileMap::GetInstance()->Render();
+	CTileMap::GetInstance()->Render();
 	
-	for (size_t i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
+		ListObjectToCheckCollision[i]->Render();
 	hud->Render();
-	
+	player->Render();
 }
 
 void CPlayScene::Unload()

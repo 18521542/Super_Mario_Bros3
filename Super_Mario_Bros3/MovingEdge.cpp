@@ -1,6 +1,8 @@
 #include "MovingEdge.h"
 #include "PlayScene.h"
-#define SPEED		0.01f
+#define SPEED		0.03f
+
+
 
 void MovingEdge::GetBoundingBox(float& left, float& top, float& right, float& bottom) {
 	left = x;
@@ -15,9 +17,9 @@ void MovingEdge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 
 	//float l, t, r, b;
 	//mario->GetBoundingBox(l, t, r, b);
-	if (mario->x < this->x)
+	if (mario->x < this->x )
 		mario->x = this->x;
-	if (x >= this->StopDes) {
+	if (this->x >= this->StopDes) {
 		vx = 0;
 		isActive = false;
 		return;

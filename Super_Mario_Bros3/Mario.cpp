@@ -517,15 +517,17 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CLeaf_Mushroom*>(e->obj)) 
 			{
-				CLeaf_Mushroom* item = dynamic_cast<CLeaf_Mushroom*>(e->obj);
-				StartEffect();
-				x += dx;
-				y += dy;
-				if (level != MARIO_LEVEL_TAIL) {
-					level += LEVEL_DELTA;
+				if (e->nx != 0 || e->ny != 0) {
+					CLeaf_Mushroom* item = dynamic_cast<CLeaf_Mushroom*>(e->obj);
+					StartEffect();
+					x += dx;
+					y += dy;
+					if (level != MARIO_LEVEL_TAIL) {
+						level += LEVEL_DELTA;
+					}
+					//item->SetEffectScore(true);
+					item->SetIsAllowToAppear(false);
 				}
-				//item->SetEffectScore(true);
-				item->SetIsAllowToAppear(false);
 			}
 			else if (dynamic_cast<CSwitchBlock*>(e->obj)) {
 				CSwitchBlock* sb = dynamic_cast<CSwitchBlock*>(e->obj);
@@ -604,9 +606,10 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				if (e->nx != 0)vx = 0;
 				}
 			else if (dynamic_cast<MovingEdge*>(e->obj)) {
-				x += dx;
-				this->nx = 1;
-				vx = 6* MARIO_WALKING_SPEED_MIN;
+				MovingEdge* movingEdge = dynamic_cast<MovingEdge*>(e->obj);
+					x += dx;
+					this->nx = 1;
+					vx = 6 * MARIO_WALKING_SPEED_MIN;
 			}
 		}
 	}

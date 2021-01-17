@@ -18,7 +18,6 @@
 180	textures\special_items.png	0	183	239
 190	textures\End_Scene.png	0	0	0
 #############################################################################################
-# id	left	top	right	bottom	texture_id
 #tilemap details:
 #--Path of tileset
 #--Path of Matrix Tile-data
@@ -27,6 +26,7 @@
 #--TileWidth and TileHeight
 #[TILEMAP]
 #Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
+# id	left	top	right	bottom	texture_id
 [SPRITES]
 #HUD_CARD
 #plant
@@ -946,6 +946,8 @@
 #---platform----
 #type	left	top	ani_set_id	right	bottom	type
 
+# ---- MARIO---------------	
+0	100	400	1
 -------border platform----------------------------
 5	2815	2	1	2830	441	1
 5	1	3	1	-34	445	1	
@@ -1033,8 +1035,7 @@
 # ---- Tail ---------------
 8	300	400	2
 
-# ---- MARIO---------------	
-0	800	400	1
+
 
 #fire ball
 7	2500	300	7
@@ -1185,3 +1186,5 @@
 # type	l	t	ani_set_id	r	b	scene_id
 #50	300	98	0	316	150	2
 
+[GRID]
+SpacePartioning\GridData.txt

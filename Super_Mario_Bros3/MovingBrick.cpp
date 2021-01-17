@@ -1,6 +1,6 @@
 #include "MovingBrick.h"
-
-
+#include "MovingEdge.h"
+#include "PlayScene.h"
 MovingBrick::MovingBrick() {
 	state = STATE_BRICK_MOVING;
 	vx = 0;
@@ -14,6 +14,9 @@ void MovingBrick::GetBoundingBox(float& left, float& top, float& right, float& b
 }
 
 void MovingBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
+	MovingEdge* edge = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetMovingEdge();
+	if (abs(edge->x - x )> 290)
+		return;
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 	y += dy;
