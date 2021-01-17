@@ -374,18 +374,24 @@ void CPlayScene::Update(DWORD dt)
 	CGame::GetInstance()->GetCamPos(PreCx, PreCy);
 
 	
-	if (grid != NULL) {
-		grid->GetListObjectsOfCell(&ListObjectToCheckCollision, PreCx, PreCy);
-		//player->Update(dt, &ListObjectToCheckCollision);
-	}
+	//if (grid != NULL) {
+	//	grid->GetListObjectsOfCell(&ListObjectToCheckCollision, PreCx, PreCy);
+	//	//player->Update(dt, &ListObjectToCheckCollision);
+	//}
 	
-	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
+	/*for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
 	{
 		if(!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
 		ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
+	}*/
+
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		//if (!dynamic_cast<CMario*>(objects[i]))
+			objects[i]->Update(dt, &objects);
 	}
 
-	player->Update(dt, &ListObjectToCheckCollision);
+	//player->Update(dt, &ListObjectToCheckCollision);
 	vector<LPGAMEOBJECT> coObjects;
 	if (movingEdge != NULL && movingEdge->IsActive()) {
 		
@@ -439,8 +445,10 @@ void CPlayScene::Render()
 {
 	CTileMap::GetInstance()->Render();
 	
-	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
-		ListObjectToCheckCollision[i]->Render();
+	/*for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
+		ListObjectToCheckCollision[i]->Render();*/
+	for (size_t i = 0; i < objects.size(); i++)
+		objects[i]->Render();
 	hud->Render();
 	player->Render();
 }

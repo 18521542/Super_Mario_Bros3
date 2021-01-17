@@ -17,7 +17,6 @@
 170	textures\UI.png	255	127	39
 180	textures\special_items.png	0	183	239
 190	textures\End_Scene.png	0	0	0
-200	textures\Map1-4.png	156	252	240
 #############################################################################################
 #tilemap details:
 #--Path of tileset
@@ -1071,5 +1070,5 @@ Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
 #131	400	200	1	1700	2
 131	1	200	1	2000	1
 
-[GRID]
-SpacePartioning\GridData.txt
+#[GRID]
+#SpacePartioning\GridData.txt
