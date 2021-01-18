@@ -400,8 +400,8 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame* game = CGame::GetInstance();
 
-	cx -= (int)(game->GetScreenWidth()) / 2;
-	cy -= (int)(game->GetScreenHeight() / 3);
+	cx -= (float)(game->GetScreenWidth()) / 2;
+	cy -= (float)(game->GetScreenHeight() / 3);
 
 	if (cx <= 0)
 		cx = 0;
