@@ -148,6 +148,18 @@ bool CGameObject::CheckBB(float friend_left, float friend_top, float friend_righ
 	return on1 && on2 && down1 && down2;
 }
 
+bool CGameObject::ObjectInCam() 
+{
+	float camx;
+	float camy;
+
+	CGame::GetInstance()->GetCamPos(camx, camy);
+
+	bool CheckOX = x > camx && x < camx + CGame::GetInstance()->GetScreenWidth();
+	bool CheckOY = y > camy && y < camy + CGame::GetInstance()->GetScreenHeight();
+
+	return (CheckOX && CheckOY);
+}
 CGameObject::~CGameObject()
 {
 

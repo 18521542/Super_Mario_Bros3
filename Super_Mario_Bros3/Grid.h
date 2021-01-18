@@ -9,13 +9,15 @@ class Grid {
 	Cell** data;
 	int cellWidth;
 
+	vector<LPGAMEOBJECT>* listObjectInCam;
 	vector<LPGAMEOBJECT>* listObjectToCheckCollision;
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_OBJECTS(string line);
 	
 public:
-	void DevideObjectIntoCell(CGameObject* obj) {
+	void DevideObjectIntoCell(CGameObject* obj) 
+	{
 		int indexX, indexY;
 		float X, Y;
 		obj->GetPosition(X, Y);
@@ -28,6 +30,16 @@ public:
 	int Columns() { return this->columns; }
 	Grid(LPCWSTR filePath, vector<LPGAMEOBJECT>* listObject);
 	void GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int camY);
+	bool CheckObjectId(vector<LPGAMEOBJECT>* listObjects, LPGAMEOBJECT obj)
+	{
+		for (int i = 0; i < listObjects->size(); i++)
+		{
+			if (listObjects->at(i) == obj) {
+				return false;
+			}
+		}
+		return true;
+	}
 	void Load(LPCWSTR filePath, vector<LPGAMEOBJECT>* listObject);
 	void Unload();
 };

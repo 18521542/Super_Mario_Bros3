@@ -6,8 +6,13 @@
 
 Grid::Grid(LPCWSTR filePath, vector<LPGAMEOBJECT>* listObject)
 {
+	CGame::GetInstance()
 	this->listObjectToCheckCollision = listObject;
-	
+	for (size_t i = 0; i < listObject->size(); i++)
+	{
+		if (listObject[i] != mario)
+			grid->DevideObjectIntoCell(objects[i]);
+	}
 	ifstream f;
 	f.open(filePath);
 
@@ -114,19 +119,34 @@ void Grid::Load(LPCWSTR filePath, vector<LPGAMEOBJECT>* listObject)
 
 void Grid::GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int camY)
 {
+	/*listObjectInCam->clear();
+	for (size_t i = 0; i < listObject->size(); i++) 
+	{
+		if (listObject->at(i)->ObjectInCam()) {
+			listObjectInCam->push_back(listObject->at(i));
+		}
+		
+	}*/
 	listObject->clear();
+	/*for (size_t i = 0; i < listObjectInCam->size(); i++)
+	{
+		listObject->push_back(listObjectInCam->at(i));
+	}*/
+
 
 	int left, top, right, bottom;
 	int i, j, k;
 	left = camX / cellWidth;
 	top = camY / cellWidth;
-	/*right = (int)(camX + 320) / cellWidth
-		+ ((int)(camX + 320) % cellWidth ? 1 : 0);
-	bottom = (int)(camY + 240) / cellWidth
-		+ ((int)(camY + 240) % cellWidth ? 1 : 0);*/
-	right = left + 1;
-	bottom = top + 1;
+	right = left +2;
+	bottom = top + 2;
 
+	DebugOut(L"\n======================");
+	DebugOut(L"\nLeft: %i", left);
+	DebugOut(L"\nTop: %i", top);
+	DebugOut(L"\nRight: %i", right);
+	DebugOut(L"\nBottom: %i", bottom);
+	//DebugOut(L"\n CGame::GetInstance()->GetScreenWidth() / cellWidth = %i", CGame::GetInstance()->GetScreenWidth() / cellWidth);
 	LPGAMEOBJECT obj;
 
 	if (right < 0 || left > columns || bottom < 0 && top > rows)
@@ -152,9 +172,11 @@ void Grid::GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int 
 	}
 
 	Cell* cell;
-	for (i = left; i < right; i++)
+
+	//Get object by cells
+	for (i = left; i <= right; i++)
 	{
-		for (j = top; j < bottom; j++)
+		for (j = top; j <= bottom; j++)
 		{
 			cell = &data[i][j];
 			if (cell)
@@ -164,7 +186,9 @@ void Grid::GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int 
 					for (k = 0; k < data[i][j].GetListObjects().size(); k++)
 					{
 						obj = data[i][j].GetListObjects().at(k);
-						listObject->push_back(obj);
+						if (CheckObjectId(listObject, obj)) {
+							listObject->push_back(obj);
+						}
 					}
 				}
 			}

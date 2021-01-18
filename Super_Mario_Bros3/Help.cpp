@@ -11,7 +11,6 @@ Help::Help() {
 }
 
 void Help::Render() {
-	int ani;
 	if (isAppear) 
 	{
 		animation_set->at(ANI)->Render(x, y);

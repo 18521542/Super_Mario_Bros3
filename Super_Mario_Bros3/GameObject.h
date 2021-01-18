@@ -72,7 +72,7 @@ public:
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox();
-
+	bool ObjectInCam();
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);

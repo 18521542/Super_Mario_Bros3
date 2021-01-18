@@ -27,6 +27,8 @@
 #define OBJECT_TYPE_MOVING_EDGE			131
 
 #define MAX_SCENE_LINE 1024
+
+
 #include "Game.h"
 #include "Textures.h"
 #include "Scene.h"

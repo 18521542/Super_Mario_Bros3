@@ -355,49 +355,32 @@ void CPlayScene::_ParseSection_GRID(string line)
 	LPCWSTR path = ToLPCWSTR(tokens[0]);
 
 	grid = new Grid(path, &objects);
-
-	for (size_t i = 0; i < objects.size(); i++) {
-		if(objects[i]!= mario)
-		grid->DevideObjectIntoCell(objects[i]);
-	}
-	
-
 	
 }
 
 void CPlayScene::Update(DWORD dt)
 {
-	//grid
-	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	
 	float PreCx, PreCy;
 	CGame::GetInstance()->GetCamPos(PreCx, PreCy);
-
 	
-	//if (grid != NULL) {
-	//	grid->GetListObjectsOfCell(&ListObjectToCheckCollision, PreCx, PreCy);
-	//	//player->Update(dt, &ListObjectToCheckCollision);
-	//}
+	if (grid != NULL) {
+		grid->GetListObjectsOfCell(&ListObjectToCheckCollision, PreCx, PreCy);
+	}
 	
-	/*for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
+	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
 	{
 		if(!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
 		ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
-	}*/
-
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		//if (!dynamic_cast<CMario*>(objects[i]))
-			objects[i]->Update(dt, &objects);
 	}
 
-	//player->Update(dt, &ListObjectToCheckCollision);
-	vector<LPGAMEOBJECT> coObjects;
+	DebugOut(L"\n ListObject size %d",ListObjectToCheckCollision.size());
+	player->Update(dt, &ListObjectToCheckCollision);
+	
+
 	if (movingEdge != NULL && movingEdge->IsActive()) {
 		
 		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), (movingEdge->y+30));
-		hud->Update(dt, &coObjects);
-		
+		hud->Update(dt, &objects);
 		return;
 	}
 
@@ -418,13 +401,13 @@ void CPlayScene::Update(DWORD dt)
 
 	if (player->GetState() != MARIO_STATE_DIE) 
 	{
-		if (mario->IsAtTheEnd()) {
-			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-			if (mario->x > 2900)
-				mario->SetState(MARIO_STATE_DIE);
+		if (player->IsAtTheEnd()) {
+			player->SetState(MARIO_STATE_WALKING_RIGHT);
+			if (player->x > 2900)
+				player->SetState(MARIO_STATE_DIE);
 			return;
 		}
-		if (!mario->IsInSecretRoom()) {
+		if (!player->IsInSecretRoom()) {
 			if (cy >= 230.0f)
 				CGame::GetInstance()->SetCamPos((int)cx, 230.0f);
 				//CGame::GetInstance()->SetCamPos(cx, cy);
@@ -438,17 +421,15 @@ void CPlayScene::Update(DWORD dt)
 	{
 		return;
 	}
-	hud->Update(dt, &coObjects);
+	hud->Update(dt, &objects);
 }
 
 void CPlayScene::Render()
 {
 	CTileMap::GetInstance()->Render();
 	
-	/*for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
-		ListObjectToCheckCollision[i]->Render();*/
-	for (size_t i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
+		ListObjectToCheckCollision[i]->Render();
 	hud->Render();
 	player->Render();
 }
