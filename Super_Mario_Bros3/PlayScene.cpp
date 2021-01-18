@@ -355,6 +355,12 @@ void CPlayScene::_ParseSection_GRID(string line)
 	LPCWSTR path = ToLPCWSTR(tokens[0]);
 
 	grid = new Grid(path, &objects);
+
+	//grid->DevideObjectIntoCell()
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		grid->DevideObjectIntoCell(objects[i]);
+	}
 	
 }
 
@@ -373,7 +379,8 @@ void CPlayScene::Update(DWORD dt)
 		ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
 	}
 
-	DebugOut(L"\n ListObject size %d",ListObjectToCheckCollision.size());
+	/*DebugOut(L"\n ListObject size %d",ListObjectToCheckCollision.size());
+	DebugOut(L"\n Object size %d", objects.size());*/
 	player->Update(dt, &ListObjectToCheckCollision);
 	
 
@@ -428,10 +435,19 @@ void CPlayScene::Render()
 {
 	CTileMap::GetInstance()->Render();
 	
-	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
-		ListObjectToCheckCollision[i]->Render();
-	hud->Render();
+	
+	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++) {
+		
+		//if (!dynamic_cast<CPlatform*>(ListObjectToCheckCollision[i]))
+			ListObjectToCheckCollision[i]->Render();
+		//else
+		//	SpecialObj = dynamic_cast<CPlatform*>(ListObjectToCheckCollision[i]);
+	}
 	player->Render();
+	
+	//SpecialObj->Render();
+	hud->Render();
+	
 }
 
 void CPlayScene::Unload()

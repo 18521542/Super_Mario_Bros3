@@ -6,13 +6,8 @@
 
 Grid::Grid(LPCWSTR filePath, vector<LPGAMEOBJECT>* listObject)
 {
-	CGame::GetInstance()
 	this->listObjectToCheckCollision = listObject;
-	for (size_t i = 0; i < listObject->size(); i++)
-	{
-		if (listObject[i] != mario)
-			grid->DevideObjectIntoCell(objects[i]);
-	}
+	
 	ifstream f;
 	f.open(filePath);
 

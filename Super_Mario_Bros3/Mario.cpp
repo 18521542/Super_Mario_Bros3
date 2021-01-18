@@ -220,7 +220,9 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
 			}
 			else {
+				if (pf->getType() == PLATFORM_FOR_ENTER_SECRET_ROOM) {
 					isReadyForSecretRoom = false;
+				}
 			}
 		}
 		else if (dynamic_cast<CBreakableBrick*>(obj)) {
@@ -359,9 +361,13 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					if (e->nx != 0)vx = 0;
 				}
 				else if (plat->getType() == PLATFORM_FOR_ENTER_SECRET_ROOM) {
+					if (e->nx != 0 || e->ny != 0) {
+						isReadyForSecretRoom = true;
+						//DebugOut(L"\n Co nhay vo ham nay");
+						//DebugOut(L"\n Is ready for secret room %d", isReadyForSecretRoom);
+					}
 					x += dx;
 					y += dy;
-					isReadyForSecretRoom = true;
 				}
 				else if (plat->getType() == 5) {
 					if (e->ny != 0) 
@@ -685,7 +691,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			isForEffectAppear = false;
 		}
 	}
-
+	//DebugOut(L"\n Is For secret room %d", isReadyForSecretRoom);
 }
 
 

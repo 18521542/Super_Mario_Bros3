@@ -1,5 +1,6 @@
 #include "Tail.h"
 #include "Utils.h"
+#include "PlayScene.h"
 CTail::CTail()
 {
 	SetState(TAIL_STATE_APPEAR);
@@ -30,30 +31,29 @@ void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	//DebugOut(L"\n Co nhay vo day");
+
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	float left, top, right, bottom;
+	mario->GetBoundingBox(left, top, right, bottom);
+	if (mario->IsForTailAppear())
+	{
+		state = TAIL_STATE_APPEAR;
+		this->nx = mario->nx;
+	}
+	else
+		state = TAIL_STATE_DISAPPEAR;
+	if(mario->GetDirection()<0)
+		SetPosition(left - BB_TAIL_WIDTH, bottom - BB_TAIL_HEIGHT);
+	else if(mario->GetDirection()>0)
+		SetPosition(right , bottom - BB_TAIL_HEIGHT);
+	
 	for (size_t i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
 		float left, top, right, bottom;
 		obj->GetBoundingBox(left, top, right, bottom);
-		if (dynamic_cast<CMario*>(obj))
-		{
-			CMario* mario = dynamic_cast<CMario*>(obj);
-			if (mario->IsForTailAppear())
-			{
-				state = TAIL_STATE_APPEAR;
-				this->nx = mario->nx;
-			}
-			else
-				state = TAIL_STATE_DISAPPEAR;
-			if (mario->nx < 0)
-			{
-				this->x = left - BB_TAIL_WIDTH;
-			}
-			else
-				this->x = right;
-			this->y = (bottom - BB_TAIL_HEIGHT);
-		}
-		else if (dynamic_cast<CKoopas*>(obj)) 
+		if (dynamic_cast<CKoopas*>(obj)) 
 		{
 			float pLeft, pTop, pRight, pBottom;
 			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
