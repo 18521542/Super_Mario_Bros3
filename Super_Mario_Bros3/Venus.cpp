@@ -1,4 +1,5 @@
 #include "Venus.h"
+#include "PlayScene.h"
 
 CVenus::CVenus(int type)
 {
@@ -84,17 +85,12 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0;
 	}
 
-		
-	for (size_t i = 0; i < coObjects->size(); i++) {
-		LPGAMEOBJECT obj = coObjects->at(i);
-		if (dynamic_cast<CMario*>(obj)) {
-			if (obj->x <= this->x) nx = LEFT;
-			else nx = RIGHT;
-			if (obj->y <= this->y) ny = UP;
-			else ny = DOWN;
-			
-		}
-	}
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (mario->x <= this->x) nx = LEFT;
+	else nx = RIGHT;
+	if (mario->y <= this->y) ny = UP;
+	else ny = DOWN;
+	
 	
 }
 

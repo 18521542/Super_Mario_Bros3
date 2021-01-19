@@ -1,5 +1,6 @@
 #include "Koopas.h"
 #include "Utils.h"
+#include "PlayScene.h"
 CKoopas::CKoopas(int type)
 {
 	this->type = type;
@@ -30,26 +31,13 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vx = 0;
 		}
 	}
-		
-	for (size_t i = 0; i < coObjects->size(); i++)
+	
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (mario->IsHolding() && this->type != KOOPA_PARATROOPA)
 	{
-		LPGAMEOBJECT obj = coObjects->at(i);
-		float pLeft, pTop, pRight, pBottom;
-		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-		
-		if (CheckBB(pLeft, pTop, pRight, pBottom)) 
-		{
-			if (dynamic_cast<CMario*>(obj)) {
-				CMario* mario = dynamic_cast<CMario*>(obj);
-
-				if (mario->IsHolding() && this->type != KOOPA_PARATROOPA)
-				{
-					vy = 0;
-				}
-			}
-		}
-		
+		vy = 0;
 	}
+
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

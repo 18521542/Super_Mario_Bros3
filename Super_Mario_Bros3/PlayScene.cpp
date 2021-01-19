@@ -379,15 +379,15 @@ void CPlayScene::Update(DWORD dt)
 		ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
 	}
 
-	/*DebugOut(L"\n ListObject size %d",ListObjectToCheckCollision.size());
-	DebugOut(L"\n Object size %d", objects.size());*/
+	DebugOut(L"\n ListObject size %d",ListObjectToCheckCollision.size());
+	DebugOut(L"\n Object size %d", objects.size());
 	player->Update(dt, &ListObjectToCheckCollision);
 	
 
 	if (movingEdge != NULL && movingEdge->IsActive()) {
 		
 		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), (movingEdge->y+30));
-		hud->Update(dt, &objects);
+		hud->Update(dt, &ListObjectToCheckCollision);
 		return;
 	}
 
@@ -428,20 +428,17 @@ void CPlayScene::Update(DWORD dt)
 	{
 		return;
 	}
-	hud->Update(dt, &objects);
+	hud->Update(dt, &ListObjectToCheckCollision);
 }
 
 void CPlayScene::Render()
 {
-	CTileMap::GetInstance()->Render();
+	//CTileMap::GetInstance()->Render();
 	
 	
 	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++) {
 		
-		//if (!dynamic_cast<CPlatform*>(ListObjectToCheckCollision[i]))
 			ListObjectToCheckCollision[i]->Render();
-		//else
-		//	SpecialObj = dynamic_cast<CPlatform*>(ListObjectToCheckCollision[i]);
 	}
 	player->Render();
 	
@@ -452,10 +449,17 @@ void CPlayScene::Render()
 
 void CPlayScene::Unload()
 {
+	/*if (ListObjectToCheckCollision.size() != 0) {
+		for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++) {
+			if (!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
+				delete ListObjectToCheckCollision[i];
+		}
+	}*/
 	for (size_t i = 0; i < objects.size(); i++)
 		delete objects[i];
-
+		
 	objects.clear();
+	ListObjectToCheckCollision.clear();
 	player = NULL;
 	CTileMap::GetInstance()->Unload();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);

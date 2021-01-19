@@ -24,8 +24,8 @@
 #--Tileset Columns and Tileset Rows
 #--MapColumns and MapRows
 #--TileWidth and TileHeight
-#[TILEMAP]
-#Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
+[TILEMAP]
+Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #HUD_CARD
@@ -1030,7 +1030,7 @@
 5	2270	110	1	2276	127	4
 
 # ---- background ---------rgb = 156 252 240
-4	0	0	4	1
+#4	0	0	4	1
 
 # ---- Tail ---------------
 8	300	400	2
@@ -1098,7 +1098,7 @@
 10	1441	129	2323	3
 
 # GOOMBA
-2	100	300	3	1
+2	200	350	3	1
 2	480	400	3	1
 
 2	900	300	3	1

@@ -102,7 +102,7 @@ void CTileMap::Render()
 	for (int i = 0; i < RowOfMap; i++) {
 		for (int j = 0; j < ColumnsOfMap; j++) {
 			if(Data)
-				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw(j * _TileHeight, i * _TileWidth, 255);
+				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw((j * _TileHeight)-15, (i * _TileWidth)-15, 255);
 		}
 	}
 }

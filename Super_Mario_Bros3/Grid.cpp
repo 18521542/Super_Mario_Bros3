@@ -114,19 +114,14 @@ void Grid::Load(LPCWSTR filePath, vector<LPGAMEOBJECT>* listObject)
 
 void Grid::GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int camY)
 {
-	/*listObjectInCam->clear();
-	for (size_t i = 0; i < listObject->size(); i++) 
-	{
-		if (listObject->at(i)->ObjectInCam()) {
-			listObjectInCam->push_back(listObject->at(i));
+	//for()
+	//listObject->clear();
+	for (size_t i = 0; i < listObject->size(); i++) {
+		if (!listObject->at(i)->ObjectInCam()) 
+		{
+			listObject->erase(listObject->begin() + i);
 		}
-		
-	}*/
-	listObject->clear();
-	/*for (size_t i = 0; i < listObjectInCam->size(); i++)
-	{
-		listObject->push_back(listObjectInCam->at(i));
-	}*/
+	}
 
 
 	int left, top, right, bottom;

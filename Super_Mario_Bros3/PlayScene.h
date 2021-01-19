@@ -47,6 +47,7 @@ protected:
 
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> ListObjectToCheckCollision;
+	//vector<LPGAMEOBJECT> SpecialObjects;
 	HUD* hud;
 	Grid* grid;
 

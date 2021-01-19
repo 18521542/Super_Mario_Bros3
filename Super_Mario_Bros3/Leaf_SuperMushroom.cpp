@@ -63,28 +63,24 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//decide which will appear : leaf or mushroom, and when will appear
 	if (type != GREEN_MUSHROOM) 
 	{
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+		{
+			this->type = MUSHROOM;
+			if (mario->x < this->x && !isUsed) {
+				this->nx = 1;
+			}
+			else if (mario->x >= this->x && !isUsed) {
+				this->nx = -1;
+			}
+		}
+		else
+			this->type = LEAF;
 		for (size_t i = 0; i < coObjects->size(); i++)
 		{
 			LPGAMEOBJECT obj = coObjects->at(i);
 			float pLeft, pTop, pRight, pBottom;
 			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
-			if (dynamic_cast<CMario*>(obj))
-			{
-				CMario* mario = dynamic_cast<CMario*>(obj);
-				if (mario->GetLevel() == MARIO_LEVEL_SMALL)
-				{
-					this->type = MUSHROOM;
-					if (mario->x < this->x && !isUsed) {
-						this->nx = 1;
-					}
-					else if (mario->x >= this->x && !isUsed) {
-						this->nx = -1;
-					}
-				}
-				else
-					this->type = LEAF;
-			}
-			else if (dynamic_cast<CQuestionBrick*>(obj))
+			if (dynamic_cast<CQuestionBrick*>(obj))
 			{
 				float qX, qY;
 				CQuestionBrick* qb = dynamic_cast<CQuestionBrick*>(obj);
