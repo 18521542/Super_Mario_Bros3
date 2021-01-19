@@ -143,8 +143,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());  //left
-	float y = atof(tokens[2].c_str());	//top
+	float x = (float)atof(tokens[1].c_str());  //left
+	float y = (float)atof(tokens[2].c_str());	//top
 
 	int ani_set_id = atoi(tokens[3].c_str());
 	
@@ -188,8 +188,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case OBJECT_TYPE_PORTAL:
 	{
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
+		float r =(float) atof(tokens[4].c_str());
+		float b =(float) atof(tokens[5].c_str());
 		int scene_id = atoi(tokens[6].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
@@ -197,8 +197,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PLATFORM:
 	{
 		//DebugOut(L"aaaa");
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
+		float r = (float) atof(tokens[4].c_str());
+		float b = (float)atof(tokens[5].c_str());
 		int type = atoi(tokens[6].c_str());
 		obj = new CPlatform(x, y, r, b, type);
 
@@ -263,7 +263,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_MOVING_EDGE:
 	{
-		float stopDes = atof(tokens[4].c_str());
+		float stopDes = (float)atof(tokens[4].c_str());
 		obj = new MovingEdge(stopDes);
 		movingEdge = (MovingEdge*)obj; // moving edge start
 		break;
@@ -410,19 +410,26 @@ void CPlayScene::Update(DWORD dt)
 			
 	}
 
-	if (movingEdge != NULL ) 
+	if (movingEdge != NULL&& !player->IsInSecretRoom())
 	{
-		if (movingEdge->IsActive()) 
-		{
-			CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
-		}
-		else {
-			CGame::GetInstance()->SetCamPos((float)(1760), (movingEdge->y + 30));
-		}
 		movingEdge->Update(dt, &ListObjectToCheckCollision);
-		hud->Update(dt, &ListObjectToCheckCollision);
-		return;
+
+			if (movingEdge->IsActive())
+			{
+				CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
+				
+				//return;
+			}
+			else {
+				CGame::GetInstance()->SetCamPos((float)(1755), (movingEdge->y + 30));
+				hud->Update(dt, &ListObjectToCheckCollision);
+				//return;
+			}
+			hud->Update(dt, &ListObjectToCheckCollision);
+			return;
 	}
+
+	
 	if (player->GetState() != MARIO_STATE_DIE) 
 	{
 		if (player->IsAtTheEnd()) {
@@ -439,14 +446,14 @@ void CPlayScene::Update(DWORD dt)
 				CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
 		}
 		else
-			CGame::GetInstance()->SetCamPos((int)cx, 500.0f);
-
-		
+			CGame::GetInstance()->SetCamPos((int)cx, Anchor_in->y-SCREEN__HEIGHT/2);
+		DebugOut(L"\n Cam x %f", cx);
+		DebugOut(L"\n Cam y %f", cy);
 	}
 
 	hud->Update(dt, &ListObjectToCheckCollision);
 	TailOfMario->Update(dt, &ListObjectToCheckCollision);
-	for (int i = 0; i < fireballs.size(); i++) {
+	for (size_t i = 0; i < fireballs.size(); i++) {
 		fireballs[i]->Update(dt, &ListObjectToCheckCollision);
 	}
 }
@@ -461,7 +468,7 @@ void CPlayScene::Render()
 	}
 	//SpecialObj->Render();
 	hud->Render();
-	for (int i = 0; i < fireballs.size(); i++) {
+	for (size_t i = 0; i < fireballs.size(); i++) {
 		fireballs[i]->Render();
 	}
 }

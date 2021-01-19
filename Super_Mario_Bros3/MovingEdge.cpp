@@ -16,14 +16,14 @@ void MovingEdge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 
-	DebugOut(L"\nMario is control cam %d", mario->IsControlCamera());
-	if (!mario->IsEntering()) 
+	//DebugOut(L"\nMario is control cam %d", mario->IsControlCamera());
+	/*if (!mario->IsEntering()) 
 	{
 		mario->SetIsControlCamera(false);
 	}
 	else {
 		mario->SetIsControlCamera(true);
-	}
+	}*/
 	//float l, t, r, b;
 	//mario->GetBoundingBox(l, t, r, b);
 	if (mario->x < this->x )

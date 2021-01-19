@@ -1056,5 +1056,8 @@ Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
 #moving edge
 131	1500	200	1	1800	1
 
+5	1950	334	1	1955	335	4
+132	2202	366	1	1
+
 [GRID]
 SpacePartioning\Map1-4\GridData.txt
