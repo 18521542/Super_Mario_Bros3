@@ -86,13 +86,14 @@ void CMario::UpdateStateUsingTimeOut()
 		if (!isInSecretRoom) 
 		{
 			isInSecretRoom = true;
-			x = 2300;
-			y = 611;
+			Anchor* anchorin = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetAnchorIn();
+			SetPosition(anchorin->x, anchorin->y);
 		}
 		else {
 			isInSecretRoom = false;
-			x = 2310;
-			y = 400;
+			//Anchor out
+			Anchor* anchorout = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetAnchorOut();
+			SetPosition(anchorout->x, anchorout->y);
 		}
 	}
 }
@@ -633,7 +634,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx += a * dt;
 		vy += ay * dt;
 		
-		if (y > SAFETY_HIGHT) {
+		if (y > SAFETY_HIGHT) 
+		{
 			SetState(MARIO_STATE_DIE);
 		}
 		//DebugOut(L"\n Is in secret room %d", isInSecretRoom);
@@ -928,7 +930,6 @@ void CMario::Render()
 		}
 	else if (level == MARIO_LEVEL_TAIL)
 	{
-	DebugOut(L"\n Is flying %d", isFalling);
 		if (state == MARIO_STATE_SIT)
 		{
 			RenderLogicForSittingState(ani, MARIO_ANI_TAIL_SIT_RIGHT, MARIO_ANI_TAIL_SIT_LEFT);

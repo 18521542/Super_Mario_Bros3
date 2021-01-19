@@ -46,12 +46,16 @@ class CPlayScene : public CScene
 protected:
 	CMario* player;					// A play scene has to have player, right? 
 	CTail* TailOfMario;
+
 	vector<CFireBall*> fireballs;
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> ListObjectToCheckCollision;
 	//vector<LPGAMEOBJECT> SpecialObjects;
 	HUD* hud;
 	Grid* grid;
+
+	Anchor* Anchor_in;
+	Anchor* Anchor_out;
 
 	MovingEdge* movingEdge;
 
@@ -75,6 +79,9 @@ public:
 	CMario* GetPlayer() { return player; }
 	HUD* GetHud() { return hud; }
 	MovingEdge* GetMovingEdge() { return movingEdge; }
+
+	Anchor* GetAnchorIn() { return this->Anchor_in; }
+	Anchor* GetAnchorOut() { return this->Anchor_out; }
 	//friend class CPlayScenceKeyHandler;
 };
 

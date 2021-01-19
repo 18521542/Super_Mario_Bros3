@@ -32,7 +32,7 @@ public:
 	void GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int camY);
 	bool CheckObjectId(vector<LPGAMEOBJECT>* listObjects, LPGAMEOBJECT obj)
 	{
-		for (int i = 0; i < listObjects->size(); i++)
+		for (size_t i = 0; i < listObjects->size(); i++)
 		{
 			if (listObjects->at(i) == obj) {
 				return false;

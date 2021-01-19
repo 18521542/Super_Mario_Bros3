@@ -68,7 +68,7 @@ void Grid::_ParseSection_OBJECTS(string line)
 	int cellY = atoi(tokens[1].c_str());
 	int objectId;
 
-	for (int i = 2; i < tokens.size(); i++)
+	for (size_t i = 2; i < tokens.size(); i++)
 	{
 		objectId = atoi(tokens[i].c_str());
 		data[cellX][cellY].Add(listObjectToCheckCollision->at(objectId), objectId);

@@ -272,6 +272,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int type = atoi(tokens[4].c_str());
 		obj = new Anchor(type); // moving edge start
+		if (type == ANCHOR_IN) {
+			Anchor_in = (Anchor*)obj;
+			DebugOut(L"\n Anchor in created");
+		}
+		else if (type == ANCHOR_OUT) {
+			Anchor_out = (Anchor*)obj;
+			DebugOut(L"\n Anchor out created");
+		}
 		break;
 	}
 	default:
@@ -404,8 +412,6 @@ void CPlayScene::Update(DWORD dt)
 
 	if (movingEdge != NULL ) 
 	{
-		hud->Update(dt, &ListObjectToCheckCollision);
-		movingEdge->Update(dt, &ListObjectToCheckCollision);
 		if (movingEdge->IsActive()) 
 		{
 			CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
@@ -413,6 +419,8 @@ void CPlayScene::Update(DWORD dt)
 		else {
 			CGame::GetInstance()->SetCamPos((float)(1760), (movingEdge->y + 30));
 		}
+		movingEdge->Update(dt, &ListObjectToCheckCollision);
+		hud->Update(dt, &ListObjectToCheckCollision);
 		return;
 	}
 	if (player->GetState() != MARIO_STATE_DIE) 
@@ -463,11 +471,15 @@ void CPlayScene::Unload()
 	for (size_t i = 0; i < objects.size(); i++)
 		delete objects[i];
 	objects.clear();
+	fireballs.clear();
 	ListObjectToCheckCollision.clear();
+
 	player = NULL;
 	TailOfMario = NULL;
 	movingEdge = NULL;
-	fireballs.clear();
+	Anchor_in = NULL;
+	Anchor_out = NULL;
+
 	CTileMap::GetInstance()->Unload();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
