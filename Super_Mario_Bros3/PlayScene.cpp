@@ -396,7 +396,11 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx <= 0)
 		cx = 0;
+	if (cy >= 230.0f)
+		cy = 230.0f;
 
+
+	//grid->Update(dt,&ListObjectToCheckCollision, cx, cy);
 	if (grid != NULL) 
 	{
 		grid->GetListObjectsOfCell(&ListObjectToCheckCollision, cx, cy);
@@ -407,28 +411,23 @@ void CPlayScene::Update(DWORD dt)
 		{
 			ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
 		}
-			
 	}
 
 	if (movingEdge != NULL&& !player->IsInSecretRoom())
 	{
 		movingEdge->Update(dt, &ListObjectToCheckCollision);
 
-			if (movingEdge->IsActive())
-			{
-				CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
-				
-				//return;
-			}
-			else {
-				CGame::GetInstance()->SetCamPos((float)(1755), (movingEdge->y + 30));
-				hud->Update(dt, &ListObjectToCheckCollision);
-				//return;
-			}
+		if (movingEdge->IsActive())
+		{
+			CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
+		}
+		else {
+			CGame::GetInstance()->SetCamPos((float)(movingEdge->GetStopDes()),(float) (movingEdge->y + 30));
 			hud->Update(dt, &ListObjectToCheckCollision);
-			return;
+		}
+		hud->Update(dt, &ListObjectToCheckCollision);
+		return;
 	}
-
 	
 	if (player->GetState() != MARIO_STATE_DIE) 
 	{
@@ -440,15 +439,13 @@ void CPlayScene::Update(DWORD dt)
 		}
 		if (!player->IsInSecretRoom()) 
 		{
-			if (cy >= 230.0f)
+			/*if (cy >= 230.0f)
 				CGame::GetInstance()->SetCamPos((int)cx, 230.0f);
-			else
+			else*/
 				CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
 		}
 		else
 			CGame::GetInstance()->SetCamPos((int)cx, Anchor_in->y-SCREEN__HEIGHT/2);
-		DebugOut(L"\n Cam x %f", cx);
-		DebugOut(L"\n Cam y %f", cy);
 	}
 
 	hud->Update(dt, &ListObjectToCheckCollision);
