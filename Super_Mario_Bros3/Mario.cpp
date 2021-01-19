@@ -582,12 +582,13 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<Card*>(e->obj)) {
 				Card* card = dynamic_cast<Card*>(e->obj);
-				if (e->ny > 0)
+				if (e->ny != 0)
 				{
 					vy += MARIO_FALLING_ACCELERATION * dt;
 					isReadyToJump = false;
 					isAtTheEnd = true;
-					card->StartMoving();
+					if(!card->IsMoving())
+						card->StartMoving();
 					card->StopRandom();
 					CGame::GetInstance()->SetFCard(card->GetID());
 				}

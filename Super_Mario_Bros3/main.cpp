@@ -39,7 +39,7 @@
 #define SCREEN_WIDTH 300
 #define SCREEN_HEIGHT 290
 
-#define MAX_FRAME_RATE 140
+#define MAX_FRAME_RATE 120
 
 CGame* game;
 

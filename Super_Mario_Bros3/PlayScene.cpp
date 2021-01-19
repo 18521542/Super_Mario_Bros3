@@ -366,31 +366,8 @@ void CPlayScene::_ParseSection_GRID(string line)
 
 void CPlayScene::Update(DWORD dt)
 {
-	float PreCx, PreCy;
-	CGame::GetInstance()->GetCamPos(PreCx, PreCy);
-	
-	if (grid != NULL) {
-		grid->GetListObjectsOfCell(&ListObjectToCheckCollision, PreCx, PreCy);
-	}
-	
-	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
-	{
-		if(!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
-		ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
-	}
-
-	DebugOut(L"\n ListObject size %d",ListObjectToCheckCollision.size());
-	DebugOut(L"\n Object size %d", objects.size());
 	player->Update(dt, &ListObjectToCheckCollision);
 	
-
-	if (movingEdge != NULL && movingEdge->IsActive()) {
-		
-		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), (movingEdge->y+30));
-		hud->Update(dt, &ListObjectToCheckCollision);
-		return;
-	}
-
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
@@ -400,12 +377,27 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame* game = CGame::GetInstance();
 
-	cx -= (float)(game->GetScreenWidth()) / 2;
-	cy -= (float)(game->GetScreenHeight() / 3);
+	cx -= (int)(game->GetScreenWidth()) / 2;
+	cy -= (int)(game->GetScreenHeight() / 3);
 
 	if (cx <= 0)
 		cx = 0;
 
+	if (grid != NULL) {
+		grid->GetListObjectsOfCell(&ListObjectToCheckCollision, cx, cy);
+	}
+	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
+	{
+		if (!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
+			ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
+	}
+
+	if (movingEdge != NULL && movingEdge->IsActive()) {
+
+		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), (movingEdge->y + 30));
+		hud->Update(dt, &ListObjectToCheckCollision);
+		return;
+	}
 	if (player->GetState() != MARIO_STATE_DIE) 
 	{
 		if (player->IsAtTheEnd()) {
@@ -414,15 +406,17 @@ void CPlayScene::Update(DWORD dt)
 				player->SetState(MARIO_STATE_DIE);
 			return;
 		}
-		if (!player->IsInSecretRoom()) {
+		if (!player->IsInSecretRoom()) 
+		{
 			if (cy >= 230.0f)
 				CGame::GetInstance()->SetCamPos((int)cx, 230.0f);
-				//CGame::GetInstance()->SetCamPos(cx, cy);
 			else
 				CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
 		}
 		else
 			CGame::GetInstance()->SetCamPos((int)cx, 500.0f);
+
+		
 	}
 	else if (player->GetState() == MARIO_STATE_DIE) 
 	{
@@ -433,15 +427,12 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	//CTileMap::GetInstance()->Render();
-	
-	
-	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++) {
-		
-			ListObjectToCheckCollision[i]->Render();
-	}
+	CTileMap::GetInstance()->Render();
 	player->Render();
-	
+	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++) {
+
+		ListObjectToCheckCollision[i]->Render();
+	}
 	//SpecialObj->Render();
 	hud->Render();
 	
@@ -449,12 +440,6 @@ void CPlayScene::Render()
 
 void CPlayScene::Unload()
 {
-	/*if (ListObjectToCheckCollision.size() != 0) {
-		for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++) {
-			if (!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
-				delete ListObjectToCheckCollision[i];
-		}
-	}*/
 	for (size_t i = 0; i < objects.size(); i++)
 		delete objects[i];
 		

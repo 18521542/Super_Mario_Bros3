@@ -99,10 +99,39 @@ CTileMap* CTileMap::GetInstance() {
 
 void CTileMap::Render() 
 {
-	for (int i = 0; i < RowOfMap; i++) {
-		for (int j = 0; j < ColumnsOfMap; j++) {
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	int deltaX = CGame::GetInstance()->GetScreenWidth()/ _TileWidth + 3;
+	int deltaY = CGame::GetInstance()->GetScreenHeight()/ _TileHeight + 3;
+
+	//decide which area of map will be rendered
+	int startX = (int)cx/ _TileWidth;
+	int finishX = (int)cx / _TileWidth + deltaX;
+	int startY = (int)cy / _TileWidth;
+	int finishY = (int)cy / _TileWidth + deltaY;
+
+	if (startY < 0) {
+		startY= 0;
+	}
+
+	if (finishY > RowOfMap) {
+		finishY = RowOfMap;
+	}
+
+	if (finishX > ColumnsOfMap) {
+		finishX = ColumnsOfMap;
+	}
+	/*DebugOut(L"\n======================");
+	DebugOut(L"\n Start X %d", startX);
+	DebugOut(L"\n finishX  %d", finishX);
+	DebugOut(L"\n Start Y %d", startY);
+	DebugOut(L"\n finishY %d", finishY);*/
+	
+	for (int i = startY; i < finishY; i++) {
+		for (int j = startX; j < finishX; j++) {
 			if(Data)
-				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw((j * _TileHeight)-15, (i * _TileWidth)-15, 255);
+				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw((j * _TileWidth)-14, (i * _TileHeight)-14, 255);
 		}
 	}
 }

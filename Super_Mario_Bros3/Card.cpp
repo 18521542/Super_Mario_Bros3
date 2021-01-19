@@ -46,7 +46,7 @@ void Card::Render() {
 
 void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	CGameObject::Update(dt, coObjects);
-
+	
 	if (isAppear) 
 	{
 		if (GetTickCount64() - StartRandomTime > 150) {
@@ -55,7 +55,8 @@ void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			StartRandomTime = GetTickCount64();
 		}
 	}
-	else {
+	else 
+	{
 		x = 2600;
 		hud_card->SetPosition(x + 140, y +15);
 		hud_card->SetID(id);
@@ -63,6 +64,7 @@ void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			hud_card->StartAppear();
 		hud_card->Update(dt, coObjects);
 	}
+
 	if (isMoving) {
 		vy = -0.07f;
 		isEatenByMario = true;
@@ -70,6 +72,7 @@ void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	else {
 		vy = 0;
 	}
+	DebugOut(L"\n Is moving %d", isMoving);
 
 	y += dy;
 
