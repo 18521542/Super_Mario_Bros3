@@ -11,6 +11,7 @@ void MovingEdge::GetBoundingBox(float& left, float& top, float& right, float& bo
 	bottom = y+SCREEN__HEIGHT;
 }
 void MovingEdge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
+	DebugOut(L"\n X =  %f", x);
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	CGameObject::Update(dt, coObjects);
 	x += dx;

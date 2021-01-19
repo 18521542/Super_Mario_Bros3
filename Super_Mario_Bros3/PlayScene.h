@@ -44,7 +44,8 @@ class CPlayScene : public CScene
 {
 protected:
 	CMario* player;					// A play scene has to have player, right? 
-
+	CTail* TailOfMario;
+	vector<CFireBall*> fireballs;
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> ListObjectToCheckCollision;
 	//vector<LPGAMEOBJECT> SpecialObjects;

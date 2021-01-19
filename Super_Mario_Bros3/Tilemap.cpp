@@ -97,13 +97,18 @@ CTileMap* CTileMap::GetInstance() {
 	return instance;
 }
 
+#define EXTRA_TILES	3
+
+//14
+#define WORLD_MAP_1_1_DELTA	14
 void CTileMap::Render() 
 {
+	int id = CGame::GetInstance()->GetCurrentScene()->GetID();
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
-	int deltaX = CGame::GetInstance()->GetScreenWidth()/ _TileWidth + 3;
-	int deltaY = CGame::GetInstance()->GetScreenHeight()/ _TileHeight + 3;
+	int deltaX = CGame::GetInstance()->GetScreenWidth()/ _TileWidth + EXTRA_TILES;
+	int deltaY = CGame::GetInstance()->GetScreenHeight()/ _TileHeight + EXTRA_TILES;
 
 	//decide which area of map will be rendered
 	int startX = (int)cx/ _TileWidth;
@@ -130,8 +135,15 @@ void CTileMap::Render()
 	
 	for (int i = startY; i < finishY; i++) {
 		for (int j = startX; j < finishX; j++) {
-			if(Data)
-				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] -1]->Draw((j * _TileWidth)-14, (i * _TileHeight)-14, 255);
+			if (Data) {
+				if(id == 1)
+				CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] - 1]->Draw((j * _TileWidth) - WORLD_MAP_1_1_DELTA,
+					(i * _TileHeight) - WORLD_MAP_1_1_DELTA,
+					255);
+				else
+					CTileMap::GetInstance()->Tiles[CTileMap::GetInstance()->Data[i][j] - 1]->Draw((j * _TileWidth), (i * _TileHeight),255);
+			}
+				
 		}
 	}
 }

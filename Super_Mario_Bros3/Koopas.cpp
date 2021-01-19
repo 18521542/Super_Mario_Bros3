@@ -117,17 +117,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
-			else if (dynamic_cast<CFireBall*>(e->obj)) {
-				CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
-				if (nx != 0 || ny != 0) {
-					if (this->GetType() != KOOPA)
-						this->SetType(KOOPA);
-					SetState(KOOPAS_STATE_DIE);
-				}
-						
-				fb->setIsAppear(false);
-					
-			}	
 			else if (dynamic_cast<CQuestionBrick*>(e->obj)) {
 				CQuestionBrick* qb = dynamic_cast<CQuestionBrick*>(e->obj);
 				if (e->nx != 0) 

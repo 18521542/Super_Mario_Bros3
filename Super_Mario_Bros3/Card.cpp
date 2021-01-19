@@ -72,7 +72,7 @@ void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	else {
 		vy = 0;
 	}
-	DebugOut(L"\n Is moving %d", isMoving);
+	//DebugOut(L"\n Is moving %d", isMoving);
 
 	y += dy;
 

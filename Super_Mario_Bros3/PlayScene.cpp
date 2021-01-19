@@ -212,12 +212,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	break;
 	case OBJECT_TYPE_FIREBALL:
 		obj = new CFireBall();
+		fireballs.push_back((CFireBall*)obj);
 		//x,y
 		break;
 	case OBJECT_TYPE_TAIL:
 		obj = new CTail();
-		//obj = new CFireBall();
-		//x,y
+		TailOfMario = (CTail*)(obj);
 		break;
 	case OBJECT_TYPE_BREAKABLEBRICK:
 	{
@@ -383,18 +383,23 @@ void CPlayScene::Update(DWORD dt)
 	if (cx <= 0)
 		cx = 0;
 
-	if (grid != NULL) {
+	if (grid != NULL) 
+	{
 		grid->GetListObjectsOfCell(&ListObjectToCheckCollision, cx, cy);
 	}
 	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++)
 	{
-		if (!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]))
+		if (!dynamic_cast<CMario*>(ListObjectToCheckCollision[i]) && !dynamic_cast<MovingEdge*>(ListObjectToCheckCollision[i]))
+		{
 			ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
+		}
+			
 	}
 
 	if (movingEdge != NULL && movingEdge->IsActive()) {
 
-		CGame::GetInstance()->SetCamPos((int)(movingEdge->x), (movingEdge->y + 30));
+		CGame::GetInstance()->SetCamPos((int)(movingEdge->x-1), (movingEdge->y + 30));
+		movingEdge->Update(dt, &ListObjectToCheckCollision);
 		hud->Update(dt, &ListObjectToCheckCollision);
 		return;
 	}
@@ -418,11 +423,12 @@ void CPlayScene::Update(DWORD dt)
 
 		
 	}
-	else if (player->GetState() == MARIO_STATE_DIE) 
-	{
-		return;
-	}
+
 	hud->Update(dt, &ListObjectToCheckCollision);
+	TailOfMario->Update(dt, &ListObjectToCheckCollision);
+	for (int i = 0; i < fireballs.size(); i++) {
+		fireballs[i]->Update(dt, &ListObjectToCheckCollision);
+	}
 }
 
 void CPlayScene::Render()
@@ -435,17 +441,21 @@ void CPlayScene::Render()
 	}
 	//SpecialObj->Render();
 	hud->Render();
-	
+	for (int i = 0; i < fireballs.size(); i++) {
+		fireballs[i]->Render();
+	}
 }
 
 void CPlayScene::Unload()
 {
 	for (size_t i = 0; i < objects.size(); i++)
 		delete objects[i];
-		
 	objects.clear();
 	ListObjectToCheckCollision.clear();
 	player = NULL;
+	TailOfMario = NULL;
+	movingEdge = NULL;
+	fireballs.clear();
 	CTileMap::GetInstance()->Unload();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }

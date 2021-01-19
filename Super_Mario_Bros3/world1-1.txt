@@ -947,7 +947,7 @@ Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 #type	left	top	ani_set_id	right	bottom	type
 
 # ---- MARIO---------------	
-0	2500	400	1
+0	100	400	1
 -------border platform----------------------------
 #5	2815	2	1	2830	441	1
 #5	1	3	1	-34	445	1	
@@ -1040,7 +1040,6 @@ Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 #fire ball
 7	2500	300	7
 7	2600	300	7
-7	2700	300	7
 
 #-----	QUESTION BRICK ----
 #QB with coin effect

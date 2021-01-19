@@ -12,12 +12,13 @@
 
 class CTail : public CGameObject
 {
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void Render();
+	
 	DWORD startAppear;
 	bool isAppear = false;
 public:
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Render();
 	void StartAppear() { startAppear = GetTickCount(); isAppear = true; }
 	CTail();
 	//virtual void SetState(int state);

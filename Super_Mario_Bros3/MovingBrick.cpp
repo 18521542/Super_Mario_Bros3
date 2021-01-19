@@ -14,9 +14,6 @@ void MovingBrick::GetBoundingBox(float& left, float& top, float& right, float& b
 }
 
 void MovingBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	MovingEdge* edge = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetMovingEdge();
-	if (abs(edge->x - x )> 290)
-		return;
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 	y += dy;
@@ -26,7 +23,7 @@ void MovingBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	}
 	else if (state == STATE_BRICK_FALLING) {
 		vx = 0;
-		vy = 0.05f;
+		vy += 0.0001f *dt;
 	}
 }
 void MovingBrick::Render() {

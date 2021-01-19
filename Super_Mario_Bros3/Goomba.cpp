@@ -52,8 +52,6 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	if (abs(mario->x - x) >  400)
-		return;
 	CGameObject::Update(dt, coObjects);
 
 	vy += MARIO_GRAVITY * dt;
@@ -172,13 +170,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 
 					}
-				}
-				else if (dynamic_cast<CFireBall*>(e->obj)) {
-					CFireBall* fb = dynamic_cast<CFireBall*>(e->obj);
-					if (nx != 0 || ny != 0) {
-						SetState(GOOMBA_STATE_DIE);
-					}
-					fb->setIsAppear(false);
 				}
 				else if (dynamic_cast<CGoomba*>(e->obj)) {
 					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);

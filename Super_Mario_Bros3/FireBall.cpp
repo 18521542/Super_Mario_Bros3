@@ -5,6 +5,7 @@
 #include "Platform.h"
 #include "Koopas.h"
 #include "PlayScene.h"
+#include "Goomba.h"
 CFireBall::CFireBall()
 {
 	isAppear = true;
@@ -20,6 +21,7 @@ CFireBall::CFireBall(float xO, float yO)
 {
 	SetPosition(xO, yO);
 	isAppear = true;
+	this->type = 2;
 }
 void CFireBall::Render()
 {
@@ -56,7 +58,18 @@ void CFireBall::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	if (type != FB_OF_VENUS) {
+		
+		if (mario->IsShootingFireBall() && !this->IsAppear() && mario->IsForFireBallAppear())
+		{
+			
+			this->SetPosition(mario->x /*+ nx * (MARIO_BIG_BBOX_WIDTH + 1.0f)*/, mario->y);
+			this->SetSpeed(mario->nx * FB_SPEED_X, FB_SPEED_Y);
+			this->StartAppear();
+			mario->SetIsForFireBallAppear(false);
+		}
+
 		
 		//do nothing;
 
@@ -113,18 +126,38 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						this->vy = -UP_SPEED;
 					}
 				}
+				else if (dynamic_cast<CKoopas*>(e->obj)) {
+					CKoopas* kp = dynamic_cast<CKoopas*>(e->obj);
+					if (e->nx != 0 || e->ny != 0) {
+						if (kp->GetType() != KOOPA)
+							kp->SetType(KOOPA);
+						kp->SetState(KOOPAS_STATE_DIE);
+						//DebugOut(L"\n Co nhay do day");
+					}
+
+					this->setIsAppear(false);
+
+				}
+				else if (dynamic_cast<CGoomba*>(e->obj)) {
+					CGoomba* gb = dynamic_cast<CGoomba*>(e->obj);
+					if (nx != 0 || ny != 0) {
+						gb->SetKillByKoopa(true);
+						//gb->StartFly();
+						gb->vx = 0;
+					}
+					this->setIsAppear(false);
+				}
 			}
 		}
 	}
 	else {
 		x += dx;
 		y += dy;
-		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		
 		float le, to, ri, bo;
 		mario->GetBoundingBox(le, to, ri, bo);
 		if (CheckBB(le, to, ri, bo) && !isCollide) 
 		{
-			//mario->SetState(MARIO_STATE_DIE);
 			mario->StartDecreaseLevel();
 			isCollide = true;
 		}

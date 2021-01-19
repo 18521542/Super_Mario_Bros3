@@ -273,7 +273,6 @@ class CMario : public CGameObject
 public:
 	CMario(float x , float y );
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
-	
 
 	//Render
 	virtual void Render();
@@ -361,8 +360,11 @@ public:
 	bool IsInSecretRoom() { return this->isInSecretRoom; }
 
 	bool IsExiting() { return this->isExiting; }
+
+	bool IsForFireBallAppear() { return this->isForFireBallAppear; }
 	
 	//set
+	void SetIsForFireBallAppear(bool fire) { this->isForFireBallAppear = fire; }
 	void SetIsReadyToHold(bool hold) { this->isReadyToHold = hold; }
 
 	void setIsReadyToJump(bool jump) {isReadyToJump = jump;}
