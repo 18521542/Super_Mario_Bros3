@@ -11,11 +11,19 @@ void MovingEdge::GetBoundingBox(float& left, float& top, float& right, float& bo
 	bottom = y+SCREEN__HEIGHT;
 }
 void MovingEdge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	DebugOut(L"\n X =  %f", x);
+	//DebugOut(L"\n X =  %f", x);
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 
+	DebugOut(L"\nMario is control cam %d", mario->IsControlCamera());
+	if (!mario->IsEntering()) 
+	{
+		mario->SetIsControlCamera(false);
+	}
+	else {
+		mario->SetIsControlCamera(true);
+	}
 	//float l, t, r, b;
 	//mario->GetBoundingBox(l, t, r, b);
 	if (mario->x < this->x )
@@ -25,8 +33,6 @@ void MovingEdge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 		isActive = false;
 		return;
 	}
-
-	
 }
 void MovingEdge::Render() {
 	RenderBoundingBox();

@@ -193,17 +193,20 @@
     <ClInclude Include="Boomerang.h">
       <Filter>Framework\GameObject\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="MovingEdge.h">
-      <Filter>Framework\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ScrollStage.h">
-      <Filter>Framework\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Framework\Space Partioning</Filter>
     </ClInclude>
     <ClInclude Include="Cell.h">
       <Filter>Framework\Space Partioning</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingEdge.h">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollStage.h">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Anchor.h">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -339,17 +342,20 @@
     <ClCompile Include="Boomerang.cpp">
       <Filter>Framework\GameObject\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="MovingEdge.cpp">
-      <Filter>Framework\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ScrollStage.cpp">
-      <Filter>Framework\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Framework\Space Partioning</Filter>
     </ClCompile>
     <ClCompile Include="Cell.cpp">
       <Filter>Framework\Space Partioning</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingEdge.cpp">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollStage.cpp">
+      <Filter>Framework\GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Anchor.cpp">
+      <Filter>Framework\GameObject\OtherIdea</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

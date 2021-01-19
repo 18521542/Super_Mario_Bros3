@@ -21,8 +21,8 @@ public:
 		int indexX, indexY;
 		float X, Y;
 		obj->GetPosition(X, Y);
-		indexX = X / cellWidth;
-		indexY = Y / cellWidth;
+		indexX = (int)X / cellWidth;
+		indexY = (int) Y / cellWidth;
 		data[indexX][indexY].Add(obj, 1);
 	}
 	vector<LPGAMEOBJECT>* GetList() { return this->listObjectToCheckCollision; }

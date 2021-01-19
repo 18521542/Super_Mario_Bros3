@@ -1,6 +1,6 @@
 [SETTINGS]
 #cell_size	num_col_cells	num_row_cells
-130	30	30
+120	30	30
 [OBJECTS]
 #index_col	index_row	object_id
 #row 1

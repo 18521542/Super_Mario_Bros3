@@ -204,7 +204,6 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 				if (CheckBB(pLeft, pTop, pRight, pBottom)) 
 				{
 					SetState(MARIO_STATE_DIE);
-					//DebugOut(L"\n AAA");
 				}
 			}
 		}
@@ -363,8 +362,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				else if (plat->getType() == PLATFORM_FOR_ENTER_SECRET_ROOM) {
 					if (e->nx != 0 || e->ny != 0) {
 						isReadyForSecretRoom = true;
-						//DebugOut(L"\n Co nhay vo ham nay");
-						//DebugOut(L"\n Is ready for secret room %d", isReadyForSecretRoom);
 					}
 					x += dx;
 					y += dy;
@@ -376,7 +373,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						{
 							StartEnter();
 							isReadyForSecretRoom = true;
-							//DebugOut(L"\n Is ready for secret room %d", isReadyForSecretRoom);
 						}
 						
 					}
@@ -932,6 +928,7 @@ void CMario::Render()
 		}
 	else if (level == MARIO_LEVEL_TAIL)
 	{
+	DebugOut(L"\n Is flying %d", isFalling);
 		if (state == MARIO_STATE_SIT)
 		{
 			RenderLogicForSittingState(ani, MARIO_ANI_TAIL_SIT_RIGHT, MARIO_ANI_TAIL_SIT_LEFT);
@@ -944,14 +941,11 @@ void CMario::Render()
 				MARIO_ANI_TAIL_JUMP_DOWN_RIGHT,
 				MARIO_ANI_TAIL_JUMP_DOWN_LEFT);
 		}
-		else if (isFlying) {
+		else if (isFlying && vy<0) {
 			RenderByDirection(ani, MARIO_ANI_TAIL_JUMP_FLY_RIGHT, MARIO_ANI_TAIL_JUMP_FLY_LEFT);
 		}
 		else if (isKicking) {
 			RenderByDirection(ani, MARIO_ANI_TAIL_KICK_RIGHT, MARIO_ANI_TAIL_KICK_LEFT);
-		}
-		else if (state==MARIO_STATE_JUMP_FLY) {
-			RenderLogicForSittingState(ani, MARIO_ANI_TAIL_JUMP_FLY_RIGHT, MARIO_ANI_TAIL_JUMP_FLY_LEFT);
 		}
 		else if (IsUsingTail()) {
 			if (nx > 0)

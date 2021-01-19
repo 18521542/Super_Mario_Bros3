@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Anchor.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="ArrowToChoose.h" />
     <ClInclude Include="Background.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="WorldMapScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="ArrowToChoose.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="Boomerang.cpp" />

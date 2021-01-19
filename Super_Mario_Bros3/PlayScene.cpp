@@ -268,6 +268,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		movingEdge = (MovingEdge*)obj; // moving edge start
 		break;
 	}
+	case OBJECT_TYPE_ANCHOR:
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new Anchor(type); // moving edge start
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -396,11 +402,17 @@ void CPlayScene::Update(DWORD dt)
 			
 	}
 
-	if (movingEdge != NULL && movingEdge->IsActive()) {
-
-		CGame::GetInstance()->SetCamPos((int)(movingEdge->x-1), (movingEdge->y + 30));
-		movingEdge->Update(dt, &ListObjectToCheckCollision);
+	if (movingEdge != NULL ) 
+	{
 		hud->Update(dt, &ListObjectToCheckCollision);
+		movingEdge->Update(dt, &ListObjectToCheckCollision);
+		if (movingEdge->IsActive()) 
+		{
+			CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
+		}
+		else {
+			CGame::GetInstance()->SetCamPos((float)(1760), (movingEdge->y + 30));
+		}
 		return;
 	}
 	if (player->GetState() != MARIO_STATE_DIE) 

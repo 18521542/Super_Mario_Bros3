@@ -268,6 +268,8 @@ class CMario : public CGameObject
 
 	bool isAtTheEnd = false;
 
+	bool isControlCamera = true;
+
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 public:
@@ -277,6 +279,7 @@ public:
 	//Render
 	virtual void Render();
 
+	bool IsControlCamera() { return this->isControlCamera; }
 	bool IsAtTheEnd() { return this->isAtTheEnd; }
 	void RenderByDirection(int& ani, int ani_right, int ani_left);
 	void SameRenderLogicsForAllLevel(int &ani, 
@@ -394,6 +397,8 @@ public:
 	void setIsAllowToStop(bool stop) { this->isAllowtoStop = stop; }
 
 	void SetIsReadyToExit(bool exit) { this->isReadyToExit = exit; }
+
+	void SetIsControlCamera(bool cam) { this->isControlCamera = cam; }
 
 	void UpdateStateUsingTimeOut();
 

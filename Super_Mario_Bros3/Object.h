@@ -17,3 +17,4 @@
 #include "MovingBrick.h"
 #include "BoomerangBrother.h"
 #include "MovingEdge.h"
+#include "Anchor.h"
