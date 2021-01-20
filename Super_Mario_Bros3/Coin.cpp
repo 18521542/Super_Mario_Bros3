@@ -55,7 +55,14 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		state = COIN_STATE_DISAPPEAR;
 	}
 		
-
+	if (isReset) 
+	{
+		vy -= 0.1f;
+		if (GetTickCount64() - StartResetTime > 100) {
+			isReset = false;
+			isUsed = false;
+		}
+	}
 	for (size_t i = 0 ; i < coObjects->size(); i++) 
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
@@ -69,6 +76,10 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				StartEffect();
 				isUsed = true;
 			}
+		}
+		else if (dynamic_cast<CBreakableBrick*>(obj))
+		{
+			
 		}
 	}
 

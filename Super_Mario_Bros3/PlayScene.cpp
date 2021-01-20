@@ -401,7 +401,7 @@ void CPlayScene::Update(DWORD dt)
 		cy = 230.0f;
 
 	//DebugOut(L"\n List object size %d", objects.size());
-	DebugOut(L"\n List object size %d", ListObjectToCheckCollision.size());
+	//DebugOut(L"\n List object size %d", ListObjectToCheckCollision.size());
 
 	//grid->Update(dt,&ListObjectToCheckCollision, cx, cy);
 	if (grid != NULL) 

@@ -1,6 +1,7 @@
 #include "Leaf_SuperMushroom.h"
 #include "Utils.h"
 #include "PlayScene.h"
+#include "BreakableBrick.h"
 
 CLeaf_Mushroom::CLeaf_Mushroom(int _type)
 {
@@ -210,9 +211,23 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						vy = 0;
 					}
 				}
+				else if (dynamic_cast<CBreakableBrick*>(e->obj)) {
+					CBreakableBrick* plat = dynamic_cast<CBreakableBrick*>(e->obj);
+					
+					if (e->ny != 0) {
+						vy = 0;
+						
+					}
+					if (e->nx != 0) {
+						this->nx = -this->nx;
+					}
+					x += dx;
+					y += min_ty * dy + ny * 0.4f;
+				}
 				else {
 					x += dx; y += dy;
 				}
+				
 			}
 		}
 

@@ -34,10 +34,12 @@ class CLeaf_Mushroom : public CGameObject
 	bool isMushroomMoving = false;
 	bool isUsed = false;
 	ULONGLONG TimeForMushroomAppear = 0;
+	int Life = 4;
 	//Effect* effect;
 	bool isEffectScore = false;
 public:
 	CLeaf_Mushroom(int state);
+	
 	void SetEffectScore(bool value) {
 		this->isEffectScore = value;
 	}

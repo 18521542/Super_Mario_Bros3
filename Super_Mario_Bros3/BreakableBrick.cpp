@@ -60,6 +60,21 @@ void CBreakableBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	for (size_t i = 0; i < coObjects->size(); i++)
+	{
+		LPGAMEOBJECT obj = coObjects->at(i);
+		float pLeft, pTop, pRight, pBottom;
+		obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+		if (dynamic_cast<CKoopas*>(obj))
+		{
+			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
+			CKoopas* kp = dynamic_cast<CKoopas*>(obj);
+			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			{
+				kp->SetState(KOOPAS_STATE_DIE_UP);
+			}
+		}
+	}
 	if (isMoving) {
 		CGameObject::Update(dt, coObjects);
 		y += dy;
@@ -95,6 +110,5 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		pieceANI->StartAppear();
 		pieceANI->Update(dt, coObjects);
 	}
-	
 	
 }

@@ -5,6 +5,7 @@
 
 #define NORMAL							1
 #define SPECIAL							2
+#define SPECIAL_1_4						3
 
 #define COIN							6
 #define SHINING							2
@@ -29,6 +30,8 @@ class CBreakableBrick : public CGameObject
 	bool isReturnedCoin = false;
 
 	bool isMoving = false;
+	int Life = 3;
+
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -45,6 +48,11 @@ public:
 		CoinAppearTime = GetTickCount64();
 		state = COIN;
 	}
+
+	void DecreaseLife() {
+		Life--;
+	}
+	int life() { return Life; }
 
 	void SetIsReturned(bool activa) {
 		this->isReturnedCoin = activa;

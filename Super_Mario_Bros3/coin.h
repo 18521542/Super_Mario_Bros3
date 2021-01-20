@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Object.h"
 #include "Effect.h"
+#include "Utils.h"
 #define COIN_ANI 0
 
 #define COIN_STATE_DISAPPEAR	1
@@ -16,12 +17,21 @@ class CCoin : public CGameObject
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-	DWORD StartEffectTime = 0;
+	ULONGLONG StartEffectTime = 0;
 	bool isUsed = false;
+
+	int MaximumResetTime = 7;
+	ULONGLONG StartResetTime;
+	bool isReset =false;
+
+	float startX;
+	float startY;
+
 public:
 	//E/ffect* GetEffect() { return this->effect; }
 	CCoin();
 	CCoin(int state);
 	//virtual void SetState(int state);
-	void StartEffect() { StartEffectTime = GetTickCount(); state = COIN_STATE_EFFECT; vy = -0.3f; }
+	void StartEffect() { StartEffectTime = GetTickCount64(); state = COIN_STATE_EFFECT; vy = -0.3f; }
+	
 };

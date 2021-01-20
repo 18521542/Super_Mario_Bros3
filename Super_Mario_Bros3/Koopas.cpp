@@ -152,7 +152,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							vy = 0;
 							y += min_ty * dy + ny * 0.4f;
 						}
-							
+						if (bb->IsMoving()) {
+							SetState(KOOPAS_STATE_DIE_UP);
+						}
 					}
 					if (e->ny != 0)
 					{
@@ -208,9 +210,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 			else if (dynamic_cast<CMario*>(e->obj)) {
-				x += min_tx * dx + nx * 0.4f;
+				/*x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;
-				CMario* mario = dynamic_cast<CMario*>(e->obj);
+				CMario* mario = dynamic_cast<CMario*>(e->obj);*/
 				//mario->StartEffect();
 			}
 		}

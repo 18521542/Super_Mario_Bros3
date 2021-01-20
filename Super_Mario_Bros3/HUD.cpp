@@ -88,7 +88,7 @@ void HUD::GetBoundingBox(float& left, float& top, float& right, float& bottom) {
 
 void HUD::TimeUpdate(float camX, float camY) 
 {
-	vector<int> TimePool = this->SeperateToNumber(TimeValue, NUMBERS_USED_AS_SKIN_OF_TIME);
+	vector<int> TimePool = this->SeperateToNumber((float)TimeValue, NUMBERS_USED_AS_SKIN_OF_TIME);
 
 	for (int i = 0; i < Time.size(); i++)
 	{
@@ -100,7 +100,7 @@ void HUD::TimeUpdate(float camX, float camY)
 void HUD::ScoreUpdate(float camX, float camY) 
 {
 	vector<int> ScorePool = this->SeperateToNumber(CGame::GetInstance()->GetScore(), NUMBERS_USED_AS_SKIN_OF_SCORE);
-	for (int i = 0; i < Score.size(); i++)
+	for (size_t i = 0; i < Score.size(); i++)
 	{
 		Score.at(i)->SetPosition((float)camX + POSX_OF_FIRST_NUMBER_SCORE + (i * (EACH_NUMBER_DISTANCE+1)), (float)camY + POSY_OF_FIRST_NUMBER_SCORE);
 		int lastIndex = ScorePool.size() - 1 - i;
