@@ -16,6 +16,7 @@
 
 class CBreakableBrick : public CGameObject 
 {
+	float startX, startY;
 	int type;
 
 	PiecesANI* pieceANI;
@@ -27,12 +28,15 @@ class CBreakableBrick : public CGameObject
 	bool isActivated = false;
 	bool isReturnedCoin = false;
 
+	bool isMoving = false;
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
 	bool isBeingBroken = false;
 	DWORD StartBroken;
+	ULONGLONG TimeStartMove;
 public:
 	CBreakableBrick(int typ);
 	int GetType() { return this->type; }
@@ -45,5 +49,8 @@ public:
 	void SetIsReturned(bool activa) {
 		this->isReturnedCoin = activa;
 	}
+	void SetStartPos(float x, float y) { this->startX = x; this->startY = y; }
+	void StartMoving() { vy = -0.1f; isMoving = true; TimeStartMove = GetTickCount64(); }
 	bool IsReturned() { return this->isReturnedCoin; }
+	bool IsMoving() { return this->isMoving; }
 };

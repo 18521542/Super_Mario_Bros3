@@ -120,7 +120,7 @@ void HUD::StackUpdate(float camX, float camY, DWORD dt, vector<LPGAMEOBJECT>* co
 	else {
 		StackDown();
 	}
-	for (int i = 0; i < stack.size(); i++) 
+	for (size_t i = 0; i < stack.size(); i++) 
 	{
 		stack.at(i)->SetPosition((float)camX + POSX_OF_FIRST_NUMBER_SCORE + (i * (EACH_NUMBER_DISTANCE + 1)), (float)camY + POSY_OF_FIRST_STACK);
 		if (stack[i]->GetLevel() < this->StackLevel) {
@@ -199,13 +199,13 @@ void HUD::Render()
 	Card->Render();
 	power->Render();
 	FCard->Render();
-	for (int i = 0; i < Time.size(); i++) {
+	for (size_t i = 0; i < Time.size(); i++) {
 		Time.at(i)->Render();
 	}
-	for (int i = 0; i < Score.size(); i++) {
+	for (size_t i = 0; i < Score.size(); i++) {
 		Score.at(i)->Render();
 	}
-	for (int i = 0; i < stack.size(); i++) {
+	for (size_t i = 0; i < stack.size(); i++) {
 		stack.at(i)->Render();
 	}
 }

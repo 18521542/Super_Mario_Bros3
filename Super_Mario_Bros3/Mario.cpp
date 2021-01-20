@@ -225,15 +225,22 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
-		else if (dynamic_cast<CBreakableBrick*>(obj)) {
-			CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(obj);
-			if (CheckBB(pLeft, pTop, pRight, pBottom))
-			{
-				if (bb->GetState() != COIN) {
-					y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
-				}	
-			}
-		}
+		//else if (dynamic_cast<CBreakableBrick*>(obj)) {
+		//	CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(obj);
+		//	if (CheckBB(pLeft, pTop, pRight, pBottom)/*&& level != MARIO_LEVEL_SMALL*/)
+		//	{
+		//		if (level != MARIO_LEVEL_SMALL) {
+		//			if (bb->GetState() != COIN && !bb->IsMoving()) {
+		//				y -= y + MARIO_BIG_BBOX_HEIGHT - pTop + PushBackPixel;
+		//			}
+		//		}
+		//		else {
+		//			if (bb->GetState() != COIN && !bb->IsMoving()) {
+		//				y -= y + MARIO_SMALL_BBOX_HEIGHT - pTop + PushBackPixel;
+		//			}
+		//		}
+		//	}
+		//}
 	}
 }
 
@@ -550,7 +557,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					
 			}
 			else if (dynamic_cast<CBreakableBrick*>(e->obj)) {
-				CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(e->obj);	
+				CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(e->obj);
 				if (bb->GetState() == COIN) 
 				{
 					x += dx;
@@ -560,8 +567,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					}
 				}			
 				else {
-					x += min_tx * dx + nx * 0.8f;
-					y += min_ty * dy + ny * 0.1f;
 					isReadyToJump = true;
 					if (state == MARIO_STATE_JUMP)
 					{
@@ -569,16 +574,31 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					}
 					if (e->ny < 0)
 					{
+						if (state == MARIO_STATE_JUMP)
+						{
+							SetState(MARIO_STATE_IDLE);
+						}
+						isReadyToJump = true;
 						vy = 0;
+						//y += dx;
 					}
 					if (e->ny > 0) {
 						vy += MARIO_FALLING_ACCELERATION * dt;
 						isReadyToJump = false;
-						if (bb->GetState() == SHINING) {
-							if (bb->GetType() == SPECIAL)
-								bb->SetState(WITHOUT_SHINING);
-							else
-								bb->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
+						if (level != MARIO_LEVEL_SMALL) 
+						{
+							if (bb->GetState() == SHINING)
+							{
+								if (bb->GetType() == SPECIAL)
+									bb->SetState(WITHOUT_SHINING);
+								else
+									bb->SetState(BREAKABLE_BRICK_STATE_DISAPPEAR);
+							}
+						}
+						else {
+							bb->StartMoving();
+							vy += MARIO_FALLING_ACCELERATION * dt;
+							isReadyToJump = false;
 						}
 					}
 					if (e->nx != 0)vx = 0;
@@ -586,6 +606,8 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny != 0 || e->nx != 0) {
 					isOnAir = false;
 				}
+				x += min_tx * dx + nx * 0.8f;
+				y += min_ty * dy + ny * 0.1f;
 			}
 			else if (dynamic_cast<Card*>(e->obj)) {
 				Card* card = dynamic_cast<Card*>(e->obj);

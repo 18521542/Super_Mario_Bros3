@@ -60,31 +60,41 @@ void CBreakableBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
-		if (!isInitPieceANI)
-		{
-			pieceANI = new PiecesANI(this->x, this->y);
-			isInitPieceANI = true;
+	if (isMoving) {
+		CGameObject::Update(dt, coObjects);
+		y += dy;
+		if (GetTickCount64() - TimeStartMove > 100) {
+			TimeStartMove = 0;
+			isMoving = false;
+			y = startY;
 		}
+		return;
+	}
+	if (!isInitPieceANI)
+	{
+		pieceANI = new PiecesANI(this->x, this->y);
+		isInitPieceANI = true;
+		SetStartPos(this->x, this->y);
+	}
 
-		if (this->state == COIN)
+	if (this->state == COIN)
+	{
+		isNotAllowAniBreakAppear = true;
+		if (GetTickCount64() - CoinAppearTime > 4500 && !isActivated)
 		{
-			isNotAllowAniBreakAppear = true;
-			if (GetTickCount64() - CoinAppearTime > 4500 && !isActivated)
-			{
-				//this->state = SHINING;		
-				this->SetState(SHINING);
-				CoinAppearTime = 0;
-				isActivated = true;
-				isNotAllowAniBreakAppear = false;
-			}
+			//this->state = SHINING;		
+			this->SetState(SHINING);
+			CoinAppearTime = 0;
+			isActivated = true;
+			isNotAllowAniBreakAppear = false;
 		}
+	}
 
-		if (state == BREAKABLE_BRICK_STATE_DISAPPEAR && !isNotAllowAniBreakAppear)
-		{
-			pieceANI->StartAppear();
-			pieceANI->Update(dt, coObjects);
-		}
+	if (state == BREAKABLE_BRICK_STATE_DISAPPEAR && !isNotAllowAniBreakAppear)
+	{
+		pieceANI->StartAppear();
+		pieceANI->Update(dt, coObjects);
+	}
 	
 	
 }

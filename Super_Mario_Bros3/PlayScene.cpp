@@ -565,6 +565,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 					//mario->SetSpeed(currentVx, MARIO_FALLING_SPEED);
 					mario->vy = MARIO_FALLING_SPEED;
 					mario->setIsFalling(true);
+					break;
 				}
 			}
 		}
