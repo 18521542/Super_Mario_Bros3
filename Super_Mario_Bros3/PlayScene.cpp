@@ -378,6 +378,7 @@ void CPlayScene::_ParseSection_GRID(string line)
 	
 }
 
+#define MAX_Y	2900
 void CPlayScene::Update(DWORD dt)
 {
 	player->Update(dt, &ListObjectToCheckCollision);
@@ -396,9 +397,11 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx <= 0)
 		cx = 0;
-	if (cy >= 230.0f)
+	if (cy >= 230.0f && !player->IsInSecretRoom())
 		cy = 230.0f;
 
+	//DebugOut(L"\n List object size %d", objects.size());
+	DebugOut(L"\n List object size %d", ListObjectToCheckCollision.size());
 
 	//grid->Update(dt,&ListObjectToCheckCollision, cx, cy);
 	if (grid != NULL) 
@@ -433,7 +436,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		if (player->IsAtTheEnd()) {
 			player->SetState(MARIO_STATE_WALKING_RIGHT);
-			if (player->x > 2900)
+			if (player->x > MAX_Y)
 				player->SetState(MARIO_STATE_DIE);
 			return;
 		}
@@ -458,11 +461,13 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	CTileMap::GetInstance()->Render();
+	
 	player->Render();
 	for (size_t i = 0; i < ListObjectToCheckCollision.size(); i++) {
 
 		ListObjectToCheckCollision[i]->Render();
 	}
+	
 	//SpecialObj->Render();
 	hud->Render();
 	for (size_t i = 0; i < fireballs.size(); i++) {

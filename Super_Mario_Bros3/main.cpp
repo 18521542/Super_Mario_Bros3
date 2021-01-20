@@ -88,7 +88,7 @@ void Render()
 		colorBackGround = MAP14_COLOR;
 	}
 
-	if (d3ddv->BeginScene())
+	if (SUCCEEDED(d3ddv->BeginScene()))
 	{
 		d3ddv->ColorFill(bb, NULL, colorBackGround);
 

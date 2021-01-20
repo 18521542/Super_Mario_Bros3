@@ -248,7 +248,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 	if (state != MARIO_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
-
+	
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -312,7 +312,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CPlatform*>(e->obj)) {
 				CPlatform* plat = dynamic_cast<CPlatform*>(e->obj);
-				
+
 				if (plat->getType() == PLATFORM_TYPE_TWO)
 				{
 					if (e->ny == 0) {
@@ -327,7 +327,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						isReadyToSit = true;
 						if (!isReadyToJump)
 							isReadyToJump = true;
-					
+
 					}
 					else if (e->ny > 0)
 					{
@@ -352,7 +352,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					{
 						state = MARIO_STATE_IDLE;
 					}
-					if (e->ny != 0) 
+					if (e->ny != 0)
 					{
 						vy = 0;
 						/*if (state == MARIO_STATE_FLY)
@@ -368,16 +368,20 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					y += dy;
 				}
 				else if (plat->getType() == 5) {
-					if (e->ny != 0) 
+					if (e->ny != 0)
 					{
-						if (isReadyToExit) 
+						if (isReadyToExit)
 						{
 							StartEnter();
 							isReadyForSecretRoom = true;
 						}
-						
+
 					}
-					
+
+				}
+
+				if (e->ny != 0 || e->nx != 0) {
+					isOnAir = false;
 				}
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj))
@@ -516,6 +520,9 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						}	
 					}
 				}
+				if (e->ny != 0 || e->nx != 0) {
+					isOnAir = false;
+				}
 			}
 			else if (dynamic_cast<CLeaf_Mushroom*>(e->obj)) 
 			{
@@ -575,6 +582,9 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 					if (e->nx != 0)vx = 0;
+				}
+				if (e->ny != 0 || e->nx != 0) {
+					isOnAir = false;
 				}
 			}
 			else if (dynamic_cast<Card*>(e->obj)) {
@@ -958,13 +968,22 @@ void CMario::Render()
 			RenderLogicForRunningState(ani, MARIO_ANI_TAIL_RUN_RIGHT, MARIO_ANI_TAIL_RUN_LEFT,
 				MARIO_ANI_TAIL_WALK_FAST_RIGHT, MARIO_ANI_TAIL_WALK_FAST_LEFT);
 		}
-		else if ((isOnAir && isFalling))
+		else if ((isOnAir))
 		{
-			if (nx > 0) {
-				ani = MARIO_ANI_TAIL_FALLING_RIGHT;
+			if (isFalling) {
+				if (nx > 0) {
+					ani = MARIO_ANI_TAIL_FALLING_RIGHT;
+				}
+				else
+					ani = MARIO_ANI_TAIL_FALLING_LEFT;
 			}
-			else
-				ani = MARIO_ANI_TAIL_FALLING_LEFT;
+			else {
+				RenderLogicForJumpingState(ani,
+					MARIO_ANI_TAIL_JUMP_RIGHT,
+					MARIO_ANI_TAIL_JUMP_LEFT,
+					MARIO_ANI_TAIL_JUMP_DOWN_RIGHT,
+					MARIO_ANI_TAIL_JUMP_DOWN_LEFT);
+			}
 		}
 		else if (isEntering || isExiting) {
 			ani = MARIO_ANI_TAIL_ENTER_SECRET_ROOM;

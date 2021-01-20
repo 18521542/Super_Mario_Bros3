@@ -947,7 +947,7 @@ Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 #type	left	top	ani_set_id	right	bottom	type
 
 # ---- MARIO---------------	
-0	2000	200	1
+0	50	200	1
 -------border platform----------------------------
 #5	2815	2	1	2830	441	1
 #5	1	3	1	-34	445	1	
@@ -1028,9 +1028,6 @@ Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 
 ----platform type for secret room----
 5	2270	110	1	2276	127	4
-
-# ---- background ---------rgb = 156 252 240
-#4	0	0	4	1
 
 # ---- Tail ---------------
 8	300	400	2
@@ -1143,11 +1140,13 @@ Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 #venus
 #12 is venus and 4 is the picture of green pipe
 # id 	x	y	ani-set	type
+
 12	364	370	10	2
 4	354	369	4	2
 
-4	1859	369	4	2
+
 12	1869	370	10	3
+4	1859	369	4	2
 
 
 #switch block
@@ -1181,13 +1180,11 @@ Resourses\Tileset1-1.png	Resourses\Map1-1.txt	11	12	178	45	16	16
 #PARA KOOPA
 3	1326	290	6	2
 3	1375	290	6	2
-3	1426	290	6	2
+3	1415	290	6	2
 
 132	2300	611	1	1
 132	2310	400	1	2
-# --- SCENE PORTAL ----
-# type	l	t	ani_set_id	r	b	scene_id
-#50	300	98	0	316	150	2
+
 
 [GRID]
 SpacePartioning\Map1-1\GridData.txt

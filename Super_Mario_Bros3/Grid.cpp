@@ -115,13 +115,13 @@ void Grid::Load(LPCWSTR filePath, vector<LPGAMEOBJECT>* listObject)
 void Grid::GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int camY)
 {
 	//for()
-	//listObject->clear();
-	for (size_t i = 0; i < listObject->size(); i++) {
+	listObject->clear();
+	/*for (size_t i = 0; i < listObject->size(); i++) {
 		if (!listObject->at(i)->ObjectInCam()) 
 		{
 			listObject->erase(listObject->begin() + i);
 		}
-	}
+	}*/
 
 
 	int left, top, right, bottom;
@@ -131,11 +131,11 @@ void Grid::GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int 
 	right = left +2;
 	bottom = top + 2;
 
-	/*DebugOut(L"\n======================");
+	DebugOut(L"\n======================");
 	DebugOut(L"\nLeft: %i", left);
 	DebugOut(L"\nTop: %i", top);
 	DebugOut(L"\nRight: %i", right);
-	DebugOut(L"\nBottom: %i", bottom);*/
+	DebugOut(L"\nBottom: %i", bottom);
 	//DebugOut(L"\n CGame::GetInstance()->GetScreenWidth() / cellWidth = %i", CGame::GetInstance()->GetScreenWidth() / cellWidth);
 	LPGAMEOBJECT obj;
 
@@ -182,7 +182,6 @@ void Grid::GetListObjectsOfCell(vector<LPGAMEOBJECT>* listObject, int camX, int 
 					}
 				}
 			}
-
 		}
 	}
 }
