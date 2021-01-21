@@ -49,6 +49,9 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 	}
 }
 
+#define TIME_WAIT_UNTIL_DEAD	300
+#define TIME_WAIT_UNTIL_DEAD_LIMIT	500
+#define FLY_SPEED_Y	0.35f
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
@@ -100,20 +103,20 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else if (type == GOOMBA)
 		{
-			if (isSwitched)
+			/*if (isSwitched)
 			{
 				if (GetTickCount64() - TimeToSwitch > 100)
 				{
 					this->isSwitched = false;
 				}
-			}
+			}*/
 			if (state == GOOMBA_STATE_DIE)
 			{
 				vx = 0;
 				vy = 0;
 			}
 
-			if (GetTickCount64() - TimeStartDisappear > 300 && GetTickCount64() - TimeStartDisappear < 500)
+			if (GetTickCount64() - TimeStartDisappear > TIME_WAIT_UNTIL_DEAD && GetTickCount64() - TimeStartDisappear < TIME_WAIT_UNTIL_DEAD_LIMIT)
 			{
 				isDisapear = true;
 				TimeStartDisappear = 0;
@@ -162,7 +165,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								vy = 0;
 							}
 							else {
-								vy = -0.35f;
+								vy = -FLY_SPEED_Y;
 								x += dx;
 								y += dy;
 							}

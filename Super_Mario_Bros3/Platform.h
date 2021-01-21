@@ -4,6 +4,7 @@
 #define PLATFORM_TYPE_ONE	1
 #define PLATFORM_TYPE_THREE	3
 #define PLATFORM_FOR_ENTER_SECRET_ROOM	4
+#define PLATFORM_FOR_OUT_OF_SECRET_ROOM	5
 class CPlatform : public CGameObject
 {
 	int width;

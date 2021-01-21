@@ -4,6 +4,9 @@
 
 #include "Utils.h"
 
+#define TO_HAND_POS_X	5.0f
+#define TO_HAND_POS_Y	5.0f
+
 
 BoomerangBrother::BoomerangBrother() {
 	FirstWeapon = new Boomerang();
@@ -29,12 +32,12 @@ void BoomerangBrother::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (FirstWeapon->GetState() == STATE_NOT_MOVING) 
 	{
-		FirstWeapon->SetPosition(x-5.0f, y-5.0f);
+		FirstWeapon->SetPosition(x- TO_HAND_POS_X, y- TO_HAND_POS_Y);
 		FirstWeapon->isAllowCollideOneTime = true;
 	}
 
 	if (SecondWeapon->GetState() == STATE_NOT_MOVING) {
-		SecondWeapon->SetPosition(x - 5.0f, y - 5.0f);
+		SecondWeapon->SetPosition(x - TO_HAND_POS_X, y - TO_HAND_POS_Y);
 		SecondWeapon->isAllowCollideOneTime = true;
 	}
 	StateMachine(dt, coObjects);
@@ -45,11 +48,15 @@ void BoomerangBrother::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
+#define LONG_WAIT_TIME	3000
+#define TIME_FOR_FIRST_FIRING	500
+#define SHORT_WAIT_TIME	1000
+#define TIME_FOR_SECOND_FIRING	500
 void BoomerangBrother::StateMachine(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	if (state == STATE_LONG_WAITING)
 	{
 
-		if (GetTickCount64() - LongWaitingTimeStart > 3000) {
+		if (GetTickCount64() - LongWaitingTimeStart > LONG_WAIT_TIME) {
 			StartFirstFiring();
 			
 		}
@@ -58,13 +65,13 @@ void BoomerangBrother::StateMachine(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 
 		FirstWeapon->StartWaitingToMove();
 
-		if (GetTickCount64() - FirstFiringTimeStart > 500) {
+		if (GetTickCount64() - FirstFiringTimeStart > TIME_FOR_FIRST_FIRING) {
 			StartShortWaiting();
 		}
 	}
 	else if (state == STATE_SHORT_WAITING) {
 	
-		if (GetTickCount64() - ShortWaitingTimeStart > 1000) 
+		if (GetTickCount64() - ShortWaitingTimeStart > SHORT_WAIT_TIME)
 		{
 			StartSecondFiring();
 		}
@@ -73,28 +80,31 @@ void BoomerangBrother::StateMachine(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 		
 	    SecondWeapon->StartWaitingToMove();
 
-		if (GetTickCount64() - SecondFiringStart > 500) {
+		if (GetTickCount64() - SecondFiringStart > TIME_FOR_SECOND_FIRING) {
 			StartLongWaiting();
 		}
 	}
 }
+
+#define TIME_MOVING_UNTILL_CHANGE_DIRECTION	1500
+#define SPEED_X	0.02f
 void BoomerangBrother::StartMoving() {
-	if (GetTickCount64() - MovingLeft > 1500 && isMovingLeft)
+	if (GetTickCount64() - MovingLeft > TIME_MOVING_UNTILL_CHANGE_DIRECTION && isMovingLeft)
 	{
 		isMovingLeft = false;
 		MovingRight = GetTickCount64();
 	}
 
-	if (GetTickCount64() - MovingRight > 1500 && !isMovingLeft) {
+	if (GetTickCount64() - MovingRight > TIME_MOVING_UNTILL_CHANGE_DIRECTION && !isMovingLeft) {
 		isMovingLeft = true;
 		MovingLeft = GetTickCount64();
 	}
 
 	if (isMovingLeft) {
-		vx = -0.02f;
+		vx = -SPEED_X;
 	}
 	else
-		vx = 0.02f;
+		vx = SPEED_X;
 }
 void BoomerangBrother::Render() 
 {

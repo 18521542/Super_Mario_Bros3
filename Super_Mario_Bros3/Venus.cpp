@@ -14,8 +14,10 @@ CVenus::CVenus(int type)
 	//fireball = new CFireBall();
 }
 
-
-
+#define FALSE_VALUE -1
+#define TIME_MOVING	1600
+#define BLOCK_MOVE_TIME	3000
+#define MOVING_SPEED	0.02f
 void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
@@ -35,9 +37,7 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	//this->fireball->Update(dt, coObjects);
-
-	
-	if (ReadyToUp == -1 && !isMoving ) 
+	if (ReadyToUp == FALSE_VALUE && !isMoving )
 	{
 		if (!HasFired) 
 		{			
@@ -57,17 +57,16 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	this->fireball->Update(dt, coObjects);
 
-	
 	if (isAllowToMove) 
 	{
-		if (GetTickCount() - TimeMovingY > 1600)
+		if (GetTickCount() - TimeMovingY > TIME_MOVING)
 		{
 			StartBlock();
 		}
 	}
 	if (!isAllowToMove) 
 	{
-		if (GetTickCount() - TimeBlockMoving > 3000) 
+		if (GetTickCount() - TimeBlockMoving > BLOCK_MOVE_TIME)
 		{
 			StartMoving();
 		}
@@ -76,10 +75,10 @@ void CVenus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (isMoving)
 	{
 		if (ReadyToUp > 0) {
-			vy = -0.02f;
+			vy = -MOVING_SPEED;
 		}
 		else
-			vy = 0.02f;
+			vy = MOVING_SPEED;
 	}
 	else {
 		vy = 0;

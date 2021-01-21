@@ -382,6 +382,7 @@ void CPlayScene::_ParseSection_GRID(string line)
 }
 
 #define MAX_Y	2900
+#define Max_Y_Cam	230.0f
 void CPlayScene::Update(DWORD dt)
 {
 	player->Update(dt, &ListObjectToCheckCollision);
@@ -400,8 +401,8 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx <= 0)
 		cx = 0;
-	if (cy >= 230.0f && !player->IsInSecretRoom())
-		cy = 230.0f;
+	if (cy >= Max_Y_Cam && !player->IsInSecretRoom())
+		cy = Max_Y_Cam;
 
 	//DebugOut(L"\n List object size %d", ListObjectToCheckCollision.size());
 
@@ -417,12 +418,11 @@ void CPlayScene::Update(DWORD dt)
 			ListObjectToCheckCollision[i]->Update(dt, &ListObjectToCheckCollision);
 		}
 	}
-
 	TailOfMario->Update(dt, &ListObjectToCheckCollision);
 	for (size_t i = 0; i < fireballs.size(); i++) {
 		fireballs[i]->Update(dt, &ListObjectToCheckCollision);
 	}
-
+	//Update object
 
 	if (movingEdge != NULL && !player->IsInSecretRoom())
 	{
@@ -432,10 +432,10 @@ void CPlayScene::Update(DWORD dt)
 		}
 		if (movingEdge->IsActive())
 		{
-			CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
+			CGame::GetInstance()->SetCamPos((int)(movingEdge->x), (movingEdge->y + (game->GetScreenHeight() / 6)));
 		}
 		else {
-			CGame::GetInstance()->SetCamPos((float)(movingEdge->GetStopDes()), (float)(movingEdge->y + 30));
+			CGame::GetInstance()->SetCamPos((float)(movingEdge->GetStopDes()), (float)(movingEdge->y + (game->GetScreenHeight() / 6)));
 			hud->Update(dt, &ListObjectToCheckCollision);
 		}
 		hud->Update(dt, &ListObjectToCheckCollision);
@@ -459,7 +459,6 @@ void CPlayScene::Update(DWORD dt)
 		return;
 	}
 	
-
 	hud->Update(dt, &ListObjectToCheckCollision);
 	
 }

@@ -49,13 +49,18 @@ void Card::Render() {
 
 #define CARD_DISTANCE_HEIGHT	70
 #define CARD_DISTANCE_WIDTH		50
+
+#define TIME_RANDOM	150
+#define MOVING_SPEED_CARD	0.07f
+#define TIME_FOR_MOVING		1000
+#define TIME_FOR_MOVING_LIMIT		2000
 void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	CGameObject::Update(dt, coObjects);
 	y += dy;
 
 	if (isAppear) 
 	{
-		if (GetTickCount64() - StartRandomTime > 150) {
+		if (GetTickCount64() - StartRandomTime > TIME_RANDOM) {
 			if(isAllowToRandom)
 				id = this->RandomID();
 			StartRandomTime = GetTickCount64();
@@ -74,7 +79,7 @@ void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	}
 
 	if (isMoving) {
-		vy = -0.07f;
+		vy = -MOVING_SPEED_CARD;
 		isEatenByMario = true;
 	}
 	else {
@@ -82,9 +87,7 @@ void Card::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	}
 	//DebugOut(L"\n Is moving %d", isMoving);
 
-	
-
-	if (GetTickCount64() - StartMovingTime > 1000 && GetTickCount64()-StartMovingTime <2000) {
+	if (GetTickCount64() - StartMovingTime > TIME_FOR_MOVING && GetTickCount64()-StartMovingTime < TIME_FOR_MOVING_LIMIT) {
 		isMoving = false;
 		isAppear = false;
 		StartMovingTime = 0;

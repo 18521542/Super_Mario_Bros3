@@ -58,6 +58,8 @@ void CBreakableBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 	}
 }
 
+#define TIME_MOVING	100
+#define TIME_FOR_COIN_APPEAR	4500
 void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	for (size_t i = 0; i < coObjects->size(); i++)
@@ -69,16 +71,17 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			obj->GetBoundingBox(pLeft, pTop, pRight, pBottom);
 			CKoopas* kp = dynamic_cast<CKoopas*>(obj);
-			if (CheckBB(pLeft, pTop, pRight, pBottom))
+			if (CheckBB(pLeft, pTop, pRight, pBottom) && kp->GetState() != KOOPAS_STATE_DIE_UP)
 			{
 				kp->SetState(KOOPAS_STATE_DIE_UP);
 			}
 		}
 	}
+
 	if (isMoving) {
 		CGameObject::Update(dt, coObjects);
 		y += dy;
-		if (GetTickCount64() - TimeStartMove > 100) {
+		if (GetTickCount64() - TimeStartMove > TIME_MOVING) {
 			TimeStartMove = 0;
 			isMoving = false;
 			y = startY;
@@ -95,7 +98,7 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (this->state == COIN)
 	{
 		isNotAllowAniBreakAppear = true;
-		if (GetTickCount64() - CoinAppearTime > 4500 && !isActivated)
+		if (GetTickCount64() - CoinAppearTime > TIME_FOR_COIN_APPEAR && !isActivated)
 		{
 			//this->state = SHINING;		
 			this->SetState(SHINING);

@@ -1,5 +1,7 @@
 #include "Effect.h"
 #include "Utils.h"
+
+#define TIME_FOR_EFFECT_APPEAR	1000
 Effect::Effect() 
 {
 	type = TYPE_SCORE;
@@ -14,8 +16,7 @@ void Effect::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//DebugOut(L"\nis Appear  %d", isAppear);
 	if (isAppear) 
 	{
-		//DebugOut(L"\nTime %d", GetTickCount64() - StartAppearTime);
-		if (GetTickCount64() - StartAppearTime > 1000) {
+		if (GetTickCount64() - StartAppearTime > TIME_FOR_EFFECT_APPEAR) {
 			StartAppearTime = 0;
 			isAppear = false;
 		}

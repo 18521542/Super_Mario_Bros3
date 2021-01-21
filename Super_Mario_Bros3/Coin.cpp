@@ -35,6 +35,10 @@ void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 		l = t = r = b = 0;
 }
 
+#define APPEAR_TIME	600
+#define APPEAR_TIME_LIMIT	800
+
+#define UP_SPEEAD
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt,coObjects);
@@ -49,20 +53,20 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	y += dy;
 
-	if (GetTickCount() - StartEffectTime > 600 && GetTickCount() - StartEffectTime < 800)
+	if (GetTickCount() - StartEffectTime > APPEAR_TIME && GetTickCount() - StartEffectTime < APPEAR_TIME_LIMIT)
 	{
 		StartEffectTime = 0;
 		state = COIN_STATE_DISAPPEAR;
 	}
 		
-	if (isReset) 
+	/*if (isReset) 
 	{
 		vy -= 0.1f;
 		if (GetTickCount64() - StartResetTime > 100) {
 			isReset = false;
 			isUsed = false;
 		}
-	}
+	}*/
 	for (size_t i = 0 ; i < coObjects->size(); i++) 
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
@@ -76,10 +80,6 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				StartEffect();
 				isUsed = true;
 			}
-		}
-		else if (dynamic_cast<CBreakableBrick*>(obj))
-		{
-			
 		}
 	}
 

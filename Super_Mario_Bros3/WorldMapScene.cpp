@@ -98,6 +98,11 @@ void WorldMapScene::_ParseSection_ANIMATION_SETS(string line)
 
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
 }
+
+#define MARIO_WORLDMAP	100
+#define CHECKPOINT		200
+#define TURLE			300
+#define HELP_STRING		400
 void WorldMapScene::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
@@ -107,8 +112,8 @@ void WorldMapScene::_ParseSection_OBJECTS(string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());  //left
-	float y = atof(tokens[2].c_str());	//top
+	float x = (float)atof(tokens[1].c_str());  //left
+	float y = (float)atof(tokens[2].c_str());	//top
 
 	int ani_set_id = atoi(tokens[3].c_str());
 
@@ -125,7 +130,7 @@ void WorldMapScene::_ParseSection_OBJECTS(string line)
 		obj = new CBackground(type);
 		break;
 	}
-	case 100:
+	case MARIO_WORLDMAP:
 	{
 		if (player != NULL)
 		{
@@ -136,7 +141,7 @@ void WorldMapScene::_ParseSection_OBJECTS(string line)
 		player = (MarioWorldMap*)obj;
 		break;
 	}
-	case 200:
+	case CHECKPOINT:
 	{
 		int left = atoi(tokens[4].c_str());
 		int top = atoi(tokens[5].c_str());
@@ -148,12 +153,12 @@ void WorldMapScene::_ParseSection_OBJECTS(string line)
 		obj = new CheckPoint(left, top, right, bottom, width, height, scene_id);
 		break;
 	}
-	case 300:
+	case TURLE:
 	{
 		obj = new Turle();
 		break;
 	}
-	case 400:
+	case HELP_STRING:
 	{
 		obj = new Help();
 		break;

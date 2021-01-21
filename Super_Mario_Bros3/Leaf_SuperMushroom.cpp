@@ -56,6 +56,11 @@ void CLeaf_Mushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
 	
 }
 
+#define MUSHROOM_APPEAR_TIME_LIMIT	1000
+#define MUSHROOM_APPEAR_TIME	500
+
+#define FIRST_APPEAR_SPEED_X_OF_LEAF	0.4f
+#define LEAF_UP_TIME	100
 void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
@@ -125,18 +130,17 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	
-	if ((GetTickCount64() - TimeForMushroomAppear) < 1000 
-		&& (GetTickCount64() - TimeForMushroomAppear) > 500)
+	if ((GetTickCount64() - TimeForMushroomAppear) < MUSHROOM_APPEAR_TIME_LIMIT
+		&& (GetTickCount64() - TimeForMushroomAppear) > MUSHROOM_APPEAR_TIME)
 	{
 		isAllowToAppear = true;
 		MushroomStartMoving();
 	}
 	
-
 	if (isLeafMoving && type==LEAF) 
 	{
-		if (GetTickCount64() - StartEffectTime < 100) {
-			vy = -0.3f;
+		if (GetTickCount64() - StartEffectTime < LEAF_UP_TIME) {
+			vy = -FIRST_APPEAR_SPEED_X_OF_LEAF;
 		}
 		else
 		{
@@ -217,30 +221,26 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					
 					if (e->ny != 0) {
 						vy = 0;
-						
 					}
 					if (e->nx != 0) {
-						this->vx = -this->vx;
+						this->nx = -this->nx;
 					}
 					x += min_tx * dx + nx * 0.4f;
 					y += min_ty * dy + ny * 0.4f;
 				}
-				else if (dynamic_cast<MovingBrick*>(e->obj)) {
-					x += dx;
-					y += dy;
-				}
-				else {
-					x += dx;
-					y += dy;
-				}
+				//else if (dynamic_cast<MovingBrick*>(e->obj)) {
+				//	/*x += dx;
+				//	y += dy;*/
+				//}
+				//else {
+				//	x += dx;
+				//	y += dy;
+				//}
 			}
 		}
 
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
-
-
-
 }
 
 

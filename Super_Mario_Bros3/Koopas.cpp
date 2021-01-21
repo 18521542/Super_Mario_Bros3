@@ -1,13 +1,16 @@
 #include "Koopas.h"
 #include "Utils.h"
 #include "PlayScene.h"
+
+#define KOOPA_1_4_FLY_SPEED	0.1f
+#define HALF_LIMIT_DISTANCE	50
 CKoopas::CKoopas(int type)
 {
 	this->type = type;
 	nx = 1;
 	SetState(KOOPAS_STATE_WALKING);
 	if (type == JUST_FLY_KOOPA) {
-		vy = 0.1f;
+		vy = KOOPA_1_4_FLY_SPEED;
 	}
 }
 
@@ -25,8 +28,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//vy = 0.1f;
 		
 
-		float LimitUp = StartY - 50;
-		float LimitDown = StartY + 50;
+		float LimitUp = StartY - HALF_LIMIT_DISTANCE;
+		float LimitDown = StartY + HALF_LIMIT_DISTANCE;
 
 		if ((y > LimitDown&& IsDown) ) {
 			IsDown = false;

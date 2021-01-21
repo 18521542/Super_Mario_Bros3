@@ -228,6 +228,7 @@ void CMario::HandleOverlapColision(vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
+#define Pushback_Speed	0.01f
 void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects) 
 {
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -346,8 +347,6 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					if (e->ny != 0)
 					{
 						vy = 0;
-						/*if (state == MARIO_STATE_FLY)
-							state == MARIO_STATE_IDLE;*/
 					}
 					if (e->nx != 0)vx = 0;
 				}
@@ -548,6 +547,11 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CBreakableBrick*>(e->obj)) {
 				CBreakableBrick* bb = dynamic_cast<CBreakableBrick*>(e->obj);
+				x += min_tx * dx + nx * 0.8f;
+				y += min_ty * dy + ny * 0.1f;
+				if (e->ny != 0 || e->nx != 0) {
+					isOnAir = false;
+				}
 				if (bb->GetState() == COIN) 
 				{
 					x += dx;
@@ -557,11 +561,11 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					}
 				}			
 				else {
-					isReadyToJump = true;
+					/*isReadyToJump = true;
 					if (state == MARIO_STATE_JUMP)
 					{
 						state = MARIO_STATE_IDLE;
-					}
+					}*/
 					if (e->ny < 0)
 					{
 						if (state == MARIO_STATE_JUMP)
@@ -572,7 +576,7 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 						vy = 0;
 						//y += dx;
 					}
-					if (e->ny > 0) {
+					else if (e->ny > 0) {
 						vy += MARIO_FALLING_ACCELERATION * dt;
 						isReadyToJump = false;
 						if (level != MARIO_LEVEL_SMALL) 
@@ -608,11 +612,9 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					}
 					if (e->nx != 0)vx = 0;
 				}
-				if (e->ny != 0 || e->nx != 0) {
-					isOnAir = false;
-				}
-				x += min_tx * dx + nx * 0.8f;
-				y += min_ty * dy + ny * 0.1f;
+				
+				/*x += min_tx * dx + nx * 0.8f;
+				y += min_ty * dy + ny * 0.1f;*/
 			}
 			else if (dynamic_cast<Card*>(e->obj)) {
 				Card* card = dynamic_cast<Card*>(e->obj);
@@ -630,21 +632,23 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<MovingBrick*>(e->obj)) {
 				/*x += min_tx * dx + nx * 0.1f;*/
 				//y += min_ty * dy + ny * 0.001f;
-				MovingBrick* mb = dynamic_cast<MovingBrick*>(e->obj);
-				isReadyToJump = true;
-				if (state == MARIO_STATE_JUMP)
-				{
-					state = MARIO_STATE_IDLE;
+				if (e->ny != 0 || e->nx != 0) {
+					isOnAir = false;
 				}
+				MovingBrick* mb = dynamic_cast<MovingBrick*>(e->obj);
+				
 				if (e->ny != 0)
 				{
-					vy = mb->vy;
-					mb->SetState(STATE_BRICK_FALLING);
-					//y = mb->y-MARIO_BIG_BBOX_HEIGHT;
-					
+					isReadyToJump = true;
+					if (state == MARIO_STATE_JUMP)
+					{
+						state = MARIO_STATE_IDLE;
+					}
+					vy = mb->vy - Pushback_Speed;
+					mb->SetState(STATE_BRICK_FALLING);				
 				}
 				if (e->nx != 0)vx = 0;
-				}
+			}
 			else if (dynamic_cast<MovingEdge*>(e->obj)) {
 				MovingEdge* movingEdge = dynamic_cast<MovingEdge*>(e->obj);
 					x += dx;

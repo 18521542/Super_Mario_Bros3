@@ -1,6 +1,10 @@
 #include "MovingBrick.h"
 #include "MovingEdge.h"
 #include "PlayScene.h"
+
+#define MOVING_BRICK_SPEED	-0.03f
+#define ACCELERATION_OF_MVB	0.0001f
+
 MovingBrick::MovingBrick() {
 	state = STATE_BRICK_MOVING;
 	vx = 0;
@@ -18,12 +22,12 @@ void MovingBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	x += dx;
 	y += dy;
 	if (state == STATE_BRICK_MOVING) {
-		vx = -0.03f;
+		vx = MOVING_BRICK_SPEED;
 		vy = 0;
 	}
 	else if (state == STATE_BRICK_FALLING) {
 		vx = 0;
-		vy += 0.0001f *dt;
+		vy += ACCELERATION_OF_MVB *dt;
 	}
 }
 void MovingBrick::Render() {

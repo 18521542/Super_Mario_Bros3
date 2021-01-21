@@ -14,6 +14,7 @@
 #define ANI_COIN						1
 #define ANI_WITHOUT_SHINING				2
 #define ANI_SHINING						0
+#define LIFE_OF_BREAKABLE_BRICK			3
 
 class CBreakableBrick : public CGameObject 
 {
@@ -30,7 +31,7 @@ class CBreakableBrick : public CGameObject
 	bool isReturnedCoin = false;
 
 	bool isMoving = false;
-	int Life = 3;
+	int Life = LIFE_OF_BREAKABLE_BRICK;
 
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
