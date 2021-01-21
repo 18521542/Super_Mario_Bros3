@@ -177,6 +177,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int type = atoi(tokens[4].c_str());
 		obj = new CKoopas(type);
+		obj->StartY = y;
 		break;
 	}
 	case OBJECT_TYPE_BACKGROUND: 

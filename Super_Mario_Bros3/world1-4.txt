@@ -857,6 +857,7 @@ Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
 
 #boomerang inactive
 9962	9962	100
+
 #############################################################################################
 # id	ani1	ani2	ani3
 [ANIMATION_SETS]
@@ -891,6 +892,8 @@ Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
 #black background
 999999	999999
 #======================================================
+# Background
+4	1	222	333
 # coin
 5	1001
 # koopas
@@ -1104,5 +1107,19 @@ Resourses\Tileset1-4.png	Resourses\Map1-4_.txt	11	5	161	29	16	16
 11	1232	289	9	3
 #card
 14	2447	335	121212
+
+#platform type 2
+5	1969	367	1	2015	372	2
+#koopas
+3	1975	330	6	1
+
+#platform type 3
+5	2014	357	1	2018	372	3
+
+#fly koopas
+3	1890	330	6	3
+
+#Green pipe
+4	1936	335	4	2
 [GRID]
 SpacePartioning\Map1-4\GridData.txt

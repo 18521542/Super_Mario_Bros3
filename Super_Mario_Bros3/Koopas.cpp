@@ -6,14 +6,41 @@ CKoopas::CKoopas(int type)
 	this->type = type;
 	nx = 1;
 	SetState(KOOPAS_STATE_WALKING);
+	if (type == JUST_FLY_KOOPA) {
+		vy = 0.1f;
+	}
 }
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
+	if (type != JUST_FLY_KOOPA)
 	vy += KP_GRAVITY * dt;
 
+	if (type == JUST_FLY_KOOPA) 
+	{
+		nx = -1;
+		vx = 0;
+		//vy = 0.1f;
+		
+
+		float LimitUp = StartY - 50;
+		float LimitDown = StartY + 50;
+
+		if ((y > LimitDown&& IsDown) ) {
+			IsDown = false;
+			vy = -vy;
+		}
+		
+		if ((y < LimitUp && !IsDown)) {
+			IsDown = true;
+			vy = -vy;
+		}
+		CGameObject::Update(dt, coObjects);
+		y += dy;
+		return;
+	}
 	if (state == KOOPAS_STATE_DIE_UP) 
 	{
 		if (nx > 0) 
@@ -210,10 +237,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 			else if (dynamic_cast<CMario*>(e->obj)) {
-				/*x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
-				CMario* mario = dynamic_cast<CMario*>(e->obj);*/
-				//mario->StartEffect();
 			}
 			else if (dynamic_cast<MovingBrick*>(e->obj)) {
 				x += dx;
@@ -247,7 +270,7 @@ void CKoopas::Render()
 			ani = KOOPAS_ANI_DIE_up;
 		}
 	}
-	else if (type == KOOPA_PARATROOPA) {
+	else if (type == KOOPA_PARATROOPA || type == JUST_FLY_KOOPA) {
 		if (nx > 0) {
 			ani = KOOPAS_PARATROOPA_ANI_RIGHT;
 		}
@@ -257,7 +280,7 @@ void CKoopas::Render()
 
 	animation_set->at(ani)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CKoopas::SetState(int state)

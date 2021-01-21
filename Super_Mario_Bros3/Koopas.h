@@ -34,6 +34,7 @@
 #define KOOPAS_PARATROOPA_ANI_LEFT	5
 #define KOOPAS_PARATROOPA_ANI_RIGHT	6
 
+#define JUST_FLY_KOOPA				3
 #define KOOPA_PARATROOPA			2
 #define KOOPA						1
 
@@ -42,6 +43,7 @@ class CKoopas : public CGameObject
 	bool isBeingHold = false;
 	bool isNormal = true;
 	int type;
+	bool IsDown = true;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
