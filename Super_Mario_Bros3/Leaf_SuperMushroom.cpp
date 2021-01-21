@@ -205,11 +205,12 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CQuestionBrick*>(e->obj)) {
 					CQuestionBrick* plat = dynamic_cast<CQuestionBrick*>(e->obj);
-					x += dx;
-					y += min_ty * dy + ny * 0.4f;
+					
 					if (e->ny != 0) {
 						vy = 0;
 					}
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
 				}
 				else if (dynamic_cast<CBreakableBrick*>(e->obj)) {
 					CBreakableBrick* plat = dynamic_cast<CBreakableBrick*>(e->obj);
@@ -219,15 +220,19 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						
 					}
 					if (e->nx != 0) {
-						this->nx = -this->nx;
+						this->vx = -this->vx;
 					}
-					x += dx;
+					x += min_tx * dx + nx * 0.4f;
 					y += min_ty * dy + ny * 0.4f;
 				}
-				else {
-					x += dx; y += dy;
+				else if (dynamic_cast<MovingBrick*>(e->obj)) {
+					x += dx;
+					y += dy;
 				}
-				
+				else {
+					x += dx;
+					y += dy;
+				}
 			}
 		}
 

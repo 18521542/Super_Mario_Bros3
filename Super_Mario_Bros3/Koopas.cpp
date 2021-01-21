@@ -215,6 +215,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CMario* mario = dynamic_cast<CMario*>(e->obj);*/
 				//mario->StartEffect();
 			}
+			else if (dynamic_cast<MovingBrick*>(e->obj)) {
+				x += dx;
+				y += dy;
+			}
 		}
 	}
 

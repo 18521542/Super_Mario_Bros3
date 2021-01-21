@@ -44,7 +44,8 @@ struct CCollisionEvent
 class CGameObject
 {
 public:
-
+	float StartX;
+	float StartY;
 	float x;
 	float y;
 

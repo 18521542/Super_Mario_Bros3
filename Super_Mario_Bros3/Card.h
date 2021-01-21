@@ -23,6 +23,7 @@ class Card :public CGameObject {
 	bool isMoving = false;
 	bool isRandomFirstTime = true;
 	bool isAllowToRandom = true;
+	bool isInitStart = false;
 	ULONGLONG	StartMovingTime;
 	ULONGLONG	StartRandomTime;
 	HUD_Card* hud_card;

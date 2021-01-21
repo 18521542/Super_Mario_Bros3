@@ -249,6 +249,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CARD:
 	{
 		obj = new Card();
+		obj->StartX = x;
+		obj->StartY = y;
 		break;
 	}
 	case OBJECT_TYPE_MOVING_BRICK:
@@ -400,7 +402,6 @@ void CPlayScene::Update(DWORD dt)
 	if (cy >= 230.0f && !player->IsInSecretRoom())
 		cy = 230.0f;
 
-	//DebugOut(L"\n List object size %d", objects.size());
 	//DebugOut(L"\n List object size %d", ListObjectToCheckCollision.size());
 
 	//grid->Update(dt,&ListObjectToCheckCollision, cx, cy);
@@ -416,16 +417,24 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
-	if (movingEdge != NULL&& !player->IsInSecretRoom())
+	TailOfMario->Update(dt, &ListObjectToCheckCollision);
+	for (size_t i = 0; i < fireballs.size(); i++) {
+		fireballs[i]->Update(dt, &ListObjectToCheckCollision);
+	}
+
+
+	if (movingEdge != NULL && !player->IsInSecretRoom())
 	{
 		movingEdge->Update(dt, &ListObjectToCheckCollision);
-
+		for (size_t i = 0; i < fireballs.size(); i++) {
+			fireballs[i]->Update(dt, &ListObjectToCheckCollision);
+		}
 		if (movingEdge->IsActive())
 		{
 			CGame::GetInstance()->SetCamPos((int)(movingEdge->x - 1), (movingEdge->y + 30));
 		}
 		else {
-			CGame::GetInstance()->SetCamPos((float)(movingEdge->GetStopDes()),(float) (movingEdge->y + 30));
+			CGame::GetInstance()->SetCamPos((float)(movingEdge->GetStopDes()), (float)(movingEdge->y + 30));
 			hud->Update(dt, &ListObjectToCheckCollision);
 		}
 		hud->Update(dt, &ListObjectToCheckCollision);
@@ -436,26 +445,22 @@ void CPlayScene::Update(DWORD dt)
 	{
 		if (player->IsAtTheEnd()) {
 			player->SetState(MARIO_STATE_WALKING_RIGHT);
-			if (player->x > MAX_Y)
-				player->SetState(MARIO_STATE_DIE);
 			return;
 		}
 		if (!player->IsInSecretRoom()) 
 		{
-			/*if (cy >= 230.0f)
-				CGame::GetInstance()->SetCamPos((int)cx, 230.0f);
-			else*/
-				CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
+			CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
 		}
 		else
 			CGame::GetInstance()->SetCamPos((int)cx, Anchor_in->y-SCREEN__HEIGHT/2);
 	}
+	else {
+		return;
+	}
+	
 
 	hud->Update(dt, &ListObjectToCheckCollision);
-	TailOfMario->Update(dt, &ListObjectToCheckCollision);
-	for (size_t i = 0; i < fireballs.size(); i++) {
-		fireballs[i]->Update(dt, &ListObjectToCheckCollision);
-	}
+	
 }
 
 void CPlayScene::Render()
