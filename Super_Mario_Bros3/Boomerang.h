@@ -38,6 +38,7 @@ class Boomerang : public CGameObject {
 	ULONGLONG TimeCollide = 0;
 	//ULONGLONG MovingUp;
 public :
+	bool isStopUpdate = false;
 	bool isActive = false;
 	bool isAllowCollideOneTime = true;
 	Boomerang();

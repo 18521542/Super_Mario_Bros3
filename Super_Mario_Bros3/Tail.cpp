@@ -98,5 +98,12 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
+		else if (dynamic_cast<CGoomba*>(obj)) {
+			CGoomba* gb = dynamic_cast<CGoomba*>(obj);
+			if (CheckBB(left, top, right, bottom)) {
+				gb->SetState(GOOMBA_STATE_DIE);
+				gb->StartDisapear();
+			}
+		}
 	}
 }

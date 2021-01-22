@@ -132,6 +132,7 @@ void HUD::StackUpdate(float camX, float camY, DWORD dt, vector<LPGAMEOBJECT>* co
 	}
 }
 
+#define TIME_FOR_EACH_OF_STACK_UPDATE_UP	170
 void HUD::StackUp() {
 	
 	if (!StackIsUp) {
@@ -139,12 +140,14 @@ void HUD::StackUp() {
 		return;
 	}
 	//hard code
-	if (GetTickCount64() - StartUptime>170) {
+	if (GetTickCount64() - StartUptime> TIME_FOR_EACH_OF_STACK_UPDATE_UP) {
 		StackLevel++;
 		StartUptime = GetTickCount64();
 	}
 }
 
+
+#define TIME_FOR_EACH_OF_STACK_UPDATE_DOWN	200
 void HUD::StackDown() {
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	if (mario->IsFlying())
@@ -152,17 +155,17 @@ void HUD::StackDown() {
 	if (StackIsUp ) {
 		return;
 	}
-	if (GetTickCount64() - StartDownTime > 200) {
+	if (GetTickCount64() - StartDownTime > TIME_FOR_EACH_OF_STACK_UPDATE_DOWN) {
 		StackLevel--;
 		StartDownTime = GetTickCount64();
 	}
 }
 
 
-
+#define GAME_DELTA_TIME	0.01f
 void HUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
 {
-	TimeValue -= 0.01f;
+	TimeValue -= GAME_DELTA_TIME;
 
 	int id = CGame::GetInstance()->GetCurrentScene()->GetID();
 

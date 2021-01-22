@@ -199,7 +199,7 @@
 
 class CMario : public CGameObject
 {
-	float a;	// vx = vx + a*dt
+	
 	float ay;	//vy = ay*dt;
 
 	//sit
@@ -273,6 +273,7 @@ class CMario : public CGameObject
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 public:
+	float a;	// vx = vx + a*dt
 	CMario(float x , float y );
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 

@@ -4,10 +4,11 @@ Piece::Piece() {
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANI_SET_PIECE));
 }
 
+#define ACCELERATION_OF_PIECE	0.0005f
 void Piece::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
 	CGameObject::Update(dt);
-	vy += 0.0005f * dt;
+	vy += ACCELERATION_OF_PIECE * dt;
 
 	x += dx;
 	y += dy;
@@ -17,6 +18,10 @@ void Piece::Render() {
 	animation_set->at(ANI_PIECE)->Render(x, y);
 }
 
+#define UP		-0.15f
+#define DOWN	-0.1f
+#define RIGHT	0.02f
+#define LEFT	-0.02f
 PiecesANI::PiecesANI(float x, float y) {
 
 	Piece* piece;
@@ -27,10 +32,10 @@ PiecesANI::PiecesANI(float x, float y) {
 		pieces.push_back(piece);
 	}
 
-	pieces.at(0)->SetSpeed(-0.02f, -0.15f);
-	pieces.at(1)->SetSpeed(-0.02f, -0.1f);
-	pieces.at(2)->SetSpeed(0.02f, -0.15f);
-	pieces.at(3)->SetSpeed(0.02f, -0.1f);
+	pieces.at(0)->SetSpeed(LEFT, UP);
+	pieces.at(1)->SetSpeed(LEFT, DOWN);
+	pieces.at(2)->SetSpeed(RIGHT, UP);
+	pieces.at(3)->SetSpeed(RIGHT, DOWN);
 }
 
 PiecesANI::~PiecesANI()
@@ -40,6 +45,7 @@ PiecesANI::~PiecesANI()
 	pieces.clear();
 }
 
+#define APPEAR_TIME	1500
 void PiecesANI::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject) 
 {
 	if (isAppear) 
@@ -49,7 +55,7 @@ void PiecesANI::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			piece->Update(dt, coObject);
 		}
 	}
-	if (GetTickCount64() - StartAppearTime > 1500) 
+	if (GetTickCount64() - StartAppearTime > APPEAR_TIME)
 	{
 		isAppear = false;
 		StartAppearTime = 0;

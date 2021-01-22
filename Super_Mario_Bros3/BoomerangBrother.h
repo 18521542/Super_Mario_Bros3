@@ -31,7 +31,10 @@ class BoomerangBrother : public CGameObject
 	bool isMovingHand = false;
 
 	bool isInitedWeapon = false;
+
+	
 public:
+	bool isDead = false;
 	BoomerangBrother();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

@@ -60,7 +60,13 @@ void CLeaf_Mushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
 #define MUSHROOM_APPEAR_TIME	500
 
 #define FIRST_APPEAR_SPEED_X_OF_LEAF	0.4f
+#define SPEED_Y_DOWN_OF_LEAF	0.035f
+#define LEAF_ACCELERATION	0.0003f
+#define MAX_MIN_SPEED	0.12f
 #define LEAF_UP_TIME	100
+#define FIRST_APPEAR_ACCELERATION_OF_MUSHROOM	0.00005f
+#define FIRST_APPEAR_TIME	270
+#define SPEED_MUSHROOM	0.05f
 void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
@@ -144,9 +150,9 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else
 		{
-			vy = 0.035f;
-			vx += nx * 0.0003f * dt;
-			if (abs(vx) > 0.12f) 
+			vy = SPEED_Y_DOWN_OF_LEAF;
+			vx += nx * LEAF_ACCELERATION * dt;
+			if (abs(vx) > MAX_MIN_SPEED)
 			{
 				nx = -nx;
 			}
@@ -162,13 +168,13 @@ void CLeaf_Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else if ((type == MUSHROOM|| type == GREEN_MUSHROOM) && isMushroomMoving)
 	{
-		if (GetTickCount64() - StartEffectTime < 270) {
-			vy += -0.00005f * dt;
+		if (GetTickCount64() - StartEffectTime < FIRST_APPEAR_TIME) {
+			vy += -FIRST_APPEAR_ACCELERATION_OF_MUSHROOM * dt;
 		}
 		else
 		{
 			vy += GRAVITY * dt;
-			vx = nx * 0.05f;
+			vx = nx * SPEED_MUSHROOM;
 		}
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;

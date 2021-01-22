@@ -568,11 +568,12 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					}*/
 					if (e->ny < 0)
 					{
-						if (state == MARIO_STATE_JUMP)
+						/*if (state == MARIO_STATE_JUMP)
 						{
 							SetState(MARIO_STATE_IDLE);
-						}
+						}*/
 						isReadyToJump = true;
+
 						vy = 0;
 						//y += dx;
 					}
@@ -655,6 +656,12 @@ void CMario::HandleNormalColision(vector<LPGAMEOBJECT>* coObjects)
 					this->nx = 1;
 					vx = 6 * MARIO_WALKING_SPEED_MIN;
 			}
+			else if ((dynamic_cast<BoomerangBrother*>(e->obj))) {
+				if (e->ny != 0) {
+					BoomerangBrother* bb = dynamic_cast<BoomerangBrother*>(e->obj);
+					bb->isDead = true;
+				}
+			}
 		}
 	}
 
@@ -671,7 +678,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (!isForEffectAppear) 
 	{
 		CGameObject::Update(dt);
-
+		
 		vx += a * dt;
 		vy += ay * dt;
 		

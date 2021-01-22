@@ -21,6 +21,8 @@ void CSwitchBlock::Render()
 	//RenderBoundingBox();
 }
 
+#define SWB_BBOX_WIDTH	16
+#define SWB_BBOX_HEIGHT	16
 void CSwitchBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	if (isAppear) 
@@ -29,8 +31,8 @@ void CSwitchBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
 		{
 			l = x;
 			t = y;
-			r = x + 16;
-			b = y + 16;
+			r = x + SWB_BBOX_WIDTH;
+			b = y + SWB_BBOX_HEIGHT;
 		}
 		else
 		{

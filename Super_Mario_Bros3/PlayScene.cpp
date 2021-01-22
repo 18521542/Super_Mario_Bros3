@@ -297,7 +297,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
 
-	
 }
 
 void CPlayScene::Load()
@@ -374,10 +373,10 @@ void CPlayScene::_ParseSection_GRID(string line)
 	grid = new Grid(path, &objects);
 
 	//grid->DevideObjectIntoCell()
-	for (size_t i = 0; i < objects.size(); i++)
+	/*for (size_t i = 0; i < objects.size(); i++)
 	{
 		grid->DevideObjectIntoCell(objects[i]);
-	}
+	}*/
 	
 }
 
@@ -404,7 +403,8 @@ void CPlayScene::Update(DWORD dt)
 	if (cy >= Max_Y_Cam && !player->IsInSecretRoom())
 		cy = Max_Y_Cam;
 
-	//DebugOut(L"\n List object size %d", ListObjectToCheckCollision.size());
+	DebugOut(L"\n List object size %d", objects.size());
+	DebugOut(L"\n List object size %d", ListObjectToCheckCollision.size());
 
 	//grid->Update(dt,&ListObjectToCheckCollision, cx, cy);
 	if (grid != NULL) 
@@ -703,7 +703,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		{
 			if (game->IsKeyDown(DIK_S))
 			{
-
+				mario->nx = 1;
+				mario->vx = 0.09f;
 			}
 			else if (mario->IsReadyToRun())
 			{
@@ -719,7 +720,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		else if (game->IsKeyDown(DIK_LEFT)) {
 			if (game->IsKeyDown(DIK_S))
 			{
-
+				mario->nx = -1;
+				mario->vx = -0.09f;
 			}
 			else if (mario->IsReadyToRun()) {
 				mario->setIsRunning(true);

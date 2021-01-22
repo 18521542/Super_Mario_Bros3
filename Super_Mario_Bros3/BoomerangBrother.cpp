@@ -16,36 +16,50 @@ BoomerangBrother::BoomerangBrother() {
 	
 }
 void BoomerangBrother::GetBoundingBox(float& left, float& top, float& right, float& bottom) {
-
+	left = x;
+	top = y;
+	right = x + 17;
+	bottom = y + 10;
 }
 void BoomerangBrother::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
 {
 	//SecondWeapon->Update(dt,coObjects);
-
+	
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 
-	StartMoving();
+	if (isDead) {
+		vy = 0.1f;
+		y += dy;
+		FirstWeapon->isStopUpdate = true;
+		SecondWeapon->isStopUpdate = true;
+		return;
+	}
+
+	else {
+		StartMoving();
+
+		FirstWeapon->Update(dt, coObjects);
+		SecondWeapon->Update(dt, coObjects);
+
+		if (FirstWeapon->GetState() == STATE_NOT_MOVING)
+		{
+			FirstWeapon->SetPosition(x - TO_HAND_POS_X, y - TO_HAND_POS_Y);
+			FirstWeapon->isAllowCollideOneTime = true;
+		}
+
+		if (SecondWeapon->GetState() == STATE_NOT_MOVING) {
+			SecondWeapon->SetPosition(x - TO_HAND_POS_X, y - TO_HAND_POS_Y);
+			SecondWeapon->isAllowCollideOneTime = true;
+		}
+		StateMachine(dt, coObjects);
+		if (!isInitedWeapon) {
+			isInitedWeapon = true;
+			FirstWeapon->SetPosition(x, y);
+			SecondWeapon->SetPosition(x, y);
+		}
+	}
 	
-	FirstWeapon->Update(dt, coObjects);
-	SecondWeapon->Update(dt, coObjects);
-
-	if (FirstWeapon->GetState() == STATE_NOT_MOVING) 
-	{
-		FirstWeapon->SetPosition(x- TO_HAND_POS_X, y- TO_HAND_POS_Y);
-		FirstWeapon->isAllowCollideOneTime = true;
-	}
-
-	if (SecondWeapon->GetState() == STATE_NOT_MOVING) {
-		SecondWeapon->SetPosition(x - TO_HAND_POS_X, y - TO_HAND_POS_Y);
-		SecondWeapon->isAllowCollideOneTime = true;
-	}
-	StateMachine(dt, coObjects);
-	if (!isInitedWeapon) {
-		isInitedWeapon = true;
-		FirstWeapon->SetPosition(x, y);
-		SecondWeapon->SetPosition(x, y);
-	}
 }
 
 #define LONG_WAIT_TIME	3000

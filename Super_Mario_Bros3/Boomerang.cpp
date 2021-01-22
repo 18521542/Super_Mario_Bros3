@@ -34,6 +34,9 @@ void Boomerang::GetBoundingBox(float& left, float& top, float& right, float& bot
 }
 void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
 {
+	if (isStopUpdate) {
+		return;
+	}
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 	y += dy;
@@ -144,6 +147,8 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 void Boomerang::Render() {
+	if (isStopUpdate)
+		return;
 	if (isActive) {
 		if (state != STATE_MOVING)
 			animation_set->at(ANI_POS_NOTMOVING)->Render(x, y);
